@@ -1,0 +1,179 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MainMasterPage.master.cs" Inherits="MainMasterPage" %>
+
+<!DOCTYPE html>
+<!--[if lte IE 9]> <html class="lte-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 9]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head runat="server">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Remove Tap Highlight on Windows Phone IE -->
+    <meta name="msapplication-tap-highlight" content="no" />
+
+    <link rel="icon" type="image/png" href="assets/img/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="assets/img/favicon-32x32.png" sizes="32x32">
+
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+
+
+
+    <!-- uikit -->
+    <link rel="stylesheet" href="bower_components/uikit/css/uikit.almost-flat.min.css" media="all">
+
+    <!-- flag icons -->
+    <link rel="stylesheet" href="assets/icons/flags/flags.min.css" media="all">
+
+    <!-- altair admin -->
+    <link rel="stylesheet" href="assets/css/main.css" media="all">
+
+    <!-- matchMedia polyfill for testing media queries in JS -->
+    <!--[if lte IE 9]>
+        <script type="text/javascript" src="bower_components/matchMedia/matchMedia.js"></script>
+        <script type="text/javascript" src="bower_components/matchMedia/matchMedia.addListener.js"></script>
+    <![endif]-->
+
+    <!-- Sweet Alert -->
+    <link href="bower_components/sweetalert/sweetalert.css" rel="stylesheet" />
+    <script src="bower_components/sweetalert/sweetalert.min.js"></script>
+
+
+</head>
+<body class=" sidebar_main_open sidebar_main_swipe">
+   
+        <!-- main header -->
+        <header id="header_main">
+            <div class="header_main_content">
+                <nav class="uk-navbar">
+
+                    <!-- main sidebar switch -->
+                    <a href="#" id="sidebar_main_toggle" class="sSwitch sSwitch_left">
+                        <span class="sSwitchIcon"></span>
+                    </a>
+
+                    <!-- secondary sidebar switch -->
+                    <a href="#" id="sidebar_secondary_toggle" class="sSwitch sSwitch_right sidebar_secondary_check">
+                        <span class="sSwitchIcon"></span>
+                    </a>
+
+
+                    <div class="uk-navbar-flip">
+                        <ul class="uk-navbar-nav user_actions">
+                            <li><a href="#" id="full_screen_toggle" class="user_action_icon uk-visible-large"><i class="material-icons md-24 md-light">&#xE5D0;</i></a></li>
+                            <li><a href="#" id="main_search_btn" class="user_action_icon"><i class="material-icons md-24 md-light">&#xE8B6;</i></a></li>
+                            <li data-uk-dropdown="{mode:'click',pos:'bottom-right'}">
+                                <a href="#" class="user_action_image">
+                                    <img class="md-user-image" src="assets/img/avatars/3240200322527.png" alt="" /></a>
+                                <div class="uk-dropdown uk-dropdown-small">
+                                    <ul class="uk-nav js-uk-prevent">
+                                        <li><a href="#">My profile</a></li>
+                                        <li><a href="#">Settings</a></li>
+                                        <li><a href="logout.aspx">Logout</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+            <div class="header_main_search_form">
+                <i class="md-icon header_main_search_close material-icons">&#xE5CD;</i>
+                <form class="uk-form">
+                    <input type="text" class="header_main_search_input" />
+                    <button class="header_main_search_btn uk-button-link"><i class="md-icon material-icons">&#xE8B6;</i></button>
+                </form>
+            </div>
+        </header>
+        <!-- main header end -->
+        <!-- main sidebar -->
+        <aside id="sidebar_main">
+
+            <%
+                 string pageName = System.IO.Path.GetFileNameWithoutExtension(Page.AppRelativeVirtualPath);
+                 %>
+
+
+            <div class="sidebar_main_header">
+                <div class="sidebar_logo">
+                    <a href="index.html" class="sSidebar_hide">
+                        <img src="assets/img/logo_niets_small.png" alt=""/></a>
+                    <a href="index.html" class="sSidebar_show">
+                        <img src="assets/img/logo_niets_small.png" alt="" height="32" width="32" /></a>
+                </div>
+            </div>
+
+            <div class="menu_section">
+                <ul>
+                    <li title="หน้าหลัก" <% if (pageName == "Dashboard") Response.Write("class='current_section'"); %>>
+                        <a href="Dashboard.aspx">
+                            <span class="menu_icon"><i class="material-icons">&#xE871;</i></span>
+                            <span class="menu_title">หน้าหลัก </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span class="menu_icon"><i class="material-icons">&#xE2BD;</i></span>
+                            <span class="menu_title">ข้อมูล</span>
+                        </a>
+                        <ul>
+                            <li <% if (pageName == "importdatafactory") Response.Write("class='act_item'"); %>><a href="importdatafactory.aspx">นำเข้าข้อมูล</a></li>
+                            <li <% if (pageName == "exportdatafactory") Response.Write("class='act_item'"); %>><a href="importdatafactory.aspx">ส่งออกข้อมูล</a></li>
+                            <li <% if (pageName == "importomr") Response.Write("class='act_item'"); %>><a href="importomr.aspx">นำเข้าข้อมูล OMR</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+        <!-- main sidebar end -->
+
+        <div id="page_content">
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                
+            </asp:ContentPlaceHolder>
+        </div>
+
+    
+
+    <!-- google web fonts -->
+    <script>
+        WebFontConfig = {
+            google: {
+                families: [
+                    'Source+Code+Pro:400,700:latin',
+                    'Roboto:400,300,500,700,400italic:latin'
+                ]
+            }
+        };
+        (function () {
+            var wf = document.createElement('script');
+            wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+            '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+            wf.type = 'text/javascript';
+            wf.async = 'true';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(wf, s);
+        })();
+    </script>
+
+    <!-- common functions -->
+    <script src="assets/js/common.min.js"></script>
+    <!-- uikit functions -->
+    <script src="assets/js/uikit_custom.js"></script>
+    <!-- altair common functions/helpers -->
+    <script src="assets/js/altair_admin_common.min.js"></script>
+
+
+    <script>
+        $(function () {
+            // enable hires images
+            altair_helpers.retina_images();
+            // fastClick (touch devices)
+            if (Modernizr.touch) {
+                FastClick.attach(document.body);
+            }
+        });
+    </script>
+</body>
+</html>
