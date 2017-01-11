@@ -27,7 +27,6 @@
     <link href="bower_components/sweetalert/sweetalert.css" rel="stylesheet" />
     <script src="bower_components/sweetalert/sweetalert.min.js"></script>
 
-
 </head>
 
 <body  class="login_page">
@@ -57,7 +56,8 @@
         </div>
     </div>
 
-    <!-- common functions -->
+    
+        <!-- common functions -->
     <script src="assets/js/common.js"></script>
     <!-- altair core functions -->
     <script src="assets/js/altair_admin_common.js"></script>
