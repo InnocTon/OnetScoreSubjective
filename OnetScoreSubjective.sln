@@ -3,26 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "OnetScoreSubjective", "..\..\WebSites\OnetScoreSubjective\", "{9679A212-9499-4C88-BF3E-5DA822707D24}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "OnetScoreSubjective", ".", "{D71AEB43-4EE5-487C-8DDE-2982D45E1F12}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5.2"
-		Debug.AspNetCompiler.VirtualPath = "/localhost_23796"
-		Debug.AspNetCompiler.PhysicalPath = "..\..\WebSites\OnetScoreSubjective\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_23796\"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_27665"
+		Debug.AspNetCompiler.PhysicalPath = "..\OnetScoreSubjective\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_27665\"
 		Debug.AspNetCompiler.Updateable = "true"
 		Debug.AspNetCompiler.ForceOverwrite = "true"
 		Debug.AspNetCompiler.FixedNames = "false"
 		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/localhost_23796"
-		Release.AspNetCompiler.PhysicalPath = "..\..\WebSites\OnetScoreSubjective\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_23796\"
+		Release.AspNetCompiler.VirtualPath = "/localhost_27665"
+		Release.AspNetCompiler.PhysicalPath = "..\OnetScoreSubjective\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_27665\"
 		Release.AspNetCompiler.Updateable = "true"
 		Release.AspNetCompiler.ForceOverwrite = "true"
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
-		VWDPort = "23796"
-		SlnRelativePath = "..\..\WebSites\OnetScoreSubjective\"
-		DefaultWebSiteLanguage = "Visual C#"
+		VWDPort = "27665"
+		SlnRelativePath = "..\OnetScoreSubjective\"
 	EndProjectSection
 EndProject
 Global
@@ -30,8 +29,8 @@ Global
 		Debug|Any CPU = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9679A212-9499-4C88-BF3E-5DA822707D24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9679A212-9499-4C88-BF3E-5DA822707D24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D71AEB43-4EE5-487C-8DDE-2982D45E1F12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D71AEB43-4EE5-487C-8DDE-2982D45E1F12}.Debug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
