@@ -6,6 +6,7 @@
      <form id="form1" runat="server">
     <asp:Button ID="Button1" runat="server" Text="Button" OnClick="Button1_Click"/>
     <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
+         <asp:Label ID="Label2" runat="server" Text="Label2"></asp:Label>
          </form>
 </asp:Content>
 
