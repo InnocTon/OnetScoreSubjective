@@ -9,7 +9,7 @@
             <div class="md-card">
                 <div class="md-card-content">
                     <div class="uk-grid uk-grid-divider" data-uk-grid-margin>
-                        <div class="uk-width-large-1-3 uk-width-medium-1-2">
+                        <div class="uk-width-large-1-2 uk-width-medium-1-2">
                             <ul class="md-list md-list-addon">
                                 <li>
                                     <div class="md-list-addon-element">
@@ -40,7 +40,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="uk-width-large-1-3 uk-width-medium-1-2">
+                        <div class="uk-width-large-1-2 uk-width-medium-1-2">
                             <ul class="md-list md-list-addon">
                                 <li>
                                     <div class="md-list-addon-element">
@@ -49,6 +49,24 @@
                                     <div class="md-list-content">
                                         <span class="md-list-heading">ตรวจสอบเลขที่ใบบันทึกคะแนนกับฐานข้อมูล</span>
                                         <span class="uk-text-small uk-text-muted">ตรวจสอบความถูกต้องของเลขที่ใบบันทึกคะแนนกับข้อมูลในฐานข้อมูล</span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="md-list-addon-element">
+                                        <i class="md-list-addon-icon material-icons uk-text-success">&#xE001;</i>
+                                    </div>
+                                    <div class="md-list-content">
+                                        <span class="md-list-heading">ตรวจสอบการบันทึกคะแนนเป็นค่าว่าง</span>
+                                        <span class="uk-text-small uk-text-muted">ตรวจสอบความถูกต้องของคะแนนที่บันทึกเป็นค่าว่าง</span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="md-list-addon-element">
+                                        <i class="md-list-addon-icon material-icons uk-text-success">&#xE001;</i>
+                                    </div>
+                                    <div class="md-list-content">
+                                        <span class="md-list-heading">ตรวจสอบการบันทึกคะแนนเป็นดอกจัน</span>
+                                        <span class="uk-text-small uk-text-muted">ตรวจสอบความถูกต้องของคะแนนที่บันทึกเป็นดอกจัน</span>
                                     </div>
                                 </li>
                             </ul>

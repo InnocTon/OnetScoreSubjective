@@ -23,25 +23,6 @@ public partial class importomr : System.Web.UI.Page
 
     protected void listdirectorybtn_Click(object sender, EventArgs e)
     {
-        /*   DataTable dt = new DataTable();
-           DataColumn dc_no = new DataColumn("NO", typeof(String));
-           DataColumn dc_name = new DataColumn("NAME", typeof(String));
-           DataColumn dc_status = new DataColumn("STATUS", typeof(String));
-
-           dt.Columns.Add(dc_no);
-           dt.Columns.Add(dc_name);
-           dt.Columns.Add(dc_status);
-
-           for (int i = 0; i < 15; i++)
-           {
-               DataRow dr = dt.NewRow();
-               dr["NO"] = i;
-               dt.Rows.Add(dr);
-
-           }
-           GridViewListFile.DataSource = dt;
-           GridViewListFile.DataBind();*/
-
         TableRow row;
         TableCell cellNo;
         TableCell cellName;
@@ -98,7 +79,7 @@ public partial class importomr : System.Web.UI.Page
                 }
 
                 //ตรวจสอบข้อมูลคะแนนเป็นดอกจัน
-           /*     if(ExamKey.Contains("*"))
+                if(ExamKey.Contains("*"))
                 {
                     ispass++;
                     ErrorMessage += "- พบข้อมูลคะแนนเป็นดอกจัน ลำดับที่ : " + SerialNo + " <br/>";
@@ -109,7 +90,7 @@ public partial class importomr : System.Web.UI.Page
                 {
                     ispass++;
                     ErrorMessage += "- พบข้อมูลคะแนนเป็นค่าว่าง ลำดับที่ : " + SerialNo + " <br/>";
-                }*/
+                }
 
                 LithoCodeArray.Add(LithoCode);
                 countline++;
@@ -142,13 +123,6 @@ public partial class importomr : System.Web.UI.Page
             }
 
 
-
-
-
-
-
-
-
             if (ispass == 0)
             {
                 cellStatus.Text = "<button class=\"md-btn md-btn-success\" data-uk-tooltip=\"{cls:'long-text'}\" title=\"" + ErrorMessage + "\">นำเข้าสำเร็จ</button>";
@@ -177,10 +151,6 @@ public partial class importomr : System.Web.UI.Page
         }
 
 
-
-        // GridViewListFile.DataSource = files;
-        // GridViewListFile.DataBind();
-
     }
 
 
@@ -189,7 +159,7 @@ public partial class importomr : System.Web.UI.Page
         int total = 0;
         string packagecode = filename.Substring(0, filename.IndexOf('.'));
         SqlConnection conn = new SqlConnection(connStr);
-        String query = "SELECT COUNT(*) as TOTAL FROM TRN_XM_PAPER WHERE PACKAGE_CODE = @packagecode GROUP BY PACKAGE_CODE";
+        String query = "SELECT PAPER_NUM FROM TRN_XM_PACKAGE WHERE PACKAGE_CODE = @packagecode";
         SqlCommand command = new SqlCommand(query, conn);
         command.Parameters.AddWithValue("@packagecode", packagecode);
         conn.Open();
@@ -198,7 +168,7 @@ public partial class importomr : System.Web.UI.Page
               SqlDataReader reader = command.ExecuteReader();
               while (reader.Read())
               {
-                  total = Convert.ToInt32(reader["TOTAL"].ToString());
+                  total = Convert.ToInt32(reader["PAPER_NUM"].ToString());
               }
 
             reader.Close();

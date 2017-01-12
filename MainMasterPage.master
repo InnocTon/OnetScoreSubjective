@@ -112,17 +112,22 @@
                             <span class="menu_title">หน้าหลัก </span>
                         </a>
                     </li>
-                    <li>
-                        <a href="#">
-                            <span class="menu_icon"><i class="material-icons">&#xE2BD;</i></span>
-                            <span class="menu_title">ข้อมูล</span>
+                    <li title="ข้อมูลจากโรงงาน" <% if (pageName == "importdatafactory") Response.Write("class='current_section'"); %>>
+                        <a href="importdatafactory.aspx">
+                            <span class="menu_icon"><i class="material-icons">&#xE0AF;</i></span>
+                            <span class="menu_title">ข้อมูลจากโรงงาน</span>
                         </a>
-                        <ul>
-                            <li <% if (pageName == "importdatafactory") Response.Write("class='act_item'"); %>><a href="importdatafactory.aspx">นำเข้าข้อมูล</a></li>
-                            <li <% if (pageName == "exportdatafactory") Response.Write("class='act_item'"); %>><a href="importdatafactory.aspx">ส่งออกข้อมูล</a></li>
-                            <li <% if (pageName == "importomr") Response.Write("class='act_item'"); %>><a href="importomr.aspx">นำเข้าข้อมูล OMR</a></li>
-                        </ul>
                     </li>
+                    <li title="ข้อมูลคะแนนจากการอ่าน OMR"  <% if (pageName == "importomr") Response.Write("class='current_section'"); %>>
+                        <a href="importomr.aspx">
+                            <span class="menu_icon"><i class="material-icons">&#xE3EA;</i></span>
+                            <span class="menu_title">ข้อมูลคะแนน</span>
+                        </a>
+                    </li>
+
+
+
+                    
                 </ul>
             </div>
         </aside>
