@@ -11,7 +11,7 @@ public partial class MainMasterPage : System.Web.UI.MasterPage
     {
         if (Session["USER_NAME"] == null)
         {
-           // Response.Redirect("default.aspx");
+           Response.Redirect("default.aspx");
         }
     }
 }
