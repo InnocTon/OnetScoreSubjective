@@ -1,6 +1,7 @@
 ﻿$(function () {
     // datatables
     altair_datatables.dt_individual_search();
+
 });
 
 altair_datatables = {
@@ -31,6 +32,8 @@ altair_datatables = {
                 });
             });
 
+            
+            
         }
     }
 };

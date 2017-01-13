@@ -1,13 +1,15 @@
-$(function() {
+﻿$(function () {
 
-    if(Modernizr.touch) {
+    
+
+    if (Modernizr.touch) {
         // make table cell focusable
         var $focus_highlight = $('.focus-highlight');
-        if ( $focus_highlight.length ) {
+        if ($focus_highlight.length) {
             $focus_highlight
                 .find('td, th')
                 .attr('tabindex', '1')
-                .on('touchstart', function() {
+                .on('touchstart', function () {
                     $(this).focus();
                 });
         }
@@ -15,16 +17,39 @@ $(function() {
         $('.tablesorter').find('th').addClass('needsclick');
     }
 
-    // pager + filters
-	altair_tablesorter.pager_filter_example();
-    // align widget example
-	altair_tablesorter.align_widget_example();
+    // list view
+    altair_issues.list_view();
+
+
+
+    altair_form_validation.init();
+
 });
 
-altair_tablesorter = {
-    pager_filter_example: function() {
 
-        var $ts_pager_filter = $("#ts_pager_filter");
+// validation (parsley)
+altair_form_validation = {
+    init: function () {
+        var $formValidate = $('#form_validation');
+
+        $formValidate
+            .parsley()
+            .on('form:validated', function () {
+                altair_md.update_input($formValidate.find('.md-input-danger'));
+            })
+            .on('field:validated', function (parsleyField) {
+                if ($(parsleyField.$element).hasClass('md-input')) {
+                    altair_md.update_input($(parsleyField.$element));
+                }
+            });
+    }
+};
+
+
+altair_issues = {
+    list_view: function () {
+
+        var $ts_issues = $("#ts_issues");
 
         // define pager options
         var pagerOptions = {
@@ -43,23 +68,17 @@ altair_tablesorter = {
         };
 
         // Initialize tablesorter
-        var ts_users = $ts_pager_filter
+        var ts_users = $ts_issues
             .tablesorter({
                 theme: 'altair',
                 widthFixed: true,
-                widgets: ['zebra', 'filter'],
-                headers: {
-                    0: {
-                        sorter: false,
-                        parser: false
-                    }
-                }
+                widgets: ['zebra', 'filter']
             })
             // initialize the pager plugin
             .tablesorterPager(pagerOptions)
-            .on('pagerComplete', function(e, filter){
+            .on('pagerComplete', function (e, filter) {
                 // update selectize value
-                if(typeof selectizeObj !== 'undefined' && selectizeObj.data('selectize')) {
+                if (typeof selectizeObj !== 'undefined' && selectizeObj.data('selectize')) {
                     selectizePage = selectizeObj[0].selectize;
                     selectizePage.setValue($('select.ts_gotoPage option:selected').index() + 1, false);
                 }
@@ -73,22 +92,21 @@ altair_tablesorter = {
                 .after('<div class="selectize_fix"></div>')
                 .selectize({
                     hideSelected: true,
-                    onDropdownOpen: function($dropdown) {
+                    onDropdownOpen: function ($dropdown) {
                         $dropdown
                             .hide()
                             .velocity('slideDown', {
-                                duration: 200,
+                                duration: 280,
                                 easing: easing_swiftOut
                             })
                     },
-                    onDropdownClose: function($dropdown) {
+                    onDropdownClose: function ($dropdown) {
                         $dropdown
                             .show()
                             .velocity('slideUp', {
-                                duration: 200,
+                                duration: 280,
                                 easing: easing_swiftOut
                             });
-
                         // hide tooltip
                         $('.uk-tooltip').hide();
                     }
@@ -101,30 +119,29 @@ altair_tablesorter = {
             .after('<div class="selectize_fix"></div>')
             .selectize({
                 hideSelected: true,
-                onDropdownOpen: function($dropdown) {
+                onDropdownOpen: function ($dropdown) {
                     $dropdown
                         .hide()
                         .velocity('slideDown', {
-                            duration: 200,
+                            duration: 280,
                             easing: easing_swiftOut
                         })
                 },
-                onDropdownClose: function($dropdown) {
+                onDropdownClose: function ($dropdown) {
                     $dropdown
                         .show()
                         .velocity('slideUp', {
-                            duration: 200,
+                            duration: 280,
                             easing: easing_swiftOut
                         });
 
                     // hide tooltip
                     $('.uk-tooltip').hide();
-
-                    if(typeof selectizeObj !== 'undefined' && selectizeObj.data('selectize')) {
+                    if (typeof selectizeObj !== 'undefined' && selectizeObj.data('selectize')) {
                         selectizePage = selectizeObj[0].selectize;
                         selectizePage.destroy();
                         $('.ts_gotoPage').next('.selectize_fix').remove();
-                        setTimeout(function() {
+                        setTimeout(function () {
                             createPageSelectize()
                         })
                     }
@@ -132,70 +149,5 @@ altair_tablesorter = {
                 }
             });
 
-        // select/unselect table rows
-        $('.ts_checkbox_all')
-            .iCheck({
-                checkboxClass: 'icheckbox_md',
-                radioClass: 'iradio_md',
-                increaseArea: '20%'
-            })
-            .on('ifChecked',function() {
-                $ts_pager_filter
-                    .find('.ts_checkbox')
-                    // check all checkboxes in table
-                    .prop('checked',true)
-                    .iCheck('update')
-                    // add highlight to row
-                    .closest('tr')
-                    .addClass('row_highlighted');
-            })
-            .on('ifUnchecked',function() {
-                $ts_pager_filter
-                    .find('.ts_checkbox')
-                    // uncheck all checkboxes in table
-                    .prop('checked',false)
-                    .iCheck('update')
-                    // remove highlight from row
-                    .closest('tr')
-                    .removeClass('row_highlighted');
-            });
-
-        // select/unselect table row
-        $ts_pager_filter.find('.ts_checkbox')
-            .on('ifUnchecked',function() {
-                $(this).closest('tr').removeClass('row_highlighted');
-                $('.ts_checkbox_all').prop('checked',false).iCheck('update');
-            }).on('ifChecked',function() {
-                $(this).closest('tr').addClass('row_highlighted');
-            });
-
-        // remove single row
-        $ts_pager_filter.on('click','.ts_remove_row',function(e) {
-            e.preventDefault();
-
-            var $this = $(this);
-            UIkit.modal.confirm('Are you sure you want to delete this user?', function(){
-                $this.closest('tr').remove();
-                ts_users.trigger('update');
-            }, {
-                labels: {
-                    'Ok': 'Delete'
-                }
-            });
-        });
-
-    },
-    align_widget_example: function() {
-        $('#ts_align')
-            .tablesorter({
-                theme: 'altair',
-                widgets: ['zebra', 'alignChar'],
-                widgetOptions : {
-                    alignChar_wrap         : '<i/>',
-                    alignChar_charAttrib   : 'data-align-char',
-                    alignChar_indexAttrib  : 'data-align-index',
-                    alignChar_adjustAttrib : 'data-align-adjust' // percentage width adjustments
-                }
-            });
     }
 };
