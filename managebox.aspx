@@ -110,8 +110,8 @@
                          <div class="uk-grid" data-uk-grid-margin>
                             <div class="uk-width-medium-2-2">
                                 <div class="parsley-row">
-                                    <label for="fullname">Full Name<span class="req">*</span></label>
-                                    <input type="text" name="fullname" required="required" class="md-input" data-required-message="Please insert your name" parsley-error-message="Please insert your name" />
+                                    <label for="boxcodetxt">รหัสกล่อง<span class="req">*</span></label>
+                                    <input type="text" name="boxcodetxt" id="boxcodetxt" required="required" class="md-input" data-required-message="กรุณากรอกรหัสกล่อง" parsley-error-message="กรุณากรอกรหัสกล่อง" runat="server" />
                                 </div>
                             </div>
                         </div>
@@ -119,8 +119,8 @@
                          <div class="uk-grid" data-uk-grid-margin>
                             <div class="uk-width-medium-2-2">
                                 <div class="parsley-row">
-                                    <label for="email">Email<span class="req">*</span></label>
-                                    <input type="email" name="email" data-parsley-trigger="change" required  class="md-input" />
+                                    <label for="ratercodetxt">รหัสเจ้าหน้าที่<span class="req">*</span></label>
+                                    <input type="text" name="usercodetxt" id="usercodetxt"  required  class="md-input" runat="server" data-required-message="กรุณากรอกรหัสเจ้าหน้าที่" parsley-error-message="กรุณากรอกรหัสเจ้าหน้าที่" />
                                 </div>
                             </div>
                         </div>
@@ -133,6 +133,7 @@
                     </div>
             </form>
         </div>
+    </div>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
 
@@ -147,6 +148,23 @@
     <script>
         // load parsley config (altair_admin_common.js)
         altair_forms.parsley_validation_config();
+        //Modal
+        $('.uk-modal').on({
+
+            'show.uk.modal': function () {
+              //  console.log("Modal is visible.");
+            },
+
+            'hide.uk.modal': function () {
+                console.log("Element is not visible.");
+                $("#<%=boxcodetxt.ClientID%>").val('');
+                $("#<%=usercodetxt.ClientID%>").val('');
+                $('#form_validation').parsley().reset();
+            }
+        });
+
+
+
     </script>
     <script src="bower_components/parsleyjs/dist/parsley.js"></script>
     <!--  issues list functions -->

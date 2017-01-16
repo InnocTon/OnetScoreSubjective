@@ -46,6 +46,8 @@ altair_form_validation = {
 };
 
 
+
+
 altair_issues = {
     list_view: function () {
 
