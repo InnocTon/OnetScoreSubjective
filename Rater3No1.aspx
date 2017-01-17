@@ -40,7 +40,7 @@
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
-    
+    @serverinfo.gethtml()
     <div class="md-card uk-margin-medium-bottom">
                 <div class="md-card-content">
                     <div id="vmaps_world_connected" class="vm_wrapper uk-text-center main-print">

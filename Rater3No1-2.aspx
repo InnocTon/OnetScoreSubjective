@@ -230,11 +230,74 @@
 
         $("#score_submit").click(function (e) {
             e.preventDefault();
-            var form_serialized = JSON.stringify($("#score_form").serializeObject(), null, 2);
-            UIkit.modal.alert('<p>Product data:</p><pre>' + form_serialized + '</pre>');
+            // if radio hv checked
+            var ischeck = 0;
+            if ($('input:radio[name=score1_1]').is(':checked')) {
+                ischeck++;
+            }
+            if ($('input:radio[name=score1_2]').is(':checked')) {
+                ischeck++;
+            }
+            if ($('input:radio[name=score2_1]').is(':checked')) {
+                ischeck++;
+            }
+            if ($('input:radio[name=score2_2]').is(':checked')) {
+                ischeck++;
+            }
+            if ($('input:radio[name=score3_1]').is(':checked')) {
+                ischeck++;
+            }
+            if ($('input:radio[name=score3_2]').is(':checked')) {
+                ischeck++;
+            }
+            if ($('input:radio[name=score3_3]').is(':checked')) {
+                ischeck++;
+            }
+            if ($('input:radio[name=score3_4]').is(':checked')) {
+                ischeck++;
+            }
+            //alert(ischeck);
+            if (ischeck == 8) {
+                //var form_serialized = JSON.stringify($("#score_form").serializeObject(), null, 2);
+                var scoreValue = $("#score_form").serializeObject();
+                //UIkit.modal.alert('<p>Score:</p><pre>' + scoreValue.score1_1 + '</pre>');
+                var sumScore = Number(scoreValue.score1_1) + Number(scoreValue.score1_2) + Number(scoreValue.score2_1) + Number(scoreValue.score2_2) + Number(scoreValue.score3_1) + Number(scoreValue.score3_2) + Number(scoreValue.score3_3) + Number(scoreValue.score3_4);
+                UIkit.modal.confirm('<div><p>ยืนยันการให้คะแนน :</p><pre><table style="border:0px;" align="center">' +
+                    '<tr><td>๑.๑ ความยาว :</td><td>' + scoreValue.score1_1 +
+                    '</td><tr><td>๑.๒ เขียนเรื่อง :</td><td>' + scoreValue.score1_2 +
+                    '</td><tr><td>๒.๑ แนวคิด :</td><td>' + scoreValue.score2_1 +
+                    '</td><tr><td>๒.๒ ลำดับ :</td><td>' + scoreValue.score2_2 +
+                    '</td><tr><td>๓.๑ สะกด :</td><td>' + scoreValue.score3_1 +
+                    '</td><tr><td>๓.๒ การใช้คำ :</td><td>' + scoreValue.score3_2 +
+                    '</td><tr><td>๓.๓ ประโยค :</td><td>' + scoreValue.score3_3 +
+                    '</td><tr><td>๓.๔ วรรคตอน :</td><td>' + scoreValue.score3_4 +
+                    '</td><tr><td><strong>คะแนนรวม :<strong></td><td><strong>' + sumScore +
+                    '</strong></td></tr></table></pre></div>',
+                    function () {
+                        $.ajax({
+                            type: "POST",
+                            url: "Default.aspx/GetDate",
+                            data: { score: scoreValue },
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (msg) {
+                                // Replace the div's content with the page method's return.
+                                //$("#Result").text(msg.d);
+                                alert("C");
+                            }
+                        });
+                        //UIkit.modal.alert('Confirmed!');
+                    }
+                    );
+            } else {
+                UIkit.modal.alert('<p> กรุณาให้คะแนนให้ครบทุกเกณฑ์การตรวจ !!</p>');
+            }
+            
             //UIkit.modal.alert('<p>Product data:</p><pre>xx</pre>');
             //alert('1');
             //UIkit.modal.alert('Attention!');
         });
+
+        
     </script>
 </asp:Content>
