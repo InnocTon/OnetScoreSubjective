@@ -28,35 +28,85 @@ public partial class managebox : System.Web.UI.Page
         //  showMessage("test", boxcodetxt.Value.ToString(), "error");
         String boxcode = boxcodetxt.Value.ToString();
         String usercode = usercodetxt.Value.ToString();
+        String actionstatus = boxaction.Value.ToString();
+
 
         // CHECK BOX CODE in DB
-        Boolean StatusBox = CheckBoxStatus(boxcode);
+        Boolean StatusBox = CheckBoxStatus(boxcode, actionstatus);
         Boolean StatusUser = CheckUserStatus(usercode);
 
         if(StatusBox && StatusUser)
         {
 
             SqlConnection conn = new SqlConnection(connStr);
+            SqlTransaction trans = null;
             try
             {
+
+                String box_status = "N";
+
+                switch (actionstatus)
+                {
+                    case "borrow": box_status = "B"; break;
+                    case "return": box_status = "N"; break;
+                }
+
                 conn.Open();
-                String query = "UPDATE TRN_XM_BOX SET [OWNER_BY] = @usercode, [OWNER_DATETIME] = getdate() WHERE [BOX_CODE] = @boxcode";
+                trans = conn.BeginTransaction();
+
+                String query = "UPDATE TRN_XM_BOX SET BOX_STATUS = @boxstatus,UPDATE_BY = @updateby,UPDATE_DATETIME = getdate() WHERE [BOX_CODE] = @boxcode;";
                 SqlCommand command = new SqlCommand(query, conn);
                 command.Parameters.AddWithValue("@boxcode", boxcode);
-                command.Parameters.AddWithValue("@usercode", usercode);
+                command.Parameters.AddWithValue("@boxstatus", box_status);
+                command.Parameters.AddWithValue("@updateby", Session["USER_ID"].ToString());
+                command.Transaction = trans;
                 int result = command.ExecuteNonQuery();
                 if(result == 1)
                 {
-                    showMessage("สำเร็จ", "บันทึกข้อมูลการรับกล่องเรียบร้อยแล้ว", "success");
+
+                    query = "INSERT INTO[TRN_XM_BOX_ACTION]([BOX_CODE],[OWNER_BY],[OWNER_DATETIME],[ACT_STATUS],[CREATE_BY],[CREATE_DATETIME])  VALUES(@boxcode,@ownerby,getdate(),@actstatus,@createby,getdate());";
+                    command = new SqlCommand(query, conn);
+                    command.Parameters.AddWithValue("@boxcode", boxcode);
+                    command.Parameters.AddWithValue("@ownerby", usercode);
+                    command.Parameters.AddWithValue("@actstatus", actionstatus);
+                    command.Parameters.AddWithValue("@createby", Session["USER_ID"].ToString());
+                    command.Transaction = trans;
+                    result = command.ExecuteNonQuery();
+
+                    if(result == 1)
+                    {
+                        trans.Commit();
+                        showMessage("สำเร็จ", "บันทึกข้อมูลการรับ-ส่งกล่องเรียบร้อยแล้ว", "success");
+                        boxcodetxt.Value = "";
+                        usercodetxt.Value = "";
+                        boxaction.Value = "";
+                    }
+                    else
+                    {
+                        trans.Rollback();
+                        showMessage("ผิดพลาด", "ไม่สามารถบันทึกข้อมูลการรับ-ส่งกล่องได้", "error");
+                    }
+
+                   
+
+
+                    
                 }
                 else
                 {
+                    trans.Rollback();
                     showMessage("ข้อผิดพลาด!","เกิดความผิดพลาดในการรับกล่อง. กรุณาลองใหม่อีกครั้ง!", "error");
                 }
+
+
+                conn.Close();
+
             }
             catch(Exception ex)
             {
+                trans.Rollback();
                 showMessage("ข้อผิดพลาด!", ex.Message, "error");
+                
             }
             finally
             {
@@ -71,37 +121,51 @@ public partial class managebox : System.Web.UI.Page
 
     }
 
-    private Boolean CheckBoxStatus(String boxcode)
+    private Boolean CheckBoxStatus(String boxcode,String actionstatus)
     {
         Boolean StatusBox = true;
         SqlConnection conn = new SqlConnection(connStr);
         try
         {
             conn.Open();
-            String query = "SELECT * FROM TRN_XM_BOX WHERE BOX_CODE = @boxcode AND BOX_STATUS = 'N'";
+            String query = "SELECT * FROM TRN_XM_BOX WHERE BOX_CODE = @boxcode AND BOX_STATUS != 'C'";
             SqlCommand command = new SqlCommand(query, conn);
             command.Parameters.AddWithValue("@boxcode", boxcode);
             SqlDataReader reader = command.ExecuteReader();
-            String owner = "";
-            String boxseq = "";
+            String bstatus = "";
+            String bseq = "";
             while (reader.Read())
             {
-                owner = reader["OWNER_BY"].ToString();
-                boxseq = reader["BOX_SEQ"].ToString();
+                bstatus = reader["BOX_STATUS"].ToString();
+                bseq = reader["BOX_SEQ"].ToString();
+
             }
 
 
 
-            if (boxseq == "")
+
+            if (bseq == "")
             {
                 showMessage("คำเตือน!", "ไม่พบกล่องใบนี้ในฐานข้อมูล", "warning");
                 StatusBox = false;
             }
-            else if (owner != "")
+            else
             {
-                showMessage("คำเตือน!", "กล่องใบนี้ได้ถูกนำออกจากห้องมั่นคงเรียบร้อยแล้ว โดย " + owner, "warning");
-                StatusBox = false;
+                if(actionstatus == "borrow" && bstatus != "N")
+                {
+                    showMessage("คำเตือน!", "สถานะกล่องใบนี้ไม่อยู่ในห้องมั่นคง", "warning");
+                    StatusBox = false;
+                }
+
+                if(actionstatus == "return" && bstatus != "B")
+                {
+                    showMessage("คำเตือน!", "สถานะกล่องใบนี้อยู่ในห้องมั่นคงอยู่แล้ว", "warning");
+                    StatusBox = false;
+                }
             }
+
+            reader.Close();
+            conn.Close();
         }
         catch (Exception ex)
         {
@@ -139,6 +203,9 @@ public partial class managebox : System.Web.UI.Page
                 showMessage("คำเตือน!", "ไม่พบรายชื่อเจ้าหน้าที่ในฐานข้อมูล", "warning");
                 StatusUser = false;
             }
+
+            reader.Close();
+            conn.Close();
         }
         catch (Exception ex)
         {

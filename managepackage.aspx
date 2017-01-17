@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MainMasterPage.master" AutoEventWireup="true" CodeFile="managebox.aspx.cs" Inherits="managebox" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MainMasterPage.master" AutoEventWireup="true" CodeFile="managepackage.aspx.cs" Inherits="managepackage" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
 </asp:Content>
@@ -9,9 +9,10 @@
             <a href="#" data-uk-tooltip="{pos:'bottom'}" title="พิมพ์"><i class="md-icon material-icons">&#xE8AD;</i></a>
             <a href="#" data-uk-tooltip="{pos:'bottom'}" title="รับ-ส่ง" id="sendrecivebtn" data-uk-modal="{target:'#modal_send_recive'}"><i class="md-icon material-icons">&#xE03C;</i></a>
         </div>
-        <h1><i class="material-icons">&#xE80D;</i> รับ-ส่ง กล่องใบบันทึกคะแนนอัตนัย</h1>
-        <span class="uk-text-upper uk-text-small">ข้อมูลรับ-ส่งกล่องบรรจุใบบันทึกคะแนนอัตนัย</span>
+        <h1><i class="material-icons">&#xE80D;</i> รับ-ส่ง ซองบรรจุใบบันทึกคะแนนอัตนัย</h1>
+        <span class="uk-text-upper uk-text-small">ข้อมูลรับ-ส่งซองบรรจุใบบันทึกคะแนนอัตนัย</span>
     </div>
+
 
     <div id="page_content_inner">
         <div class="md-card">
@@ -22,18 +23,21 @@
                             <tr>
                                 <th class="uk-text-center">ลำดับที่</th>
                                 <th>รหัสกล่อง</th>
-                                <th>จำนวนซอง</th>
-                                <th>สถานะกล่อง</th>
+                                <th>รหัสซอง</th>
+                                <th>จำนวนกระดาษ</th>
+                                <th>สถานะซอง</th>
                             </tr>
                         </thead>
                         <tbody>
                             <%
+
                                 string connStr = ConfigurationManager.ConnectionStrings["SqlConnectionString"].ConnectionString;
                                 System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(connStr);
 
                                 try
                                 {
-                                    String query = "SELECT bx.*,bstatus.BSTATUS_NAME FROM [TRN_XM_BOX] bx INNER JOIN [dbo].[MST_BOX_STATUS] bstatus ON bstatus.[BSTATUS_CODE] = bx.BOX_STATUS ORDER BY bx.BOX_SEQ";
+                                    String query = "  SELECT PACKAGE_CODE,PACK.BOX_CODE,PAPER_NUM,PSTATUS_NAME,PACKAGE_STATUS FROM [dbo].[TRN_XM_PACKAGE] PACK INNER JOIN  [dbo].MST_PACKAGE_STATUS PSTATUS ON PACK.PACKAGE_STATUS = PSTATUS.PSTATUS_CODE INNER JOIN [dbo].[TRN_XM_BOX] BOX ON BOX.BOX_CODE = PACK.BOX_CODE";
+
                                     System.Data.SqlClient.SqlCommand command = new System.Data.SqlClient.SqlCommand(query, conn);
                                     conn.Open();
                                     System.Data.SqlClient.SqlDataReader reader = command.ExecuteReader();
@@ -43,20 +47,22 @@
 
                                         String status_style = "";
 
-
-                                        if (reader["BOX_STATUS"].ToString() == "N") status_style = "uk-badge uk-badge-primary";
+                                        if (reader["PACKAGE_STATUS"].ToString() == "N") status_style = "uk-badge uk-badge-primary";
                                         else status_style = "uk-badge uk-badge-warning";
+                                      
 
                                         i++;
                             %>
                             <tr>
                                 <td class="uk-text-center"><span class="uk-text-small uk-text-muted uk-text-nowrap"><% Response.Write(i.ToString()); %></span></td>
                                 <td><% Response.Write(reader["BOX_CODE"].ToString()); %></td>
-                                <td><% Response.Write(reader["PACKAGE_NUM"].ToString()); %></td>
-                                <td><span class="<% Response.Write(status_style); %>"><% Response.Write(reader["BSTATUS_NAME"].ToString()); %></span></td>
+                                <td><% Response.Write(reader["PACKAGE_CODE"].ToString()); %></td>
+                                <td><% Response.Write(reader["PAPER_NUM"].ToString()); %></td>
+                                <td><span class="<% Response.Write(status_style); %>"><% Response.Write(reader["PSTATUS_NAME"].ToString()); %></span></td>
                             </tr>
                             <%
                                     }
+
                                     reader.Close();
                                     conn.Close();
                                 }
@@ -101,37 +107,38 @@
     <div class="uk-modal" id="modal_send_recive">
         <div class="uk-modal-dialog">
             <div class="uk-modal-header">
-                <h3 class="uk-modal-title">แบบฟอร์ม รับ-ส่ง กล่องบรรจุใบบันทึกคะแนนอัตนัย</h3>
+                <h3 class="uk-modal-title">แบบฟอร์ม รับ-ส่ง ซองใบบันทึกคะแนนอัตนัย</h3>
             </div>
             <form id="form_validation" class="uk-form-stacked" runat="server" autocomplete="off">
                 <div class="uk-width-medium-3-3">
                     <div class="uk-form-row">
-                        
-                         <div class="uk-grid" data-uk-grid-margin>
+
+                        <div class="uk-grid" data-uk-grid-margin>
                             <div class="uk-width-medium-2-2">
                                 <div class="parsley-row">
-                                    <label for="boxcodetxt">รหัสกล่อง</label>
-                                    <input type="text" name="boxcodetxt" id="boxcodetxt" required="required" class="md-input" data-required-message="กรุณากรอกรหัสกล่อง" parsley-error-message="กรุณากรอกรหัสกล่อง" runat="server" />
+                                    <label for="boxcodetxt">รหัสซอง</label>
+                                    <input type="text" name="packagecodetxt" id="packagecodetxt" required="required" class="md-input" data-required-message="กรุณากรอกรหัสกล่อง" parsley-error-message="กรุณากรอกรหัสกล่อง" runat="server" />
                                 </div>
                             </div>
                         </div>
 
-                         <div class="uk-grid" data-uk-grid-margin>
+                        <div class="uk-grid" data-uk-grid-margin>
                             <div class="uk-width-medium-2-2">
                                 <div class="parsley-row">
-                                    <label for="ratercodetxt">รหัสเจ้าหน้าที่</label>
-                                    <input type="text" name="usercodetxt" id="usercodetxt"  required  class="md-input" runat="server" data-required-message="กรุณากรอกรหัสเจ้าหน้าที่" parsley-error-message="กรุณากรอกรหัสเจ้าหน้าที่" />
+                                    <label for="ratercodetxt">รหัสผู้ตรวจ</label>
+                                    <input type="text" name="ratercodetxt" id="ratercodetxt" required class="md-input" runat="server" data-required-message="กรุณากรอกรหัสผู้ตรวจ" parsley-error-message="กรุณากรอกรหัสผู้ตรวจ" />
                                 </div>
                             </div>
                         </div>
 
-                         <div class="uk-grid" data-uk-grid-margin>
+                        <div class="uk-grid" data-uk-grid-margin>
                             <div class="uk-width-medium-2-2">
                                 <div class="parsley-row">
-                                    <select id="boxaction" name="boxaction" runat="server" required class="md-input" data-required-message="กรุณาเลือกสถานะกล่อง" parsley-error-message="กรุณาเลือกสถานะกล่อง">
-                                        <option value="">กรุณาเลือกสถานะกล่อง</option>
-                                        <option value="borrow">เบิกกล่องส่งตรวจ</option>
-                                        <option value="return">ส่งกล่องคืนห้องมั่นคง</option>
+                                    <select id="boxaction" name="boxaction" runat="server" required class="md-input" data-required-message="กรุณาเลือกสถานะซอง" parsley-error-message="กรุณาเลือกสถานะซอง">
+                                        <option value="">กรุณาเลือกสถานะซอง</option>
+                                        <option value="rater">ผู้ตรวจรับซอง</option>
+                                        <option value="return">ผู้ตรวจส่งซองคืน</option>
+                                        <option value="omr">ส่งห้องอ่าน OMR</option>
                                     </select>
                                 </div>
                             </div>
@@ -146,10 +153,12 @@
             </form>
         </div>
     </div>
+
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
 
-    <!-- page specific plugins -->
+
+     <!-- page specific plugins -->
     <!-- tablesorter -->
     <script src="bower_components/tablesorter/dist/js/jquery.tablesorter.min.js"></script>
     <script src="bower_components/tablesorter/dist/js/jquery.tablesorter.widgets.min.js"></script>
@@ -168,9 +177,9 @@
             },
 
             'hide.uk.modal': function () {
-        //        console.log("Element is not visible.");
-                $("#<%=boxcodetxt.ClientID%>").val('');
-                $("#<%=usercodetxt.ClientID%>").val('');
+               // console.log("Element is not visible.");
+                $("#<%=packagecodetxt.ClientID%>").val('');
+                $("#<%=ratercodetxt.ClientID%>").val('');
                 $("#<%=boxaction.ClientID%>").val('');
                 $('#form_validation').parsley().reset();
 
@@ -183,9 +192,7 @@
     </script>
     <script src="bower_components/parsleyjs/dist/parsley.js"></script>
     <!--  issues list functions -->
-    <script src="assets/js/pages/managebox.js"></script>
-
-
+    <script src="assets/js/pages/managepackage.js"></script>
 
 
 

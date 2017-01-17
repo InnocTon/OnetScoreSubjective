@@ -27,9 +27,10 @@ public partial class _Default : System.Web.UI.Page
         SqlCommand command = new SqlCommand(query, conn);
         command.Parameters.AddWithValue("@user", user);
         command.Parameters.AddWithValue("@pass", pass);
-        conn.Open();
+       
         try
         {
+            conn.Open();
             String USER_NAME = String.Empty;
             String USER_TYPE = String.Empty;
             String USER_ID = String.Empty;
