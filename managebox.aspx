@@ -24,6 +24,7 @@
                                 <th>รหัสกล่อง</th>
                                 <th>จำนวนซอง</th>
                                 <th>สถานะกล่อง</th>
+                                <th>สถานะซอง</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -33,7 +34,15 @@
 
                                 try
                                 {
-                                    String query = "SELECT bx.*,bstatus.BSTATUS_NAME FROM [TRN_XM_BOX] bx INNER JOIN [dbo].[MST_BOX_STATUS] bstatus ON bstatus.[BSTATUS_CODE] = bx.BOX_STATUS ORDER BY bx.BOX_SEQ";
+                                    String query = "  SELECT bx.*,bstatus.BSTATUS_NAME,PSTATUS.NUMP FROM [TRN_XM_BOX] bx  " +
+"  INNER JOIN [dbo].[MST_BOX_STATUS] bstatus ON bstatus.[BSTATUS_CODE] = bx.BOX_STATUS " +
+"  LEFT JOIN (  " +
+"	  SELECT BOX_CODE,  " +
+"	  SUM(CASE WHEN PACKAGE_STATUS = 'F' THEN 1 ELSE 0 END) AS NUMP  " +
+"	  FROM TRN_XM_PACKAGE  " +
+"	  GROUP BY BOX_CODE  " +
+"  )PSTATUS ON PSTATUS.BOX_CODE = bx.BOX_CODE  " +
+"  ORDER BY bx.BOX_SEQ";
                                     System.Data.SqlClient.SqlCommand command = new System.Data.SqlClient.SqlCommand(query, conn);
                                     conn.Open();
                                     System.Data.SqlClient.SqlDataReader reader = command.ExecuteReader();
@@ -42,10 +51,19 @@
                                     {
 
                                         String status_style = "";
+                                        String pstatus_style = "";
 
 
-                                        if (reader["BOX_STATUS"].ToString() == "N") status_style = "uk-badge uk-badge-primary";
+                                        if (reader["BOX_STATUS"].ToString() == "N") status_style = "uk-badge uk-badge-success";
                                         else status_style = "uk-badge uk-badge-warning";
+
+                                        if(reader["NUMP"].ToString() == reader["PACKAGE_NUM"].ToString())
+                                        {
+                                            pstatus_style = "<span class='uk-badge uk-badge-success'>เสร็จแล้ว ("+ reader["NUMP"].ToString() +"/"+reader["PACKAGE_NUM"].ToString() +")</span>";
+                                        }else
+                                        {
+                                             pstatus_style = "<span class='uk-badge uk-badge-danger'>ยังไม่แล้วเสร็จ ("+ reader["NUMP"].ToString() +"/"+reader["PACKAGE_NUM"].ToString() +")</span>";
+                                        }
 
                                         i++;
                             %>
@@ -54,6 +72,7 @@
                                 <td><% Response.Write(reader["BOX_CODE"].ToString()); %></td>
                                 <td><% Response.Write(reader["PACKAGE_NUM"].ToString()); %></td>
                                 <td><span class="<% Response.Write(status_style); %>"><% Response.Write(reader["BSTATUS_NAME"].ToString()); %></span></td>
+                                <td><% Response.Write(pstatus_style); %></td>
                             </tr>
                             <%
                                     }
@@ -106,8 +125,8 @@
             <form id="form_validation" class="uk-form-stacked" runat="server" autocomplete="off">
                 <div class="uk-width-medium-3-3">
                     <div class="uk-form-row">
-                        
-                         <div class="uk-grid" data-uk-grid-margin>
+
+                        <div class="uk-grid" data-uk-grid-margin>
                             <div class="uk-width-medium-2-2">
                                 <div class="parsley-row">
                                     <label for="boxcodetxt">รหัสกล่อง</label>
@@ -116,16 +135,16 @@
                             </div>
                         </div>
 
-                         <div class="uk-grid" data-uk-grid-margin>
+                        <div class="uk-grid" data-uk-grid-margin>
                             <div class="uk-width-medium-2-2">
                                 <div class="parsley-row">
                                     <label for="ratercodetxt">รหัสเจ้าหน้าที่</label>
-                                    <input type="text" name="usercodetxt" id="usercodetxt"  required  class="md-input" runat="server" data-required-message="กรุณากรอกรหัสเจ้าหน้าที่" parsley-error-message="กรุณากรอกรหัสเจ้าหน้าที่" />
+                                    <input type="text" name="usercodetxt" id="usercodetxt" required class="md-input" runat="server" data-required-message="กรุณากรอกรหัสเจ้าหน้าที่" parsley-error-message="กรุณากรอกรหัสเจ้าหน้าที่" />
                                 </div>
                             </div>
                         </div>
 
-                         <div class="uk-grid" data-uk-grid-margin>
+                        <div class="uk-grid" data-uk-grid-margin>
                             <div class="uk-width-medium-2-2">
                                 <div class="parsley-row">
                                     <select id="boxaction" name="boxaction" runat="server" required class="md-input" data-required-message="กรุณาเลือกสถานะกล่อง" parsley-error-message="กรุณาเลือกสถานะกล่อง">
@@ -164,11 +183,11 @@
         $('.uk-modal').on({
 
             'show.uk.modal': function () {
-              //  console.log("Modal is visible.");
+                //  console.log("Modal is visible.");
             },
 
             'hide.uk.modal': function () {
-        //        console.log("Element is not visible.");
+                //        console.log("Element is not visible.");
                 $("#<%=boxcodetxt.ClientID%>").val('');
                 $("#<%=usercodetxt.ClientID%>").val('');
                 $("#<%=boxaction.ClientID%>").val('');

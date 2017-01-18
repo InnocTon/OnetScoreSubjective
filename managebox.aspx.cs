@@ -87,9 +87,7 @@ public partial class managebox : System.Web.UI.Page
                         showMessage("ผิดพลาด", "ไม่สามารถบันทึกข้อมูลการรับ-ส่งกล่องได้", "error");
                     }
 
-                   
-
-
+                  
                     
                 }
                 else

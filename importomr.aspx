@@ -98,3 +98,27 @@
     </form>
 </asp:Content>
 
+<asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
+
+
+     <!-- page specific plugins -->
+
+    <script>
+        // load parsley config (altair_admin_common.js)
+    
+
+
+
+
+
+
+    </script>
+
+
+
+
+
+</asp:Content>
+
+
+

@@ -125,11 +125,13 @@ public partial class importomr : System.Web.UI.Page
 
             if (ispass == 0)
             {
-                cellStatus.Text = "<button class=\"md-btn md-btn-success\" data-uk-tooltip=\"{cls:'long-text'}\" title=\"" + ErrorMessage + "\">นำเข้าสำเร็จ</button>";
+               cellStatus.Text = "<button class=\"md-btn md-btn-success\" data-uk-tooltip=\"{cls:'long-text'}\" title=\"" + ErrorMessage + "\">นำเข้าสำเร็จ</button>";
+                
             }
             else
             {
-                cellStatus.Text = "<button class=\"md-btn md-btn-danger\" data-uk-tooltip=\"{cls:'long-text'}\" title=\"" + ErrorMessage + "\">นำเข้าผิดพลาด</button>";
+               cellStatus.Text = "<button class=\"md-btn md-btn-danger\" data-uk-tooltip=\"{cls:'long-text'}\" title=\"" + ErrorMessage + "\">นำเข้าผิดพลาด</button>";
+                
             }
 
 

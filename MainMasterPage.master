@@ -136,8 +136,33 @@
                 <li title="ข้อมูลคะแนนจากการอ่าน OMR" <% if (pageName == "importomr") Response.Write("class='current_section'"); %>>
                     <a href="importomr.aspx">
                         <span class="menu_icon"><i class="material-icons">&#xE3EA;</i></span>
-                        <span class="menu_title">ข้อมูลคะแนน</span>
+                        <span class="menu_title">นำเข้าข้อมูล OMR</span>
                     </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <span class="menu_icon"><i class="material-icons">&#xE02F;</i></span>
+                        <span class="menu_title">รายงาน</span>
+                    </a>
+                    <ul>
+                        <li <% if (pageName == "report") Response.Write("class='act_item'"); %>>
+                            <a href="report.aspx">รายงาน</a></li>
+                    </ul>
+                </li>
+
+
+                 <li>
+                    <a href="#">
+                        <span class="menu_icon"><i class="material-icons">&#xE8B9;</i></span>
+                        <span class="menu_title">ตั้งค่าโปรแกรม</span>
+                    </a>
+                    <ul>
+                        <li <% if (pageName == "userapplication") Response.Write("class='act_item'"); %>>
+                            <a href="userapplication.aspx">ตั้งค่าผู้ใช้งาน</a></li>
+                        <li <% if (pageName == "raterapplication") Response.Write("class='act_item'"); %>>
+                            <a href="raterapplication.aspx">ตั้งค่าผู้ตรวจ</a></li>
+                    </ul>
                 </li>
 
 

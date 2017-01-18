@@ -47,7 +47,7 @@
 
                                         String status_style = "";
 
-                                        if (reader["PACKAGE_STATUS"].ToString() == "N") status_style = "uk-badge uk-badge-primary";
+                                        if (reader["PACKAGE_STATUS"].ToString() == "F") status_style = "uk-badge uk-badge-primary";
                                         else status_style = "uk-badge uk-badge-warning";
                                       
 
@@ -125,8 +125,8 @@
                         <div class="uk-grid" data-uk-grid-margin>
                             <div class="uk-width-medium-2-2">
                                 <div class="parsley-row">
-                                    <label for="ratercodetxt">รหัสผู้ตรวจ</label>
-                                    <input type="text" name="ratercodetxt" id="ratercodetxt" required class="md-input" runat="server" data-required-message="กรุณากรอกรหัสผู้ตรวจ" parsley-error-message="กรุณากรอกรหัสผู้ตรวจ" />
+                                    <label for="ratercodetxt">รหัสผู้ตรวจ/รหัสเจ้าหน้าที่</label>
+                                    <input type="text" name="ratercodetxt" id="ratercodetxt" required class="md-input" runat="server" data-required-message="กรุณากรอกรหัสผู้ตรวจ/รหัสเจ้าหน้าที่" parsley-error-message="กรุณากรอกรหัสผู้ตรวจ/รหัสเจ้าหน้าที่" />
                                 </div>
                             </div>
                         </div>
@@ -139,6 +139,8 @@
                                         <option value="rater">ผู้ตรวจรับซอง</option>
                                         <option value="return">ผู้ตรวจส่งซองคืน</option>
                                         <option value="omr">ส่งห้องอ่าน OMR</option>
+                                        <option value="modify">ส่งแก้ไขข้อมูล</option>
+                                        <option value="final">ดำเนินการเสร็จเรียบร้อย</option>
                                     </select>
                                 </div>
                             </div>
