@@ -274,19 +274,25 @@
                     '</td><tr><td><strong>คะแนนรวม :<strong></td><td><strong>' + sumScore +
                     '</strong></td></tr></table></pre></div>',
                     function () {
+                        var params = { score1_1: scoreValue.score1_1, score1_2: scoreValue.score1_2 };
                         $.ajax({
                             type: "POST",
-                            url: "Default.aspx/GetDate",
-                            data: { score: scoreValue },
+                            url: "rater31data.aspx/recieve",
+                            //data: { score: scoreValue },
+                            data: "{'recieveValue':'" + JSON.stringify(scoreValue) + "'}",
                             contentType: "application/json; charset=utf-8",
                             dataType: "json",
+                            async: true,
                             success: function (msg) {
-                                // Replace the div's content with the page method's return.
-                                //$("#Result").text(msg.d);
-                                alert("C");
+                                var msgReturn =$.parseJSON(msg.d);
+                                console.log(msgReturn);
+                                
                             }
                         });
                         //UIkit.modal.alert('Confirmed!');
+                        //console.log("{'recieveValue31':'" + JSON.stringify(params) + "'}");
+                        console.log(scoreValue);
+                        console.log(params);
                     }
                     );
             } else {
