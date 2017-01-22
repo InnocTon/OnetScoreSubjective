@@ -88,14 +88,14 @@ public partial class importomr : System.Web.UI.Page
                 if (ExamKey.Contains("*"))
                 {
                     ispass++;
-                    ErrorMessage += "- พบข้อมูลคะแนนเป็นดอกจัน ลำดับที่ : " + SerialNo + " <br/>";
+                    ErrorMessage += "- พบข้อมูลดอกจัน ลำดับที่ : " + SerialNo + " <br/>";
                 }
 
                 //ตรวจสอบข้อมูลคะแนนเป็นค่าว่าง
                 if (ExamKey.Contains(" "))
                 {
                     //  ispass++;
-                    ErrorMessage += "- พบข้อมูลคะแนนเป็นค่าว่าง ลำดับที่ : " + SerialNo + " <br/>";
+                    ErrorMessage += "- พบข้อมูลค่าว่าง ลำดับที่ : " + SerialNo + " <br/>";
                 }
 
                 LithoCodeArray.Add(LithoCode);
@@ -110,7 +110,7 @@ public partial class importomr : System.Web.UI.Page
             if (numpaper != countline)
             {
                 ispass++;
-                ErrorMessage += "- จำนวนรายการในไฟล์ไม่ตรงกับจำนวนในฐานข้อมูล (ฐาน:" + countline.ToString() + " / ไฟล์:" + numpaper.ToString() + ") <br/>";
+                ErrorMessage += "- จำนวนรายการในไฟล์ไม่ตรงกับฐานข้อมูล (ฐาน:" + countline.ToString() + " / ไฟล์:" + numpaper.ToString() + ") <br/>";
             }
 
             // ตรวจสอบข้อมูลซ้ำ
@@ -126,7 +126,7 @@ public partial class importomr : System.Web.UI.Page
                 if (pair.Value != 1)
                 {
                     ispass++;
-                    ErrorMessage += "- พบข้อมูลเลขที่ใบบันทึกคะแนนซ้ำที่ " + pair.Key.ToString() + " <br/>";
+                    ErrorMessage += "- พบข้อมูลซ้ำที่ " + pair.Key.ToString() + " <br/>";
                 }
             }
 
@@ -150,54 +150,89 @@ public partial class importomr : System.Web.UI.Page
 
                     filename = Path.GetFileName(filePath);
                     path = Server.MapPath("omrfile\\" + filename);
-                    reader = File.OpenText(path);
 
-                    while ((line = reader.ReadLine()) != null)
+                    //INSERT INTO TRN_OMR_IMPORT
+                    String query = "INSERT INTO TRN_OMR_IMPORT([IMP_FILENAME],[IMP_STATUS],[IMP_BY],[IMP_DATETIME]) VALUES(@filename,'N',@impby,getdate())";
+                    SqlCommand command = new SqlCommand(query, conn);
+                    command.Parameters.AddWithValue("@filename", filename);
+                    command.Parameters.AddWithValue("@impby", Session["USER_ID"].ToString());
+                    command.Transaction = trans;
+                    command.ExecuteNonQuery();
+
+
+                    query = "SELECT IMP_SEQ FROM TRN_OMR_IMPORT WHERE IMP_FILENAME = @filename AND IMP_STATUS = 'N' AND IMP_BY = @impby";
+                    SqlCommand readercommand = new SqlCommand(query, conn);
+                    readercommand.Parameters.AddWithValue("@filename", filename);
+                    readercommand.Parameters.AddWithValue("@impby", Session["USER_ID"].ToString());
+                    readercommand.Transaction = trans;
+                    SqlDataReader sqlreader = readercommand.ExecuteReader();
+                    String IMP_SEQ = "";
+                    while (sqlreader.Read())
                     {
-
-                        BatchNo = line.Substring(0, 10);
-                        SerialNo = line.Substring(11, 4);
-                        SeatNo = line.Substring(16, 7);
-                        ExamKey = line.Substring(24, 8);
-                        LithoCode = line.Substring(33, 7);
-                        MachineName = line.Substring(41, 5);
-                        // INSERT INTO TRN_XM_BATCH_DETAIL
-                        String query = "INSERT INTO TRN_XM_BATCH_DETAIL(BATCH_NO,SERIAL_NO,SEAT_NO,LITHO_CODE,EXAM_KEY,OMR_MACHINE,CREATE_BY,CREATE_DATETIME) VALUES(@batchno,@serialno,@seatno,@lithocode,@examkey,@machine,@createby,getdate())";
-
-
-                        SqlCommand command = new SqlCommand(query, conn);
-                        command.Parameters.AddWithValue("@batchno", BatchNo);
-                        command.Parameters.AddWithValue("@serialno", SerialNo);
-                        command.Parameters.AddWithValue("@seatno", SeatNo);
-                        command.Parameters.AddWithValue("@lithocode", LithoCode);
-                        command.Parameters.AddWithValue("@examkey", ExamKey);
-                        command.Parameters.AddWithValue("@machine", MachineName);
-                        command.Parameters.AddWithValue("@createby", Session["USER_ID"].ToString());
-                        command.Transaction = trans;
-                        result += command.ExecuteNonQuery();
-
+                        IMP_SEQ = sqlreader["IMP_SEQ"].ToString();
                     }
+                    sqlreader.Close();
+                    readercommand.Dispose();
 
-                    reader.Close();
-                    reader.Dispose();
 
-                    if (result == numpaper)
+                    if (IMP_SEQ != "")
                     {
-                        trans.Commit();
+                        reader = File.OpenText(path);
 
-                        string sourceFile = Server.MapPath("omrfile\\" + filename);
-                        string destinationFile = Server.MapPath("omrfile\\success\\" + filename);
 
-                        // MOVE FILE TO FOLDER SUCCESS
-                        File.Move(sourceFile, destinationFile);
+                        while ((line = reader.ReadLine()) != null)
+                        {
 
-                        cellStatus.Text = "<span class='uk-badge uk-badge-success'>นำเข้าสำเร็จ</span>";
-                    }
-                    else
+                            BatchNo = line.Substring(0, 10);
+                            SerialNo = line.Substring(11, 4);
+                            SeatNo = line.Substring(16, 7);
+                            ExamKey = line.Substring(24, 8);
+                            LithoCode = line.Substring(33, 7);
+                            MachineName = line.Substring(41, 5);
+                            // INSERT INTO TRN_XM_BATCH_DETAIL
+                            query = "INSERT INTO TRN_XM_BATCH_DETAIL(IMP_SEQ,BATCH_NO,SERIAL_NO,SEAT_NO,LITHO_CODE,EXAM_KEY,OMR_MACHINE,CREATE_BY,CREATE_DATETIME,SHEET_STATUS) VALUES(@impseq,@batchno,@serialno,@seatno,@lithocode,@examkey,@machine,@createby,getdate(),'N')";
+
+
+                            command = new SqlCommand(query, conn);
+                            command.Parameters.AddWithValue("@impseq", IMP_SEQ);
+                            command.Parameters.AddWithValue("@batchno", BatchNo);
+                            command.Parameters.AddWithValue("@serialno", SerialNo);
+                            command.Parameters.AddWithValue("@seatno", SeatNo);
+                            command.Parameters.AddWithValue("@lithocode", LithoCode);
+                            command.Parameters.AddWithValue("@examkey", ExamKey);
+                            command.Parameters.AddWithValue("@machine", MachineName);
+                            command.Parameters.AddWithValue("@createby", Session["USER_ID"].ToString());
+                            command.Transaction = trans;
+                            result += command.ExecuteNonQuery();
+
+                        }
+
+                        reader.Close();
+                        reader.Dispose();
+
+                        if (result == numpaper)
+                        {
+                            trans.Commit();
+
+                            string sourceFile = Server.MapPath("omrfile\\" + filename);
+                            string destinationFile = Server.MapPath("omrfile\\success\\" + filename);
+
+                            // MOVE FILE TO FOLDER SUCCESS
+                            File.Move(sourceFile, destinationFile);
+
+                            cellStatus.Text = "<span class='uk-badge uk-badge-success'>นำเข้าสำเร็จ</span>";
+                        }
+                        else
+                        {
+                            trans.Rollback();
+                            cellStatus.Text = "<span class='uk-badge uk-badge-danger'data-uk-tooltip=\"{cls:'long-text'}\" title=\" ไม่สามารถบันทึกลงฐานข้อมูลได้ \">นำเข้าผิดพลาด</span>";
+                        }
+                    }else
                     {
                         trans.Rollback();
-                        cellStatus.Text = "<span class='uk-badge uk-badge-danger'data-uk-tooltip=\"{cls:'long-text'}\" title=\" ไม่สามารถบันทึกลงฐานข้อมูลได้ " + result + " \">นำเข้าผิดพลาด</span>";
+                        cellStatus.Text = "<span class='uk-badge uk-badge-danger'data-uk-tooltip=\"{cls:'long-text'}\" title=\" ไม่สามารถบันทึกลงฐานข้อมูลได้  \">นำเข้าผิดพลาด</span>";
                     }
+                    
 
                  
 

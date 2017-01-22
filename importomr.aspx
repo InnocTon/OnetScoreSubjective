@@ -106,17 +106,7 @@
     <script>
         // load parsley config (altair_admin_common.js)
     
-
-
-
-
-
-
     </script>
-
-
-
-
 
 </asp:Content>
 
