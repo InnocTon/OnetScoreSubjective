@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="NameTagDataSet" targetNamespace="http://tempuri.org/NameTagDataSet.xsd" xmlns:mstns="http://tempuri.org/NameTagDataSet.xsd" xmlns="http://tempuri.org/NameTagDataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="NameTagDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_UserDSName="NameTagDataSet" msprop:Generator_DataSetName="NameTagDataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="DataTable1" msprop:Generator_TableClassName="DataTable1DataTable" msprop:Generator_TableVarName="tableDataTable1" msprop:Generator_TablePropName="DataTable1" msprop:Generator_RowDeletingName="DataTable1RowDeleting" msprop:Generator_RowChangingName="DataTable1RowChanging" msprop:Generator_RowEvHandlerName="DataTable1RowChangeEventHandler" msprop:Generator_RowDeletedName="DataTable1RowDeleted" msprop:Generator_UserTableName="DataTable1" msprop:Generator_RowChangedName="DataTable1RowChanged" msprop:Generator_RowEvArgName="DataTable1RowChangeEvent" msprop:Generator_RowClassName="DataTable1Row">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="RATER_NAME" msprop:Generator_ColumnVarNameInTable="columnRATER_NAME" msprop:Generator_ColumnPropNameInRow="RATER_NAME" msprop:Generator_ColumnPropNameInTable="RATER_NAMEColumn" msprop:Generator_UserColumnName="RATER_NAME" type="xs:string" minOccurs="0" />
+              <xs:element name="RATER_PID" msprop:Generator_ColumnVarNameInTable="columnRATER_PID" msprop:Generator_ColumnPropNameInRow="RATER_PID" msprop:Generator_ColumnPropNameInTable="RATER_PIDColumn" msprop:Generator_UserColumnName="RATER_PID" type="xs:string" minOccurs="0" />
+              <xs:element name="RATER_CODE" msprop:Generator_ColumnVarNameInTable="columnRATER_CODE" msprop:Generator_ColumnPropNameInRow="RATER_CODE" msprop:Generator_ColumnPropNameInTable="RATER_CODEColumn" msprop:Generator_UserColumnName="RATER_CODE" type="xs:string" minOccurs="0" />
+              <xs:element name="RATER_PLACE" msprop:Generator_ColumnVarNameInTable="columnRATER_PLACE" msprop:Generator_ColumnPropNameInRow="RATER_PLACE" msprop:Generator_ColumnPropNameInTable="RATER_PLACEColumn" msprop:Generator_UserColumnName="RATER_PLACE" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

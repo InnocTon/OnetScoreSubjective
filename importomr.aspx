@@ -72,8 +72,15 @@
                             </ul>
                         </div>
                         <div class="uk-grid" data-uk-grid-margin="">
+                            <div class="uk-width-medium-10-10">
+                                 
+                                <asp:DropDownList ID="importqnoddl" runat="server" data-md-selectize Height="29px" Style="margin-right: 28px" Width="241px">
+                                    <asp:ListItem Value="0">กรุณาเลือกข้อที่ต้องการนำเข้า</asp:ListItem>
+                                    <asp:ListItem Value="1">ข้อที่ 1 การเขียนเล่าเรื่องจากภาพ</asp:ListItem>
+                                    <asp:ListItem Value="2">ข้อท่ 2 การเขียนสรุปใจความสำคัญ</asp:ListItem>
+                                </asp:DropDownList>
+                            </div>
                             <div class="uk-width-medium-1-10 uk-text-center">
-                                <!-- <input type="file" multiple webkitdirectory id="fileURL" /> -->
                                 <asp:Button ID="listdirectorybtn" runat="server" Text="นำเข้าไฟล์" OnClick="listdirectorybtn_Click" CssClass="uk-form-file md-btn md-btn-primary" />
                             </div>
                         </div>
@@ -106,17 +113,7 @@
     <script>
         // load parsley config (altair_admin_common.js)
     
-
-
-
-
-
-
     </script>
-
-
-
-
 
 </asp:Content>
 
