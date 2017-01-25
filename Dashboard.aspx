@@ -38,19 +38,18 @@
                     <div class="md-card">
                         <div class="md-card-content">
                             <div class="uk-float-right uk-margin-top uk-margin-small-right"><span class="peity_visitors peity_data">5,3,9,6,5,9,7</span></div>
-                            <span class="uk-text-muted uk-text-small">จำนวนกระดาษอัตนัย</span>
+                            <span class="uk-text-muted uk-text-small">จำนวนข้อมูลที่ส่งออก</span>
                             <h2 class="uk-margin-remove"><span class="countUpMe">0<noscript>12456</noscript></span></h2>
                         </div>
                     </div>
                 </div>
             </div>
 
-        <div class="uk-grid" data-uk-grid-margin>
+        <div class="uk-grid uk-grid-width-large-1-1 uk-grid-medium uk-sortable sortable-handler hierarchical_show" data-uk-grid-margin>
             <div class="uk-width-large-1-1">
                         <div class="md-card">
                             <div class="md-card-content">
-                                <h4 class="heading_c uk-margin-bottom">Line Chart with Area</h4>
-                                <div id="chartist_line_area" class="chartist"></div>
+                                
                             </div>
                         </div>
                     </div>
@@ -83,8 +82,7 @@
 
         <!--  dashbord functions -->
         <script src="assets/js/pages/dashboard.js"></script>
-     <!--  charts functions -->
-    <script src="assets/js/pages/plugins_charts.js"></script>
+
 
 </asp:Content>
 

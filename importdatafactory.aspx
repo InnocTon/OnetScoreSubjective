@@ -86,53 +86,11 @@
                                 <th>วันที่นำเข้า</th>
                             </tr>
                         </tfoot>
-
-                        <tbody>
-                            <%
-                                string connStr = ConfigurationManager.ConnectionStrings["SqlConnectionString"].ConnectionString;
-                                System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(connStr);
-
-                                try
-                                {
-                                    String query = "SELECT * FROM TRN_FAC_IMPORT imp INNER JOIN SYS_IMPTYPE typ on imp.IMPTYPE_CODE = typ.IMPTYPE_CODE   INNER JOIN SYS_USER usr on usr.USER_ID = imp.IMP_BY   ORDER BY IMP_SEQ";
-                                    System.Data.SqlClient.SqlCommand command = new System.Data.SqlClient.SqlCommand(query, conn);
-                                    conn.Open();
-                                    System.Data.SqlClient.SqlDataReader reader = command.ExecuteReader();
-                                    int i = 0;
-                                    while (reader.Read())
-                                    {
-                                        String impstatus = (reader["IMP_STATUS"].ToString() == "N") ? "ปกติ" : "ยกเลิก";
-                                        i++;
-                            %>
-                            <tr>
-                                <td><% Response.Write(i.ToString()); %></td>
-                                <td><% Response.Write(reader["OLD_FILE_NAME"]); %></td>
-                                <td><% Response.Write(impstatus); %></td>
-                                <td><% Response.Write(reader["IMPTYPE_NAME"]); %></td>
-                                <td><% Response.Write(reader["USER_NAME"]); %></td>
-                                <td><% Response.Write(reader["IMP_DATETIME"]); %></td>
-                            </tr>
-
-                            <%
-                                }
-                                    conn.Close();
-                                }
-                                catch (Exception ex)
-                                {
-
-                                }
-                                finally
-                                {
-                                    if (conn != null && conn.State == System.Data.ConnectionState.Open)
-                                    {
-                                        conn.Close();
-                                    }
-                                }
-                                 %>
-                        </tbody>
                     </table>
                 </div>
             </div>
+
+
 
         </div>
     </form>
@@ -158,6 +116,61 @@
 
     <!--  datatables functions -->
 
-    <script src="assets/js/pages/importdatafactory.js"></script>
+
+
+    <script>
+
+        $(document).ready(function () {
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "FactoryService.asmx/GetDats",
+                success: function (data) {
+                    var datatableVariable = $('#dt_individual_search').DataTable({
+                        lengthMenu: [[5,10, 25, 50, -1], [5,10, 25, 50, "All"]],
+                        data: data,
+                        columns: [
+                            { 'data': 'no' },
+                            { 'data': 'filename' },           
+                           {
+                               'data': 'filestatus', 'render': function (type) {
+                                   if (type == 'N') return "ปกติ";
+                                   else return "ยกเลิก";
+                               }
+                           },
+                            { 'data': 'filetype' },
+                            { 'data': 'fileimport' },
+                            { 'data': 'filedate' }
+                            ]
+/*
+                            {
+                                'data': 'dateOfBirth', 'render': function (date) {
+                                    var date = new Date(parseInt(date.substr(6)));
+                                    var month = date.getMonth() + 1;
+                                    return date.getDate() + "/" + month + "/" + date.getFullYear();
+                                }
+                            }*/
+                    });
+                    $('#dt_individual_search tfoot th').each(function () {
+                        var placeHolderTitle = $('#studentTable thead th').eq($(this).index()).text();
+                        $(this).html('<input type="text" class="form-control input input-sm" placeholder = "คำค้น ' + placeHolderTitle + '" />');
+                    });
+                    datatableVariable.columns().every(function () {
+                        var column = this;
+                        $(this.footer()).find('input').on('keyup change', function () {
+                            column.search(this.value).draw();
+                        });
+                    });
+                    $('.showHide').on('click', function () {
+                        var tableColumn = datatableVariable.column($(this).attr('data-columnindex'));
+                        tableColumn.visible(!tableColumn.visible());
+                    });
+                }
+            });
+
+        });
+
+    </script>
+
 
 </asp:Content>
