@@ -20,9 +20,5 @@ public partial class managescorediff : System.Web.UI.Page
     {
        
 
-
-
-
-
     }
 }

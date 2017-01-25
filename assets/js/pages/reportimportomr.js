@@ -20,6 +20,10 @@
     // list view
     altair_issues.list_view();
 
+
+
+
+   
 });
 
 

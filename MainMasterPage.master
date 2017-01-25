@@ -39,6 +39,13 @@
     <link href="bower_components/sweetalert/sweetalert.css" rel="stylesheet" />
     <script src="bower_components/sweetalert/sweetalert.min.js"></script>
 
+    <!-- additional styles for plugins -->
+    <!-- weather icons -->
+    <link rel="stylesheet" href="bower_components/weather-icons/css/weather-icons.min.css" media="all">
+    <!-- metrics graphics (charts) -->
+    <link rel="stylesheet" href="bower_components/metrics-graphics/dist/metricsgraphics.css">
+    <!-- chartist -->
+    <link rel="stylesheet" href="bower_components/chartist/dist/chartist.min.css">
 
 </head>
 <body class=" sidebar_main_open sidebar_main_swipe">
@@ -160,16 +167,16 @@
                 </li>
 
 
-                 <li>
+                <li>
                     <a href="#">
                         <span class="menu_icon"><i class="material-icons">&#xE8B9;</i></span>
                         <span class="menu_title">ตั้งค่าโปรแกรม</span>
                     </a>
                     <ul>
                         <li <% if (pageName == "userapplication") Response.Write("class='act_item'"); %>>
-                            <a href="userapplication.aspx">ตั้งค่าผู้ใช้งาน</a></li>
-                        <li <% if (pageName == "raterapplication") Response.Write("class='act_item'"); %>>
-                            <a href="raterapplication.aspx">ตั้งค่าผู้ตรวจ</a></li>
+                            <a href="manageuser.aspx">ตั้งค่าผู้ใช้งาน</a></li>
+                        <li <% if (pageName == "managerater") Response.Write("class='act_item'"); %>>
+                            <a href="managerater.aspx">ตั้งค่าผู้ตรวจ</a></li>
                     </ul>
                 </li>
 
