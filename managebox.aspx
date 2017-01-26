@@ -9,7 +9,7 @@
             <a href="#" data-uk-tooltip="{pos:'bottom'}" title="พิมพ์"><i class="md-icon material-icons">&#xE8AD;</i></a>
             <a href="#" data-uk-tooltip="{pos:'bottom'}" title="รับ-ส่ง" id="sendrecivebtn" data-uk-modal="{target:'#modal_send_recive'}"><i class="md-icon material-icons">&#xE03C;</i></a>
         </div>
-        <h1><i class="material-icons">&#xE80D;</i> รับ-ส่ง กล่องใบบันทึกคะแนนอัตนัย</h1>
+        <h1><i class="material-icons">&#xE80D;</i> รับ-ส่ง กล่องบรรจุใบบันทึกคะแนนอัตนัย</h1>
         <span class="uk-text-upper uk-text-small">ข้อมูลรับ-ส่งกล่องบรรจุใบบันทึกคะแนนอัตนัย</span>
     </div>
 
@@ -17,7 +17,7 @@
         <div class="md-card">
             <div class="md-card-content">
                 <div class="uk-overflow-container uk-margin-bottom">
-                    <table class="uk-table uk-table-align-vertical uk-table-nowrap tablesorter tablesorter-altair" id="ts_issues">
+                    <table class="uk-table" id="dt_individual_search">
                         <thead>
                             <tr>
                                 <th class="uk-text-center">ลำดับที่</th>
@@ -25,93 +25,21 @@
                                 <th>จำนวนซอง</th>
                                 <th>สถานะกล่อง</th>
                                 <th>สถานะซอง</th>
+                                <th>เครื่องมือ</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <%
-                                string connStr = ConfigurationManager.ConnectionStrings["SqlConnectionString"].ConnectionString;
-                                System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(connStr);
-
-                                try
-                                {
-                                    String query = "  SELECT bx.*,bstatus.BSTATUS_NAME,PSTATUS.NUMP FROM [TRN_XM_BOX] bx  " +
-"  INNER JOIN [dbo].[MST_BOX_STATUS] bstatus ON bstatus.[BSTATUS_CODE] = bx.BOX_STATUS " +
-"  LEFT JOIN (  " +
-"	  SELECT BOX_CODE,  " +
-"	  SUM(CASE WHEN PACKAGE_STATUS = 'F' THEN 1 ELSE 0 END) AS NUMP  " +
-"	  FROM TRN_XM_PACKAGE  " +
-"	  GROUP BY BOX_CODE  " +
-"  )PSTATUS ON PSTATUS.BOX_CODE = bx.BOX_CODE  " +
-"  ORDER BY bx.BOX_SEQ";
-                                    System.Data.SqlClient.SqlCommand command = new System.Data.SqlClient.SqlCommand(query, conn);
-                                    conn.Open();
-                                    System.Data.SqlClient.SqlDataReader reader = command.ExecuteReader();
-                                    int i = 0;
-                                    while (reader.Read())
-                                    {
-
-                                        String status_style = "";
-                                        String pstatus_style = "";
-
-
-                                        if (reader["BOX_STATUS"].ToString() == "N") status_style = "uk-badge uk-badge-success";
-                                        else status_style = "uk-badge uk-badge-warning";
-
-                                        if(reader["NUMP"].ToString() == reader["PACKAGE_NUM"].ToString())
-                                        {
-                                            pstatus_style = "<span class='uk-badge uk-badge-success'>เสร็จแล้ว ("+ reader["NUMP"].ToString() +"/"+reader["PACKAGE_NUM"].ToString() +")</span>";
-                                        }else
-                                        {
-                                             pstatus_style = "<span class='uk-badge uk-badge-danger'>ยังไม่แล้วเสร็จ ("+ reader["NUMP"].ToString() +"/"+reader["PACKAGE_NUM"].ToString() +")</span>";
-                                        }
-
-                                        i++;
-                            %>
-                            <tr>
-                                <td class="uk-text-center"><span class="uk-text-small uk-text-muted uk-text-nowrap"><% Response.Write(i.ToString()); %></span></td>
-                                <td><% Response.Write(reader["BOX_CODE"].ToString()); %></td>
-                                <td><% Response.Write(reader["PACKAGE_NUM"].ToString()); %></td>
-                                <td><span class="<% Response.Write(status_style); %>"><% Response.Write(reader["BSTATUS_NAME"].ToString()); %></span></td>
-                                <td><% Response.Write(pstatus_style); %></td>
+                        <tfoot>
+                             <tr>
+                                <th></th>
+                                <th>รหัสกล่อง</th>
+                                <th>จำนวนซอง</th>
+                                <th>สถานะกล่อง</th>
+                                <th>สถานะซอง</th>
+                                 <th></th>
                             </tr>
-                            <%
-                                    }
-                                    reader.Close();
-                                    conn.Close();
-                                }
-                                catch (Exception ex)
-                                {
-
-                                }
-                                finally
-                                {
-                                    if (conn != null && conn.State == System.Data.ConnectionState.Open)
-                                    {
-                                        conn.Close();
-                                    }
-                                }
-                            %>
-                        </tbody>
+                        </tfoot>
                     </table>
                 </div>
-                <ul class="uk-pagination ts_pager">
-                    <li data-uk-tooltip title="Select Page">
-                        <select class="ts_gotoPage ts_selectize"></select>
-                    </li>
-                    <li class="first"><a href="javascript:void(0)"><i class="uk-icon-angle-double-left"></i></a></li>
-                    <li class="prev"><a href="javascript:void(0)"><i class="uk-icon-angle-left"></i></a></li>
-                    <li><span class="pagedisplay"></span></li>
-                    <li class="next"><a href="javascript:void(0)"><i class="uk-icon-angle-right"></i></a></li>
-                    <li class="last"><a href="javascript:void(0)"><i class="uk-icon-angle-double-right"></i></a></li>
-                    <li data-uk-tooltip title="Page Size">
-                        <select class="pagesize ts_selectize">
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                        </select>
-                    </li>
-                </ul>
             </div>
         </div>
     </div>
@@ -168,12 +96,17 @@
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
 
+
     <!-- page specific plugins -->
-    <!-- tablesorter -->
-    <script src="bower_components/tablesorter/dist/js/jquery.tablesorter.min.js"></script>
-    <script src="bower_components/tablesorter/dist/js/jquery.tablesorter.widgets.min.js"></script>
-    <script src="bower_components/tablesorter/dist/js/widgets/widget-alignChar.min.js"></script>
-    <script src="bower_components/tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js"></script>
+    <!-- datatables -->
+    <script src="bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
+    <!-- datatables colVis-->
+    <script src="bower_components/datatables-colvis/js/dataTables.colVis.js"></script>
+    <!-- datatables tableTools-->
+    <script src="bower_components/datatables-tabletools/js/dataTables.tableTools.js"></script>
+    <!-- datatables custom integration -->
+    <script src="assets/js/custom/datatables_uikit.min.js"></script>
+
 
 
     <script>
@@ -202,7 +135,83 @@
     </script>
     <script src="bower_components/parsleyjs/dist/parsley.js"></script>
     <!--  issues list functions -->
-    <script src="assets/js/pages/managebox.js"></script>
+  
+       <script>
+
+        $(document).ready(function () {
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "DataboxService.asmx/GetDats",
+                success: function (data) {
+                    var datatableVariable = $('#dt_individual_search').DataTable({
+
+                        oLanguage: {
+                            sLengthMenu: "แสดง _MENU_ รายการต่อหน้า",
+                            sZeroRecords: "ไม่เจอข้อมูลที่ค้นหา",
+                            sInfo: "แสดงรายการที่ _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
+                            sInfoEmpty: "แสดง 0 ถึง 0 ของทั้งหมด 0 รายการ",
+                            sInfoFiltered: "(จากเร็คคอร์ดทั้งหมด _MAX_ เร็คคอร์ด)",
+                            sSearch: "ค้นหา :",
+                            oPaginate: {
+                            sFirst: "หน้าแรก",// ปุ่มกลับมาหน้าแรก
+                            sLast: "หน้าสุดท้าย",//ปุ่มไปหน้าสุดท้าย
+                            sNext: "ถัดไป",//ปุ่มหน้าถัดไป
+                            sPrevious: "ก่อนหน้า" // ปุ่ม กลับ
+                            }
+                        },
+                        columnDefs: [
+                          { searchable: false, orderable: false, "aTargets": [5] },
+                          { className: "dt-center", "targets": [0, 3, 4, 5] },
+                          { className: "dt-left", "targets": "1" },
+                          { width: "8%", "targets": 0 }
+                        ],
+                        lengthMenu: [[5,10, 25, 50, -1], [5,10, 25, 50, "All"]],
+                        data: data,
+                        columns: [
+                            { 'data': 'no' },
+                            { 'data': 'boxcode' },
+                            { 'data': 'packagenum' },
+                            { 'data': 'boxstatus' },
+                            {
+                                'data': 'packagestatus', 'render': function (status, type, full) {
+                                    if (status != '0') return "<span class='uk-badge uk-badge-success'>สำเร็จแล้ว " + status + "/ " + full.packagenum + " ซอง </span>";
+                                    else return "<span class='uk-badge uk-badge-warning'>อยู่ระหว่างดำเนินการ</span>";
+                                 }
+                            },
+                            {
+                                'data': 'boxtools', 'render': function (status, type, full) {
+                                     return "<a href='boxdetial.aspx?seq=" + status + "'><i class='material-icons uk-text-success md-24'>&#xE417;</i></a>";
+                                 }
+                            }
+                            ]
+/*
+                            {
+                                'data': 'dateOfBirth', 'render': function (date) {
+                                    var date = new Date(parseInt(date.substr(6)));
+                                    var month = date.getMonth() + 1;
+                                    return date.getDate() + "/" + month + "/" + date.getFullYear();
+                                }
+                            }*/
+                    });
+                    $('#dt_individual_search tfoot th').each(function () {
+                        if ($(this).index() != 0 && $(this).index() != 5) {
+                            var placeHolderTitle = $('#dt_individual_search thead th').eq($(this).index()).text();
+                            $(this).html('<input type="text" class="form-control input input-sm" placeholder = "ค้นหา ' + placeHolderTitle + '" />');
+                        }
+                    });
+                    datatableVariable.columns().every(function () {
+                        var column = this;
+                        $(this.footer()).find('input').on('keyup change', function () {
+                            column.search(this.value).draw();
+                        });
+                    });
+                }
+            });
+
+        });
+
+    </script>
 
 
 

@@ -18,7 +18,7 @@
         <div class="md-card">
             <div class="md-card-content">
                 <div class="uk-overflow-container uk-margin-bottom">
-                    <table class="uk-table uk-table-align-vertical uk-table-nowrap tablesorter tablesorter-altair" id="ts_issues">
+                    <table class="uk-table" id="dt_individual_search">
                         <thead>
                             <tr>
                                 <th class="uk-text-center">ลำดับที่</th>
@@ -26,79 +26,21 @@
                                 <th>รหัสซอง</th>
                                 <th>จำนวนกระดาษ</th>
                                 <th>สถานะซอง</th>
+                                <th>เครื่องมือ</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <%
-
-                                string connStr = ConfigurationManager.ConnectionStrings["SqlConnectionString"].ConnectionString;
-                                System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(connStr);
-
-                                try
-                                {
-                                    String query = "  SELECT PACKAGE_CODE,PACK.BOX_CODE,PAPER_NUM,PSTATUS_NAME,PACKAGE_STATUS FROM [dbo].[TRN_XM_PACKAGE] PACK INNER JOIN  [dbo].MST_PACKAGE_STATUS PSTATUS ON PACK.PACKAGE_STATUS = PSTATUS.PSTATUS_CODE INNER JOIN [dbo].[TRN_XM_BOX] BOX ON BOX.BOX_CODE = PACK.BOX_CODE";
-
-                                    System.Data.SqlClient.SqlCommand command = new System.Data.SqlClient.SqlCommand(query, conn);
-                                    conn.Open();
-                                    System.Data.SqlClient.SqlDataReader reader = command.ExecuteReader();
-                                    int i = 0;
-                                    while (reader.Read())
-                                    {
-
-                                        String status_style = "";
-
-                                        if (reader["PACKAGE_STATUS"].ToString() == "F") status_style = "uk-badge uk-badge-primary";
-                                        else status_style = "uk-badge uk-badge-warning";
-                                      
-
-                                        i++;
-                            %>
+                        <tfoot>
                             <tr>
-                                <td class="uk-text-center"><span class="uk-text-small uk-text-muted uk-text-nowrap"><% Response.Write(i.ToString()); %></span></td>
-                                <td><% Response.Write(reader["BOX_CODE"].ToString()); %></td>
-                                <td><% Response.Write(reader["PACKAGE_CODE"].ToString()); %></td>
-                                <td><% Response.Write(reader["PAPER_NUM"].ToString()); %></td>
-                                <td><span class="<% Response.Write(status_style); %>"><% Response.Write(reader["PSTATUS_NAME"].ToString()); %></span></td>
+                                <th></th>
+                                <th>รหัสกล่อง</th>
+                                <th>รหัสซอง</th>
+                                <th>จำนวนกระดาษ</th>
+                                <th>สถานะซอง</th>
+                                <th></th>
                             </tr>
-                            <%
-                                    }
-
-                                    reader.Close();
-                                    conn.Close();
-                                }
-                                catch (Exception ex)
-                                {
-
-                                }
-                                finally
-                                {
-                                    if (conn != null && conn.State == System.Data.ConnectionState.Open)
-                                    {
-                                        conn.Close();
-                                    }
-                                }
-                            %>
-                        </tbody>
+                        </tfoot>
                     </table>
                 </div>
-                <ul class="uk-pagination ts_pager">
-                    <li data-uk-tooltip title="Select Page">
-                        <select class="ts_gotoPage ts_selectize"></select>
-                    </li>
-                    <li class="first"><a href="javascript:void(0)"><i class="uk-icon-angle-double-left"></i></a></li>
-                    <li class="prev"><a href="javascript:void(0)"><i class="uk-icon-angle-left"></i></a></li>
-                    <li><span class="pagedisplay"></span></li>
-                    <li class="next"><a href="javascript:void(0)"><i class="uk-icon-angle-right"></i></a></li>
-                    <li class="last"><a href="javascript:void(0)"><i class="uk-icon-angle-double-right"></i></a></li>
-                    <li data-uk-tooltip title="Page Size">
-                        <select class="pagesize ts_selectize">
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                        </select>
-                    </li>
-                </ul>
             </div>
         </div>
     </div>
@@ -160,12 +102,15 @@
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
 
 
-     <!-- page specific plugins -->
-    <!-- tablesorter -->
-    <script src="bower_components/tablesorter/dist/js/jquery.tablesorter.min.js"></script>
-    <script src="bower_components/tablesorter/dist/js/jquery.tablesorter.widgets.min.js"></script>
-    <script src="bower_components/tablesorter/dist/js/widgets/widget-alignChar.min.js"></script>
-    <script src="bower_components/tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js"></script>
+    <!-- page specific plugins -->
+    <!-- datatables -->
+    <script src="bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
+    <!-- datatables colVis-->
+    <script src="bower_components/datatables-colvis/js/dataTables.colVis.js"></script>
+    <!-- datatables tableTools-->
+    <script src="bower_components/datatables-tabletools/js/dataTables.tableTools.js"></script>
+    <!-- datatables custom integration -->
+    <script src="assets/js/custom/datatables_uikit.min.js"></script>
 
 
     <script>
@@ -175,11 +120,11 @@
         $('.uk-modal').on({
 
             'show.uk.modal': function () {
-              //  console.log("Modal is visible.");
+                //  console.log("Modal is visible.");
             },
 
             'hide.uk.modal': function () {
-               // console.log("Element is not visible.");
+                // console.log("Element is not visible.");
                 $("#<%=packagecodetxt.ClientID%>").val('');
                 $("#<%=ratercodetxt.ClientID%>").val('');
                 $("#<%=boxaction.ClientID%>").val('');
@@ -194,7 +139,78 @@
     </script>
     <script src="bower_components/parsleyjs/dist/parsley.js"></script>
     <!--  issues list functions -->
-    <script src="assets/js/pages/managepackage.js"></script>
+
+
+    <script>
+
+        $(document).ready(function () {
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "DatapackageService.asmx/GetDats",
+                success: function (data) {
+                    var datatableVariable = $('#dt_individual_search').DataTable({
+
+                        oLanguage: {
+                            sLengthMenu: "แสดง _MENU_ รายการต่อหน้า",
+                            sZeroRecords: "ไม่เจอข้อมูลที่ค้นหา",
+                            sInfo: "แสดงรายการที่ _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
+                            sInfoEmpty: "แสดง 0 ถึง 0 ของทั้งหมด 0 รายการ",
+                            sInfoFiltered: "(จากเร็คคอร์ดทั้งหมด _MAX_ เร็คคอร์ด)",
+                            sSearch: "ค้นหา :",
+                            oPaginate: {
+                                sFirst: "หน้าแรก",// ปุ่มกลับมาหน้าแรก
+                                sLast: "หน้าสุดท้าย",//ปุ่มไปหน้าสุดท้าย
+                                sNext: "ถัดไป",//ปุ่มหน้าถัดไป
+                                sPrevious: "ก่อนหน้า" // ปุ่ม กลับ
+                            }
+                        },
+                        columnDefs: [
+                           { searchable: false, orderable: false, "aTargets": [5] },
+                           { className: "dt-center", "targets": [0, 3, 4, 5] },
+                           { className: "dt-left", "targets": "1" },
+                           { width: "8%", "targets": 0 }
+                        ],
+                        lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                        data: data,
+                        columns: [
+                            { 'data': 'no' },
+                            { 'data': 'boxcode' },
+                            { 'data': 'packagecode' },
+                            { 'data': 'papernum' },
+                            {
+                                'data': 'packagestatus', 'render': function (status) {
+                                    if (status == 'F') return "<span class='uk-badge uk-badge-success'>สำเร็จแล้ว</span>";
+                                    else return "<span class='uk-badge uk-badge-warning'>อยู่ระหว่างดำเนินการ</span>";
+                                }
+                            },
+                            {
+                                'data': 'packagetools', 'render': function (status, type, full) {
+                                    return "<a href='packagedetial.aspx?seq=" + status + "'><i class='material-icons uk-text-success md-24'>&#xE417;</i></a>";
+                                }
+                            },
+
+
+                        ]
+                    });
+                    $('#dt_individual_search tfoot th').each(function () {
+                        if ($(this).index() != 0 && $(this).index() != 5) {
+                            var placeHolderTitle = $('#dt_individual_search thead th').eq($(this).index()).text();
+                            $(this).html('<input type="text" class="form-control input input-sm" placeholder = "ค้นหา ' + placeHolderTitle + '" />');
+                        }
+                    });
+                    datatableVariable.columns().every(function () {
+                        var column = this;
+                        $(this.footer()).find('input').on('keyup change', function () {
+                            column.search(this.value).draw();
+                        });
+                    });
+                }
+            });
+
+        });
+
+    </script>
 
 
 

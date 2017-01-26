@@ -9,7 +9,7 @@ using System.Web.Script.Serialization;
 using System.Web.Services;
 
 /// <summary>
-/// Summary description for FactoryService
+/// Summary description for DataboxService
 /// </summary>
 [WebService(Namespace = "http://tempuri.org/")]
 [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
@@ -17,11 +17,13 @@ using System.Web.Services;
 [System.Web.Script.Services.ScriptService]
 // To allow this Web Service to be called from script, using ASP.NET AJAX, uncomment the following line. 
 // [System.Web.Script.Services.ScriptService]
-public class FactoryService : System.Web.Services.WebService
+public class DataboxService : System.Web.Services.WebService
 {
+
     static string connStr = ConfigurationManager.ConnectionStrings["SqlConnectionString"].ConnectionString;
 
-    public FactoryService()
+
+    public DataboxService()
     {
 
         //Uncomment the following line if using designed components 
@@ -32,31 +34,37 @@ public class FactoryService : System.Web.Services.WebService
     public void GetDats()
     {
 
-        var factorys = new List<ClassDataFactory>();
+        var boxs = new List<ClassDataBox>();
         using (var con = new SqlConnection(connStr))
         {
-            String query = "SELECT * FROM TRN_FAC_IMPORT imp INNER JOIN SYS_IMPTYPE typ on imp.IMPTYPE_CODE = typ.IMPTYPE_CODE   INNER JOIN SYS_USER usr on usr.USER_ID = imp.IMP_BY";
+            String query = "  SELECT ROW_NUMBER() OVER(ORDER BY bx.BOX_SEQ ASC) AS Row#,bx.*,bstatus.BSTATUS_NAME,PSTATUS.NUMP FROM [TRN_XM_BOX] bx  " +
+"  INNER JOIN [dbo].[MST_BOX_STATUS] bstatus ON bstatus.[BSTATUS_CODE] = bx.BOX_STATUS " +
+"  LEFT JOIN (  " +
+"	  SELECT BOX_CODE,  " +
+"	  SUM(CASE WHEN PACKAGE_STATUS = 'F' THEN 1 ELSE 0 END) AS NUMP  " +
+"	  FROM TRN_XM_PACKAGE  " +
+"	  GROUP BY BOX_CODE  " +
+"  )PSTATUS ON PSTATUS.BOX_CODE = bx.BOX_CODE";
             var cmd = new SqlCommand(query, con) { CommandType = CommandType.Text };
             con.Open();
             var dr = cmd.ExecuteReader();
             while (dr.Read())
             {
-                var factory = new ClassDataFactory
+                var box = new ClassDataBox
                 {
-                  
-                    no = dr["IMP_SEQ"].ToString(),
-                    filename = dr["OLD_FILE_NAME"].ToString(),
-                    filestatus = dr["IMP_STATUS"].ToString(),
-                    filetype = dr["IMPTYPE_NAME"].ToString(),
-                    fileimport = dr["USER_NAME"].ToString(),
-                    filedate = dr["IMP_DATETIME"].ToString()
+                    no = dr["Row#"].ToString(),
+                    boxcode = dr["BOX_CODE"].ToString(),
+                    packagenum = dr["PACKAGE_NUM"].ToString(),
+                    boxstatus = dr["BSTATUS_NAME"].ToString(),
+                    packagestatus = dr["NUMP"].ToString(),
+                    boxtools = dr["BOX_SEQ"].ToString()
                 };
-                factorys.Add(factory);
+                boxs.Add(box);
             }
-            dr.Close();
+                dr.Close();
         }
         var js = new JavaScriptSerializer();
-        Context.Response.Write(js.Serialize(factorys));
+        Context.Response.Write(js.Serialize(boxs));
     }
 
 }

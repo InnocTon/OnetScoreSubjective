@@ -16,7 +16,7 @@
         <div class="md-card">
             <div class="md-card-content">
                 <div class="uk-overflow-container uk-margin-bottom">
-                    <table class="uk-table uk-table-align-vertical uk-table-nowrap tablesorter tablesorter-altair" id="ts_issues">
+                     <table class="uk-table" id="dt_individual_search">
                         <thead>
                             <tr>
                                 <th class="uk-text-center">ลำดับที่</th>
@@ -28,66 +28,135 @@
                                 <th>เครื่องมือ</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <%
-                                string connStr = ConfigurationManager.ConnectionStrings["SqlConnectionString"].ConnectionString;
-                                System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(connStr);
+                        <tfoot>
+                             <tr>
+                                <th class="uk-text-center">ลำดับที่</th>
+                                <th>ชื่อไฟล์</th>
+                                <th>จำนวนข้อมูล</th>
+                                <th>สถานะการนำเข้า</th>
+                                <th>ผู้นำเข้า</th>
+                                <th>วันที่นำเข้า</th>
+                                <th>เครื่องมือ</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                                try
-                                {
-                                    String query = "   SELECT IMP.IMP_SEQ,IMP.IMP_FILENAME,IMP.IMP_DATETIME,US.USER_NAME,DETAIL.NUM_RECORD,IMP.IMP_STATUS " +
- "  FROM [dbo].[TRN_OMR_IMPORT] IMP LEFT JOIN SYS_USER US ON US.USER_ID = IMP.IMP_BY LEFT JOIN ( " +
-"	SELECT COUNT(*) AS NUM_RECORD ,DT.IMP_SEQ FROM [dbo].[TRN_XM_BATCH_DETAIL]  DT WHERE DT.SHEET_STATUS = 'N' GROUP BY IMP_SEQ  " +
- "  ) AS DETAIL ON DETAIL.IMP_SEQ = IMP.IMP_SEQ WHERE IMP.IMP_STATUS  = 'N'";
-                                    System.Data.SqlClient.SqlCommand command = new System.Data.SqlClient.SqlCommand(query, conn);
-                                    conn.Open();
-                                    System.Data.SqlClient.SqlDataReader reader = command.ExecuteReader();
-                                    int i = 0;
-                                    while (reader.Read())
-                                    {
+</asp:Content>
+<asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
+    
+    <!-- page specific plugins -->
+    <!-- datatables -->
+    <script src="bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
+    <!-- datatables colVis-->
+    <script src="bower_components/datatables-colvis/js/dataTables.colVis.js"></script>
+    <!-- datatables tableTools-->
+    <script src="bower_components/datatables-tabletools/js/dataTables.tableTools.js"></script>
+    <!-- datatables custom integration -->
+    <script src="assets/js/custom/datatables_uikit.min.js"></script>
 
-                                        String status_style = "";
-                                        if (reader["IMP_STATUS"].ToString() == "N") status_style = "<span class='uk-badge uk-badge-success'>ปกติ</span>";
-                                        else status_style = "<span class='uk-badge uk-badge-warning'>ยกเลิก</span>";
-                                        i++;
-                            %>
-                            <tr>
-                                <td class="uk-text-center"><span class="uk-text-small uk-text-muted uk-text-nowrap"><% Response.Write(i.ToString()); %></span></td>
-                                <td><% Response.Write(reader["IMP_FILENAME"].ToString()); %></td>
-                                <td><% Response.Write(reader["NUM_RECORD"].ToString()); %></td>
-                                <td><% Response.Write(status_style); %></td>
-                                <td><% Response.Write(reader["USER_NAME"].ToString()); %></td>
-                                <td><% Response.Write(reader["IMP_DATETIME"].ToString()); %></td>
-                                <td class="uk-text-center">
-                                    <a href="#" onclick="UIkit.modal.confirm('กรุณายืนยัน ยกเลิกการนำเข้าไฟล์ <% Response.Write(reader["IMP_FILENAME"].ToString()); %>', function(){ 
-                                            
-                                           
-                                        var parms = { omrimpseq : '<% Response.Write(reader["IMP_SEQ"].ToString()); %>' };
-
+    <script>
+        $(document).ready(function () {
             $.ajax({
-                type: 'POST',
-                url: 'deleteomrimport.aspx/deleteomr',
-               
-                data: '{\'impseq\':\'' + JSON.stringify(parms) + '\'}',
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                async: true,
-                success: function (msg) {
-                      var msgReturn =$.parseJSON(msg.d);
-                     // console.log(msgReturn);
-                        
-                      if( msgReturn == '1'){
-                              swal({
+                type: "POST",
+                dataType: "json",
+                url: "ImportomrService.asmx/GetDats",
+                success: function (data) {
+                    var datatableVariable = $('#dt_individual_search').DataTable({
+
+                        oLanguage: {
+                            sLengthMenu: "แสดง _MENU_ รายการต่อหน้า",
+                            sZeroRecords: "ไม่เจอข้อมูลที่ค้นหา",
+                            sInfo: "แสดงรายการที่ _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
+                            sInfoEmpty: "แสดง 0 ถึง 0 ของทั้งหมด 0 รายการ",
+                            sInfoFiltered: "(จากเร็คคอร์ดทั้งหมด _MAX_ เร็คคอร์ด)",
+                            sSearch: "ค้นหา :",
+                            oPaginate: {
+                                sFirst: "หน้าแรก",// ปุ่มกลับมาหน้าแรก
+                                sLast: "หน้าสุดท้าย",//ปุ่มไปหน้าสุดท้าย
+                                sNext: "ถัดไป",//ปุ่มหน้าถัดไป
+                                sPrevious: "ก่อนหน้า" // ปุ่ม กลับ
+                            }
+                        },
+                        columnDefs: [
+                            { searchable: false, orderable: false, "aTargets": [6] },
+                            { className: "dt-center", "targets": [0, 6] },
+                            { className: "dt-left", "targets": [1] },
+                            { width: "8%", "targets": 0 }
+                        ],
+                        lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                        data: data,
+                        columns: [
+                            { 'data': 'no' },
+                            { 'data': 'impfilename' },
+                            { 'data': 'imprecord' },
+                            {
+                                'data': 'impstatus', 'render': function (status) {
+                                    if (status == 'N') return "<span class='uk-badge uk-badge-success'>ปกติ</span>";
+                                    else return "<span class='uk-badge uk-badge-warning'>ยกเลิก</span>";
+                                }
+                            },
+                            { 'data': 'impby' },
+                            { 'data': 'impdate' },
+                            {
+                                'data': 'imptools', 'render': function (status, type, full) {
+                                    return "<a href='#' onclick='confirmdelete(" + status + ",\"" + full.impfilename + "\");'><i class='md-icon material-icons uk-text-danger'>&#xE872;</i></a>";
+                                   
+                                 }
+                             }
+                        ]
+                    });
+                    $('#dt_individual_search tfoot th').each(function () {
+                        if ($(this).index() != 0 && $(this).index() != 6) {
+                            var placeHolderTitle = $('#dt_individual_search thead th').eq($(this).index()).text();
+                            $(this).html('<input type="text" class="form-control input input-sm" placeholder = "ค้นหา ' + placeHolderTitle + '" />');
+                        }
+                    });
+                    datatableVariable.columns().every(function () {
+                        var column = this;
+                        $(this.footer()).find('input').on('keyup change', function () {
+                            column.search(this.value).draw();
+                        });
+                    });
+                }
+            });
+
+        });
+
+        function confirmdelete(impseq,impfilename) {
+            UIkit.modal.confirm("กรุณายืนยันการลบข้อมูลของ " + impfilename, function () {
+                
+                var parms = { omrimpseq: impseq};
+
+                //console.log(parms);
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'deleteomrimport.aspx/deleteomr',
+
+                    data: '{\'impseq\':\'' + JSON.stringify(parms) + '\'}',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    async: true,
+                    success: function (msg) {
+                        var msgReturn = $.parseJSON(msg.d);
+                        // console.log(msgReturn);
+
+                        if (msgReturn == '1') {
+                            swal({
                                 title: 'สำเร็จ',
                                 text: 'ยกเลิกการนำเข้าไฟล์ OMR เรียบร้อย',
                                 type: 'success',
                                 confirmButtonText: 'ตกลง',
                                 closeOnConfirm: true
                             },
-                               function () {
-                                        window.location = 'reportimportomr.aspx';
-                               });
-                      }else{
+                             function () {
+                                 window.location = 'reportimportomr.aspx';
+                             });
+                        } else {
                             swal({
                                 title: 'ผิดพาด!',
                                 text: msgReturn,
@@ -98,84 +167,15 @@
                                function () {
 
                                });
-                     }
-                                        
+                        }
 
-                }
+
+                    }
+                });
+
             });
+        }
 
-
-
-                                         });"><i class="md-icon material-icons uk-text-danger">&#xE872;</i></a>
-
-                                </td>
-                            </tr>
-                            <%
-                                    }
-                                    reader.Close();
-                                    conn.Close();
-                                }
-                                catch (Exception ex)
-                                {
-
-                                }
-                                finally
-                                {
-                                    if (conn != null && conn.State == System.Data.ConnectionState.Open)
-                                    {
-                                        conn.Close();
-                                    }
-                                }
-                            %>
-                        </tbody>
-                    </table>
-                </div>
-                <ul class="uk-pagination ts_pager">
-                    <li data-uk-tooltip title="Select Page">
-                        <select class="ts_gotoPage ts_selectize"></select>
-                    </li>
-                    <li class="first"><a href="javascript:void(0)"><i class="uk-icon-angle-double-left"></i></a></li>
-                    <li class="prev"><a href="javascript:void(0)"><i class="uk-icon-angle-left"></i></a></li>
-                    <li><span class="pagedisplay"></span></li>
-                    <li class="next"><a href="javascript:void(0)"><i class="uk-icon-angle-right"></i></a></li>
-                    <li class="last"><a href="javascript:void(0)"><i class="uk-icon-angle-double-right"></i></a></li>
-                    <li data-uk-tooltip title="Page Size">
-                        <select class="pagesize ts_selectize">
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                        </select>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-</asp:Content>
-<asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
-    <!-- page specific plugins -->
-    <!-- tablesorter -->
-    <script src="bower_components/tablesorter/dist/js/jquery.tablesorter.min.js"></script>
-    <script src="bower_components/tablesorter/dist/js/jquery.tablesorter.widgets.min.js"></script>
-    <script src="bower_components/tablesorter/dist/js/widgets/widget-alignChar.min.js"></script>
-    <script src="bower_components/tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js"></script>
-
-    <!--  issues list functions -->
-    <script src="assets/js/pages/reportimportomr.js"></script>
-
-    <script>
-
-        $(function () {
-
-            
-
-              
-
-
-
-
-       });
 
     </script>
 

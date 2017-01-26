@@ -127,6 +127,22 @@
                 url: "FactoryService.asmx/GetDats",
                 success: function (data) {
                     var datatableVariable = $('#dt_individual_search').DataTable({
+
+                        oLanguage: {
+                            sLengthMenu: "แสดง _MENU_ รายการต่อหน้า",
+                            sZeroRecords: "ไม่เจอข้อมูลที่ค้นหา",
+                            sInfo: "แสดงรายการที่ _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
+                            sInfoEmpty: "แสดง 0 ถึง 0 ของทั้งหมด 0 รายการ",
+                            sInfoFiltered: "(จากเร็คคอร์ดทั้งหมด _MAX_ เร็คคอร์ด)",
+                            sSearch: "ค้นหา :",
+                            oPaginate: {
+                            sFirst: "หน้าแรก",// ปุ่มกลับมาหน้าแรก
+                            sLast: "หน้าสุดท้าย",//ปุ่มไปหน้าสุดท้าย
+                            sNext: "ถัดไป",//ปุ่มหน้าถัดไป
+                            sPrevious: "ก่อนหน้า" // ปุ่ม กลับ
+                            }
+                        },
+
                         lengthMenu: [[5,10, 25, 50, -1], [5,10, 25, 50, "All"]],
                         data: data,
                         columns: [

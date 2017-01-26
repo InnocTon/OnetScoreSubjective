@@ -18,8 +18,7 @@
         <div class="md-card">
             <div class="md-card-content">
                 <div class="uk-overflow-container uk-margin-bottom">
-
-                    <table class="uk-table uk-table-align-vertical uk-table-nowrap tablesorter tablesorter-altair" id="ts_issues">
+                    <table class="uk-table" id="dt_individual_search">
                         <thead>
                             <tr>
                                 <th class="uk-text-center">ลำดับที่</th>
@@ -30,129 +29,24 @@
                                 <th>เครื่องมือ</th>
                             </tr>
                         </thead>
-                        <tbody>
-                              <%
-
-                                string connStr = ConfigurationManager.ConnectionStrings["SqlConnectionString"].ConnectionString;
-                                System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(connStr);
-
-                                try
-                                {
-                                    String query = " SELECT * FROM [dbo].[SYS_USER] WHERE USER_STATUS = 'N' ";
-                                    System.Data.SqlClient.SqlCommand command = new System.Data.SqlClient.SqlCommand(query, conn);
-                                    conn.Open();
-                                    System.Data.SqlClient.SqlDataReader reader = command.ExecuteReader();
-                                    int i = 1;
-                                    while (reader.Read())
-                                    {
-                                       
-                                 %>
+                        <tfoot>
                             <tr>
-                                <td class="uk-text-center"><span class="uk-text-small uk-text-muted uk-text-nowrap"><% Response.Write(i.ToString()); %></span></td>
-                                <td><% Response.Write(reader["USER_NAME"].ToString()); %></td>
-                                <td><% Response.Write(reader["USER_ID"].ToString()); %></td>
-                                <td><% Response.Write(reader["USER_TYPE"].ToString()); %></td>
-                                <td><% Response.Write(reader["USER_PASS"].ToString()); %></td>
-                                <td> 
-                                    <% if (reader["USER_TYPE"].ToString() != "admin")
-                                        { %>
-                                    <a href="#" title="ยกเลิกข้อมูล" onclick="UIkit.modal.confirm('กรุณายืนยันการลบข้อมูลของ <% Response.Write(reader["USER_NAME"].ToString()); %>', function(){ 
-                                            
-                                           
-                                        var parms = { usercode : '<% Response.Write(reader["USER_ID"].ToString()); %>' };
-
-            $.ajax({
-                type: 'POST',
-                url: 'deleteuser.aspx/deluser',
-               
-                data: '{\'ucode\':\'' + JSON.stringify(parms) + '\'}',
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                async: true,
-                success: function (msg) {
-                      var msgReturn =$.parseJSON(msg.d);
-                      
-                      if( msgReturn == '1'){
-                              swal({
-                                title: 'สำเร็จ',
-                                text: 'ลบข้อมูลผู้ใช้งานเรียบร้อย',
-                                type: 'success',
-                                confirmButtonText: 'ตกลง',
-                                closeOnConfirm: true
-                            },
-                               function () {
-                                        window.location = 'manageuser.aspx';
-                               });
-                      }else{
-                            swal({
-                                title: 'ผิดพาด!',
-                                text: msgReturn,
-                                type: 'error',
-                                confirmButtonText: 'ตกลง',
-                                closeOnConfirm: true
-                            },
-                               function () {
-
-                               });
-                     }
-
-
-                }
-
-                
-            });
-
-                                         });"><i class="md-icon material-icons uk-text-danger">&#xE872;</i></a>
-                                    <% }  %>
-                                </td>
+                                <th class="uk-text-center">ลำดับที่</th>
+                                <th>ชื่อ - นามสกุล</th>
+                                <th>รหัสผู้ใช้งาน</th>
+                                <th>ประเภทผู้ใช้งาน</th>
+                                <th>รหัสผ่าน</th>
+                                <th>เครื่องมือ</th>
                             </tr>
-                            <%
-
-                                        i++;
-                                    }
-                                    reader.Close();
-                                    conn.Close();
-                                }
-                                catch (Exception ex)
-                                {
-
-                                }
-                                finally
-                                {
-                                    if (conn != null && conn.State == System.Data.ConnectionState.Open)
-                                    {
-                                        conn.Close();
-                                    }
-                                }
-
-                                 %>
-                        </tbody>
+                        </tfoot>
                     </table>
                 </div>
-                 <ul class="uk-pagination ts_pager">
-                    <li data-uk-tooltip title="Select Page">
-                        <select class="ts_gotoPage ts_selectize"></select>
-                    </li>
-                    <li class="first"><a href="javascript:void(0)"><i class="uk-icon-angle-double-left"></i></a></li>
-                    <li class="prev"><a href="javascript:void(0)"><i class="uk-icon-angle-left"></i></a></li>
-                    <li><span class="pagedisplay"></span></li>
-                    <li class="next"><a href="javascript:void(0)"><i class="uk-icon-angle-right"></i></a></li>
-                    <li class="last"><a href="javascript:void(0)"><i class="uk-icon-angle-double-right"></i></a></li>
-                    <li data-uk-tooltip title="Page Size">
-                        <select class="pagesize ts_selectize">
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                        </select>
-                    </li>
-                </ul>
             </div>
         </div>
     </div>
 
 
-     <div class="uk-modal" id="modal_send_recive">
+    <div class="uk-modal" id="modal_send_recive">
         <div class="uk-modal-dialog">
             <div class="uk-modal-header">
                 <h3 class="uk-modal-title">เพิ่มรายชื่อผู้ตรวจ</h3>
@@ -165,7 +59,7 @@
                             <div class="uk-width-medium-2-2">
                                 <div class="parsley-row">
                                     <label for="usercodetxt">รหัสผู้ใช้งาน</label>
-                                    <input type="text" name="usercodetxt" id="usercodetxt" required="required" class="md-input" data-required-message="กรุณากรอกรหัสผู้ตรวจ" parsley-error-message="กรุณากรอกรหัสผู้ตรวจ" runat="server" data-parsley-minlength="13" data-parsley-maxlength="13" maxlength="13" />
+                                    <input type="text" name="usercodetxt" id="usercodetxt" required="required" class="md-input" data-required-message="กรุณากรอกรหัสผู้ตรวจ" parsley-error-message="กรุณากรอกรหัสผู้ตรวจ" runat="server" data-parsley-minlength="11" data-parsley-maxlength="11" maxlength="11" />
                                 </div>
                             </div>
                         </div>
@@ -183,7 +77,7 @@
                             <div class="uk-width-medium-2-2">
                                 <div class="parsley-row">
                                     <label for="passwordtxt">รหัสผ่าน</label>
-                                    <input type="text" name="passwordtxt" id="passwordtxt" required class="md-input" runat="server" data-required-message="กรุณากรอกเลขบัตรประชาชน" parsley-error-message="กรุณากรอกเลขบัตรประชาชน" data-parsley-minlength="4" data-parsley-maxlength="8" maxlength="8"/>
+                                    <input type="text" name="passwordtxt" id="passwordtxt" required class="md-input" runat="server" data-required-message="กรุณากรอกเลขบัตรประชาชน" parsley-error-message="กรุณากรอกเลขบัตรประชาชน" data-parsley-minlength="4" data-parsley-maxlength="8" maxlength="8" />
                                 </div>
                             </div>
                         </div>
@@ -215,12 +109,15 @@
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
 
-      <!-- page specific plugins -->
-    <!-- tablesorter -->
-    <script src="bower_components/tablesorter/dist/js/jquery.tablesorter.min.js"></script>
-    <script src="bower_components/tablesorter/dist/js/jquery.tablesorter.widgets.min.js"></script>
-    <script src="bower_components/tablesorter/dist/js/widgets/widget-alignChar.min.js"></script>
-    <script src="bower_components/tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js"></script>
+    <!-- page specific plugins -->
+    <!-- datatables -->
+    <script src="bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
+    <!-- datatables colVis-->
+    <script src="bower_components/datatables-colvis/js/dataTables.colVis.js"></script>
+    <!-- datatables tableTools-->
+    <script src="bower_components/datatables-tabletools/js/dataTables.tableTools.js"></script>
+    <!-- datatables custom integration -->
+    <script src="assets/js/custom/datatables_uikit.min.js"></script>
 
 
     <script>
@@ -248,9 +145,139 @@
 
     </script>
 
-     <script src="bower_components/parsleyjs/dist/parsley.js"></script>
-    <!--  issues list functions -->
-    <script src="assets/js/pages/managerater.js"></script>
+    <script src="bower_components/parsleyjs/dist/parsley.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "DatauserService.asmx/GetDats",
+                success: function (data) {
+                    var datatableVariable = $('#dt_individual_search').DataTable({
+
+                        oLanguage: {
+                            sLengthMenu: "แสดง _MENU_ รายการต่อหน้า",
+                            sZeroRecords: "ไม่เจอข้อมูลที่ค้นหา",
+                            sInfo: "แสดงรายการที่ _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
+                            sInfoEmpty: "แสดง 0 ถึง 0 ของทั้งหมด 0 รายการ",
+                            sInfoFiltered: "(จากเร็คคอร์ดทั้งหมด _MAX_ เร็คคอร์ด)",
+                            sSearch: "ค้นหา :",
+                            oPaginate: {
+                                sFirst: "หน้าแรก",// ปุ่มกลับมาหน้าแรก
+                                sLast: "หน้าสุดท้าย",//ปุ่มไปหน้าสุดท้าย
+                                sNext: "ถัดไป",//ปุ่มหน้าถัดไป
+                                sPrevious: "ก่อนหน้า" // ปุ่ม กลับ
+                            }
+                        },
+                        columnDefs: [
+                            { searchable: false, orderable: false, "aTargets": [5] },
+                            { className: "dt-center", "targets": [0,5] },
+                            { className: "dt-left", "targets": "1" },
+                            { width: "8%", "targets": 0 }
+                        ],
+                        lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                        data: data,
+                        columns: [
+                            { 'data': 'no' },
+                            { 'data': 'username' },
+                            { 'data': 'usercode' },
+                            {
+                                'data': 'usertype', 'render': function (status) {
+                                    var type = "";
+                                    switch (status) {
+                                        case "admin": type = "ผู้ดูแลระบบ"; break;
+                                        case "rater3": type = "ผู้ตรวจคนที่ 3"; break;
+                                        case "user": type = "เจ้าหน้าที่"; break;
+                                    }
+                                    return type;
+                                }
+                            },
+                            { 'data': 'userpass' },
+                            {
+                                'data': 'usertools', 'render': function (status, type, full) {
+                                    if (full.usertype != "admin") {
+                                        return "<a href='#'><i class='material-icons uk-text-success md-24'>&#xE417;</i></a> <a href='#' onclick='confirmdelete(" + full.usercode + ",\"" + full.username + "\");'><i class='md-icon material-icons uk-text-danger md-24'>&#xE872;</i></a> ";
+                                    } else {
+                                        return "<a href='#'><i class='material-icons uk-text-success md-24'>&#xE417;</i></a>";
+                                    }
+                                }
+                            }
+                        ]
+                    });
+                    $('#dt_individual_search tfoot th').each(function () {
+                        if ($(this).index() != 0 && $(this).index() != 5)
+                        {
+                            var placeHolderTitle = $('#dt_individual_search thead th').eq($(this).index()).text();
+                            $(this).html('<input type="text" class="form-control input input-sm" placeholder = "ค้นหา ' + placeHolderTitle + '" />');
+                        }
+                       
+                    });
+                    datatableVariable.columns().every(function () {
+                        var column = this;
+                        $(this.footer()).find('input').on('keyup change', function () {
+                            column.search(this.value).draw();
+                        });
+                    });
+
+                }
+            });
+
+        });
+
+        function confirmdelete(userid, username) {
+            UIkit.modal.confirm('กรุณายืนยันการลบข้อมูลของ' + username, function () {
+
+
+                var parms = { usercode: userid };
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'deleteuser.aspx/deluser',
+
+                    data: '{\'ucode\':\'' + JSON.stringify(parms) + '\'}',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    async: true,
+                    success: function (msg) {
+                        var msgReturn = $.parseJSON(msg.d);
+
+                        if (msgReturn == '1') {
+                            swal({
+                                title: 'สำเร็จ',
+                                text: 'ลบข้อมูลผู้ใช้งานเรียบร้อย',
+                                type: 'success',
+                                confirmButtonText: 'ตกลง',
+                                closeOnConfirm: true
+                            },
+                             function () {
+                                 window.location = 'manageuser.aspx';
+                             });
+                        } else {
+                            swal({
+                                title: 'ผิดพาด!',
+                                text: msgReturn,
+                                type: 'error',
+                                confirmButtonText: 'ตกลง',
+                                closeOnConfirm: true
+                            },
+                               function () {
+
+                               });
+                        }
+
+
+                    }
+
+
+                });
+
+            });
+        }
+
+    </script>
+
 
 </asp:Content>
 

@@ -9,7 +9,7 @@ using System.Web.Script.Serialization;
 using System.Web.Services;
 
 /// <summary>
-/// Summary description for FactoryService
+/// Summary description for ImportomrService
 /// </summary>
 [WebService(Namespace = "http://tempuri.org/")]
 [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
@@ -17,11 +17,12 @@ using System.Web.Services;
 [System.Web.Script.Services.ScriptService]
 // To allow this Web Service to be called from script, using ASP.NET AJAX, uncomment the following line. 
 // [System.Web.Script.Services.ScriptService]
-public class FactoryService : System.Web.Services.WebService
+public class ImportomrService : System.Web.Services.WebService
 {
     static string connStr = ConfigurationManager.ConnectionStrings["SqlConnectionString"].ConnectionString;
 
-    public FactoryService()
+
+    public ImportomrService()
     {
 
         //Uncomment the following line if using designed components 
@@ -32,31 +33,34 @@ public class FactoryService : System.Web.Services.WebService
     public void GetDats()
     {
 
-        var factorys = new List<ClassDataFactory>();
+        var omrs = new List<ClassDataOmr>();
         using (var con = new SqlConnection(connStr))
         {
-            String query = "SELECT * FROM TRN_FAC_IMPORT imp INNER JOIN SYS_IMPTYPE typ on imp.IMPTYPE_CODE = typ.IMPTYPE_CODE   INNER JOIN SYS_USER usr on usr.USER_ID = imp.IMP_BY";
+            String query = " SELECT ROW_NUMBER() OVER(ORDER BY IMP.IMP_SEQ ASC) AS Row#,IMP.IMP_SEQ,IMP.IMP_FILENAME,IMP.IMP_DATETIME,US.USER_NAME,DETAIL.NUM_RECORD,IMP.IMP_STATUS " +
+"  FROM [dbo].[TRN_OMR_IMPORT] IMP LEFT JOIN SYS_USER US ON US.USER_ID = IMP.IMP_BY LEFT JOIN ( " +
+"	SELECT COUNT(*) AS NUM_RECORD ,DT.IMP_SEQ FROM [dbo].[TRN_XM_BATCH_DETAIL]  DT WHERE DT.SHEET_STATUS = 'N' GROUP BY IMP_SEQ  " +
+"  ) AS DETAIL ON DETAIL.IMP_SEQ = IMP.IMP_SEQ WHERE IMP_STATUS = 'N'";
             var cmd = new SqlCommand(query, con) { CommandType = CommandType.Text };
             con.Open();
             var dr = cmd.ExecuteReader();
             while (dr.Read())
             {
-                var factory = new ClassDataFactory
+                var omr = new ClassDataOmr
                 {
-                  
-                    no = dr["IMP_SEQ"].ToString(),
-                    filename = dr["OLD_FILE_NAME"].ToString(),
-                    filestatus = dr["IMP_STATUS"].ToString(),
-                    filetype = dr["IMPTYPE_NAME"].ToString(),
-                    fileimport = dr["USER_NAME"].ToString(),
-                    filedate = dr["IMP_DATETIME"].ToString()
+                    no = dr["Row#"].ToString(),
+                    impfilename = dr["IMP_FILENAME"].ToString(),
+                    imprecord = dr["NUM_RECORD"].ToString(),
+                    impstatus = dr["IMP_STATUS"].ToString(),
+                    impby = dr["USER_NAME"].ToString(),
+                    impdate = dr["IMP_DATETIME"].ToString(),
+                    imptools = dr["IMP_SEQ"].ToString()
                 };
-                factorys.Add(factory);
+                omrs.Add(omr);
             }
             dr.Close();
         }
         var js = new JavaScriptSerializer();
-        Context.Response.Write(js.Serialize(factorys));
+        Context.Response.Write(js.Serialize(omrs));
     }
 
 }

@@ -9,7 +9,7 @@ using System.Web.Script.Serialization;
 using System.Web.Services;
 
 /// <summary>
-/// Summary description for FactoryService
+/// Summary description for DataraterService
 /// </summary>
 [WebService(Namespace = "http://tempuri.org/")]
 [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
@@ -17,11 +17,14 @@ using System.Web.Services;
 [System.Web.Script.Services.ScriptService]
 // To allow this Web Service to be called from script, using ASP.NET AJAX, uncomment the following line. 
 // [System.Web.Script.Services.ScriptService]
-public class FactoryService : System.Web.Services.WebService
+public class DataraterService : System.Web.Services.WebService
 {
+
     static string connStr = ConfigurationManager.ConnectionStrings["SqlConnectionString"].ConnectionString;
 
-    public FactoryService()
+
+
+    public DataraterService()
     {
 
         //Uncomment the following line if using designed components 
@@ -32,31 +35,30 @@ public class FactoryService : System.Web.Services.WebService
     public void GetDats()
     {
 
-        var factorys = new List<ClassDataFactory>();
+        var rates = new List<ClassDataRater>();
         using (var con = new SqlConnection(connStr))
         {
-            String query = "SELECT * FROM TRN_FAC_IMPORT imp INNER JOIN SYS_IMPTYPE typ on imp.IMPTYPE_CODE = typ.IMPTYPE_CODE   INNER JOIN SYS_USER usr on usr.USER_ID = imp.IMP_BY";
+            String query = "SELECT ROW_NUMBER() OVER(ORDER BY RATER_SEQ ASC) AS Row#,RATER_SEQ,RATER_CODE,(RATER_PRENAME + ' ' + RATER_FNAME + ' ' + RATER_LNAME)  AS RATER_NAME,RATER_CITIZENID,RATER_PLACE FROM TRN_XM_RATER WHERE RATER_STATUS = 'N'";
             var cmd = new SqlCommand(query, con) { CommandType = CommandType.Text };
             con.Open();
             var dr = cmd.ExecuteReader();
             while (dr.Read())
             {
-                var factory = new ClassDataFactory
+                var rater = new ClassDataRater
                 {
-                  
-                    no = dr["IMP_SEQ"].ToString(),
-                    filename = dr["OLD_FILE_NAME"].ToString(),
-                    filestatus = dr["IMP_STATUS"].ToString(),
-                    filetype = dr["IMPTYPE_NAME"].ToString(),
-                    fileimport = dr["USER_NAME"].ToString(),
-                    filedate = dr["IMP_DATETIME"].ToString()
+                    no = dr["Row#"].ToString(),
+                    ratername = dr["RATER_NAME"].ToString(),
+                    ratercode = dr["RATER_CODE"].ToString(),
+                    raterpid = dr["RATER_CITIZENID"].ToString(),
+                    raterplace = dr["RATER_PLACE"].ToString(),
+                    ratertools = dr["RATER_SEQ"].ToString()
                 };
-                factorys.Add(factory);
+                rates.Add(rater);
             }
             dr.Close();
         }
         var js = new JavaScriptSerializer();
-        Context.Response.Write(js.Serialize(factorys));
+        Context.Response.Write(js.Serialize(rates));
     }
 
 }

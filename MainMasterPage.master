@@ -157,6 +157,22 @@
 
                 <li>
                     <a href="#">
+                        <span class="menu_icon"><i class="material-icons">&#xE312;</i></span>
+                        <span class="menu_title">บันทึกคะแนนชุดที่ 3</span>
+                    </a>
+                    <ul>
+                        <li <% if (pageName == "Rater3No1") Response.Write("class='act_item'"); %>>
+                            <a href="Rater3No1.aspx">ข้อที่ 1</a></li>
+                        <li <% if (pageName == "Rater3No2") Response.Write("class='act_item'"); %>>
+                            <a href="Rater3No2.aspx">ข้อที่ 2</a></li>
+                    </ul>
+                </li>
+
+               
+
+
+                <li>
+                    <a href="#">
                         <span class="menu_icon"><i class="material-icons">&#xE02F;</i></span>
                         <span class="menu_title">รายงาน</span>
                     </a>
@@ -173,7 +189,7 @@
                         <span class="menu_title">ตั้งค่าโปรแกรม</span>
                     </a>
                     <ul>
-                        <li <% if (pageName == "userapplication") Response.Write("class='act_item'"); %>>
+                        <li <% if (pageName == "manageuser") Response.Write("class='act_item'"); %>>
                             <a href="manageuser.aspx">ตั้งค่าผู้ใช้งาน</a></li>
                         <li <% if (pageName == "managerater") Response.Write("class='act_item'"); %>>
                             <a href="managerater.aspx">ตั้งค่าผู้ตรวจ</a></li>
