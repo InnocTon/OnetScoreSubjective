@@ -50,7 +50,7 @@ public class DatauserService : System.Web.Services.WebService
                     usercode = dr["USER_ID"].ToString(),
                     usertype = dr["USER_TYPE"].ToString(),
                     userpass = dr["USER_PASS"].ToString(),
-                    usertools = "1"
+                    usertools = dr["USER_ID"].ToString()
                 };
                 users.Add(user);
             }

@@ -13,13 +13,9 @@
     </div>
 
     <div id="page_content_inner">
-        <div class="md-card">
-            <div class="md-card-content">
-                <div class="uk-overflow-container uk-margin-bottom">
-                    <CR:CrystalReportViewer ID="CrystalReportViewer1" runat="server" AutoDataBind="true" EnableDatabaseLogonPrompt="False" EnableParameterPrompt="False" ReportSourceID="CrystalReportSource1" ToolPanelView="None" Width="881px" />
-                </div>
-            </div>
-        </div>
+
+             <CR:CrystalReportViewer ID="CrystalReportViewer1" runat="server" AutoDataBind="true" EnableDatabaseLogonPrompt="False" EnableParameterPrompt="False" ReportSourceID="CrystalReportSource1" ToolPanelView="None" Width="350px" />
+
     </div>
 
     </form>

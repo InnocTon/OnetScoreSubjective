@@ -19,6 +19,7 @@
         String RATER_MOBILE = "";
         String RATER_FAX = "";
         String RATER_SEQ = "";
+        String REATER_IMG = "";
 
         if (Request.QueryString["seq"] != null)
         {
@@ -75,7 +76,7 @@
 
     <div id="page_content">
         <div id="page_content_inner">
-            <div class="uk-grid" data-uk-grid-margin data-uk-grid-match id="user_profile">
+            <div class="uk-grid" id="user_profile">
                 <div class="uk-width-large-8-10">
                     <div class="md-card">
                         <div class="user_heading">
@@ -84,26 +85,40 @@
                                 <div class="uk-dropdown uk-dropdown-small">
                                     <ul class="uk-nav">
                                         <li><a href="#" onclick="confirmdelete('<% Response.Write(RATER_SEQ); %>','<% Response.Write(RATER_NAME); %>');">ลบข้อมูลผู้ตรวจ</a></li>
+                                        <li><a href="#">แก้ไขข้อมูล</a></li>
                                     </ul>
                                 </div>
                             </div>
                             <div class="user_heading_avatar">
-                                <img src="<% Response.Write("raterimages/" + RATER_CITIZENID + ".png"); %>" alt="user avatar" />
+                                <%
+                                    if (System.IO.File.Exists(Server.MapPath("~/raterimages/" + RATER_CITIZENID + ".png" )))
+                                    {
+                                        REATER_IMG = "raterimages/" + RATER_CITIZENID + ".png";
+                                    }
+                                    else
+                                    {
+                                        REATER_IMG = "raterimages/avatar_01.png";
+                                    }
+                                     %>
+                                <img src="<% Response.Write(REATER_IMG); %>" alt="user avatar" />
                             </div>
                             <div class="user_heading_content">
                                 <h2 class="heading_b uk-margin-bottom">
                                     <span class="uk-text-truncate"><% Response.Write(RATER_NAME);  %></span>
-                                    <span class="sub-heading"><% Response.Write(RATER_CODE); %></span></h2>
-                                <ul class="user_stats">
+                                    <span class="sub-heading">
+                                        <% Response.Write(RATER_CODE); %>
+                                        <input id="latercode" type="hidden" value="<% Response.Write(RATER_CODE); %>" />
+                                    </span></h2>
+                              <!--  <ul class="user_stats">
                                     <li>
                                         <h4 class="heading_a">2391 <span class="sub-heading">จำนวนตรวจ</span></h4>
                                     </li>
                                     <li>
                                         <h4 class="heading_a">120 <span class="sub-heading">จำนวนที่ต่าง</span></h4>
                                     </li>
-                                </ul>
+                                </ul> -->
                             </div>
-                            <a class="md-fab md-fab-small md-fab-accent" href="#" title="พิมพ์บัตรประจำตัว">
+                            <a class="md-fab md-fab-small md-fab-accent" href="nametag.aspx?rater_seq=<%=Request.QueryString["seq"].ToString() %>" title="พิมพ์บัตรประจำตัว">
                                 <i class="material-icons">&#xE8A3;</i>
                             </a>
                         </div>
@@ -183,7 +198,7 @@
                                                     </div>
                                                     <div class="md-list-content">
                                                         <span class="md-list-heading"><% Response.Write(RATER_EMAIL); %></span>
-                                                        <span class="uk-text-small uk-text-muted">Email</span>
+                                                        <span class="uk-text-small uk-text-muted">อีเมล์</span>
                                                     </div>
                                                 </li>
                                                 <li>
@@ -246,8 +261,6 @@
                                                         </table>
                                                     </div>
                                                 </div>
-
-
                                     </ul>
                                 </li>
                             </ul>
@@ -277,22 +290,26 @@
 
         $(document).ready(function () {
 
-            var raterid = "1";
-            var parms = { raterseq: raterid };
+            var ratercode = $("#latercode").val().toString();
+            var parms = { "ratercode": ratercode };
 
-            console.log('{\'rseq\':\'' + JSON.stringify(parms) + '\'}');
+          //  console.log('{\'rater\':\'' + JSON.stringify(parms) + '\'}');
+
+          //  console.log(parms);
 
             $.ajax({
                 type: "POST",
                 dataType: "json",
+                contentType: 'application/json; charset=utf-8',
                 url: "DatapackageService.asmx/GetDataRater",
-                data: '{\'rseq\':\'' + JSON.stringify(parms) + '\'}',
+                data: '{\'rater\':\'' + JSON.stringify(parms) + '\'}',
                 success: function (data) {
+                 //   console.log(data.d);
                     var datatableVariable = $('#dt_individual_search').DataTable({
 
                         oLanguage: {
                             sLengthMenu: "แสดง _MENU_ รายการต่อหน้า",
-                            sZeroRecords: "ไม่เจอข้อมูลที่ค้นหา",
+                            sZeroRecords: "ไม่พบข้อมูล",
                             sInfo: "แสดงรายการที่ _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
                             sInfoEmpty: "แสดง 0 ถึง 0 ของทั้งหมด 0 รายการ",
                             sInfoFiltered: "(จากเร็คคอร์ดทั้งหมด _MAX_ เร็คคอร์ด)",
@@ -310,8 +327,8 @@
                            { className: "dt-left", "targets": "1" },
                            { width: "8%", "targets": 0 }
                         ],
-                        lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
-                        data: data,
+                        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                        data: data.d,
                         columns: [
                             { 'data': 'no' },
                             { 'data': 'boxcode' },
@@ -337,7 +354,10 @@
                         $(this.footer()).find('input').on('keyup change', function () {
                             column.search(this.value).draw();
                         });
-                    });
+                    }); 
+                }, error: function (xhr, ajaxOptions, thrownError) {
+                    console.log(xhr.responseText);
+                    console.log(thrownError);
                 }
             });
 
@@ -350,12 +370,11 @@
 
                 var parms = { raterseq: raterid };
 
-                console.log('{\'rseq\':\'' + JSON.stringify(parms) + '\'}');
+            //    console.log('{\'rseq\':\'' + JSON.stringify(parms) + '\'}');
 
                 $.ajax({
                     type: 'POST',
                     url: 'deleterater.aspx/delrater',
-
                     data: '{\'rseq\':\'' + JSON.stringify(parms) + '\'}',
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',

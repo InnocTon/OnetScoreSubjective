@@ -42,18 +42,49 @@ public partial class _Default : System.Web.UI.Page
                 USER_ID = reader["USER_ID"].ToString();
             }
 
-            if(USER_NAME != String.Empty)
-            {
-                Session.Add("USER_ID", USER_ID);
-                Session.Add("USER_NAME", USER_NAME);
-                Session.Add("USER_TYPE", USER_TYPE);
+            conn.Close();
+            reader.Close();
 
-                Response.Redirect("Dashboard.aspx");
+            if (USER_NAME != String.Empty)
+            {
+                //ADD TO SYS_LOG
+                SqlTransaction trans = null;
+                query = "INSERT INTO SYS_LOG([LOG_NAME],[LOG_DESC],[LOG_DATE],[LOG_TYPE],[LOG_CODE]) values(@logname , @logdesc, getdate() , @logtype , @logcode)";
+                command = new SqlCommand(query, conn);
+                command.Parameters.AddWithValue("@logname","Login Success");
+                command.Parameters.AddWithValue("@logtype", "LOGIN");
+                command.Parameters.AddWithValue("@logcode", USER_ID);
+                command.Parameters.AddWithValue("@logdesc", USER_NAME + " เข้าใช้งานระบบสำเร็จ");
+                conn.Open();
+                trans = conn.BeginTransaction();
+                command.Transaction = trans;
+                int result = command.ExecuteNonQuery();
+                
+                if(result == 1)
+                {
+                    trans.Commit();
+                    Session.Add("USER_ID", USER_ID);
+                    Session.Add("USER_NAME", USER_NAME);
+                    Session.Add("USER_TYPE", USER_TYPE);
+                    conn.Close();
+                    Response.Redirect("Dashboard.aspx");
+                }
+                else
+                {
+                    trans.Rollback();
+                    conn.Close();
+                    ScriptManager.RegisterStartupScript(this, GetType(), "login", "swal({   title: 'เกิดความผิดพลาด!',   text: 'ไม่สามารถบันทึก log ได้. กรุณาลองใหม่อีกครั้ง',   type: 'error',  confirmButtonText: 'ตกลง',   closeOnConfirm: true }, function(){ });", true);
+                }
+
+                
 
             }else
             {
                 ScriptManager.RegisterStartupScript(this, GetType(), "login", "swal({   title: 'เกิดความผิดพลาด!',   text: 'ข้อมูลผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง.  กรุณาลองใหม่อีกครั้ง',   type: 'error',  confirmButtonText: 'ตกลง',   closeOnConfirm: true }, function(){ });", true);
             }
+
+
+            
 
             
 

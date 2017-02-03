@@ -87,7 +87,7 @@
                                 <div class="parsley-row">
                                     <select id="typeaction" name="typeaction" runat="server" required class="md-input" data-required-message="กรุณาเลือกประเภทผู้ใช้งาน" parsley-error-message="กรุณาเลือกประเภทผู้ใช้งาน">
                                         <option value="">กรุณาเลือกประเภทผู้ใช้งาน</option>
-                                        <option value="rater3">Rater คนที่ 3</option>
+                                        <option value="rater3">ผู้ตรวจคนที่ 3</option>
                                         <option value="user">เจ้าหน้าที่</option>
                                     </select>
                                 </div>
@@ -173,7 +173,7 @@
                         },
                         columnDefs: [
                             { searchable: false, orderable: false, "aTargets": [5] },
-                            { className: "dt-center", "targets": [0,5] },
+                            { className: "dt-center", "targets": [0, 5] },
                             { className: "dt-left", "targets": "1" },
                             { width: "8%", "targets": 0 }
                         ],
@@ -200,19 +200,18 @@
                                     if (full.usertype != "admin") {
                                         return "<a href='#'><i class='material-icons uk-text-success md-24'>&#xE417;</i></a> <a href='#' onclick='confirmdelete(" + full.usercode + ",\"" + full.username + "\");'><i class='md-icon material-icons uk-text-danger md-24'>&#xE872;</i></a> ";
                                     } else {
-                                        return "<a href='#'><i class='material-icons uk-text-success md-24'>&#xE417;</i></a>";
+                                        return "<a href='userdetail.aspx?seq=" + status + "'><i class='material-icons uk-text-success md-24'>&#xE417;</i></a>";
                                     }
                                 }
                             }
                         ]
                     });
                     $('#dt_individual_search tfoot th').each(function () {
-                        if ($(this).index() != 0 && $(this).index() != 5)
-                        {
+                        if ($(this).index() != 0 && $(this).index() != 5) {
                             var placeHolderTitle = $('#dt_individual_search thead th').eq($(this).index()).text();
                             $(this).html('<input type="text" class="form-control input input-sm" placeholder = "ค้นหา ' + placeHolderTitle + '" />');
                         }
-                       
+
                     });
                     datatableVariable.columns().every(function () {
                         var column = this;

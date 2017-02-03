@@ -69,7 +69,7 @@ public partial class deleteomrimport : System.Web.UI.Page
                     if (result == 1)
                     {
                         result = 0;
-                        query = "UPDATE trn_xm_batch_detail SET SHEET_STATUS = 'C',UPDATE_BY = @upby,UPDATE_DATETIME = getdate() WHERE IMP_SEQ = @impseq";
+                        query = "UPDATE trn_xm_batch_detail SET SHEET_STATUS = 'C',UPD_BY = @upby,UPD_DATETIME = getdate() WHERE IMP_SEQ = @impseq";
                         command = new SqlCommand(query, conn);
                         command.Parameters.AddWithValue("@impseq", IMP_SEQ);
                         command.Parameters.AddWithValue("@upby", HttpContext.Current.Session["USER_ID"].ToString());

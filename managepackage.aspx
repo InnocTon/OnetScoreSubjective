@@ -5,8 +5,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <div id="page_heading" data-uk-sticky="{ top: 48, media: 960 }">
         <div class="heading_actions">
-            <a href="#" data-uk-tooltip="{pos:'bottom'}" title="รายงาน"><i class="md-icon material-icons">&#xE415;</i></a>
-            <a href="#" data-uk-tooltip="{pos:'bottom'}" title="พิมพ์"><i class="md-icon material-icons">&#xE8AD;</i></a>
+            <a href="reportstatuspackage.aspx" data-uk-tooltip="{pos:'bottom'}" title="รายงาน"><i class="md-icon material-icons">&#xE415;</i></a>
             <a href="#" data-uk-tooltip="{pos:'bottom'}" title="รับ-ส่ง" id="sendrecivebtn" data-uk-modal="{target:'#modal_send_recive'}"><i class="md-icon material-icons">&#xE03C;</i></a>
         </div>
         <h1><i class="material-icons">&#xE80D;</i> รับ-ส่ง ซองบรรจุใบบันทึกคะแนนอัตนัย</h1>
@@ -67,7 +66,7 @@
                         <div class="uk-grid" data-uk-grid-margin>
                             <div class="uk-width-medium-2-2">
                                 <div class="parsley-row">
-                                    <label for="ratercodetxt">รหัสผู้ตรวจ/รหัสเจ้าหน้าที่</label>
+                                    <label for="ratercodetxt">รหัสผู้ตรวจ</label>
                                     <input type="text" name="ratercodetxt" id="ratercodetxt" required class="md-input" runat="server" data-required-message="กรุณากรอกรหัสผู้ตรวจ/รหัสเจ้าหน้าที่" parsley-error-message="กรุณากรอกรหัสผู้ตรวจ/รหัสเจ้าหน้าที่" />
                                 </div>
                             </div>
@@ -80,9 +79,6 @@
                                         <option value="">กรุณาเลือกสถานะซอง</option>
                                         <option value="rater">ผู้ตรวจรับซอง</option>
                                         <option value="return">ผู้ตรวจส่งซองคืน</option>
-                                        <option value="omr">ส่งห้องอ่าน OMR</option>
-                                        <option value="modify">ส่งแก้ไขข้อมูล</option>
-                                        <option value="final">ดำเนินการเสร็จเรียบร้อย</option>
                                     </select>
                                 </div>
                             </div>
@@ -149,11 +145,14 @@
                 dataType: "json",
                 url: "DatapackageService.asmx/GetDats",
                 success: function (data) {
+
+                  //  console.log(data);
+
                     var datatableVariable = $('#dt_individual_search').DataTable({
 
                         oLanguage: {
                             sLengthMenu: "แสดง _MENU_ รายการต่อหน้า",
-                            sZeroRecords: "ไม่เจอข้อมูลที่ค้นหา",
+                            sZeroRecords: "ไม่พบข้อมูล",
                             sInfo: "แสดงรายการที่ _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
                             sInfoEmpty: "แสดง 0 ถึง 0 ของทั้งหมด 0 รายการ",
                             sInfoFiltered: "(จากเร็คคอร์ดทั้งหมด _MAX_ เร็คคอร์ด)",
@@ -181,12 +180,15 @@
                             {
                                 'data': 'packagestatus', 'render': function (status) {
                                     if (status == 'F') return "<span class='uk-badge uk-badge-success'>สำเร็จแล้ว</span>";
-                                    else return "<span class='uk-badge uk-badge-warning'>อยู่ระหว่างดำเนินการ</span>";
+                                    else if (status == 'R') return "<span class='uk-badge uk-badge-warning'>ผู้ตรวจรับซอง</span>";
+                                    else if (status == 'S') return "<span class='uk-badge uk-badge-warning'>ผู้ตรวจส่งคืนซอง</span>";
+                                    else if (status == 'O') return "<span class='uk-badge uk-badge-warning'>อ่าน OMR</span>";
+                                    else return "<span class='uk-badge uk-badge-default'>รอดำเนินการ</span>";
                                 }
                             },
                             {
                                 'data': 'packagetools', 'render': function (status, type, full) {
-                                    return "<a href='packagedetial.aspx?seq=" + status + "'><i class='material-icons uk-text-success md-24'>&#xE417;</i></a>";
+                                    return "<a href='packagedetail.aspx?seq=" + status + "'><i class='material-icons uk-text-success md-24'>&#xE417;</i></a>";
                                 }
                             },
 

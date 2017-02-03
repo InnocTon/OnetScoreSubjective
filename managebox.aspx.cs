@@ -34,8 +34,12 @@ public partial class managebox : System.Web.UI.Page
         // CHECK BOX CODE in DB
         Boolean StatusBox = CheckBoxStatus(boxcode, actionstatus);
         Boolean StatusUser = CheckUserStatus(usercode);
+        Boolean StatusPackage = false;
 
-        if(StatusBox && StatusUser)
+        if (actionstatus == "omr") StatusPackage = CheckPackageStatus(boxcode);
+        else StatusPackage = true;
+
+        if (StatusBox && StatusUser && StatusPackage)
         {
 
             SqlConnection conn = new SqlConnection(connStr);
@@ -49,7 +53,10 @@ public partial class managebox : System.Web.UI.Page
                 {
                     case "borrow": box_status = "B"; break;
                     case "return": box_status = "N"; break;
+                    case "omr": box_status = "O"; break;
                 }
+
+
 
                 conn.Open();
                 trans = conn.BeginTransaction();
@@ -118,6 +125,59 @@ public partial class managebox : System.Web.UI.Page
         }
 
     }
+    
+    /// <summary>
+    /// ตรวจสอบซองทั้งหมดในกล่องว่าถูกตรวจแล้วหรือยัง
+    /// </summary>
+    /// <param name="boxcode">รหัสกล่อง</param>
+    /// <returns>True = ทั้งหมดถูกตรวจ , Else = มีบางซองยังไม่ถูกตรวจ</returns>
+    private Boolean CheckPackageStatus(String boxcode)
+    {
+        Boolean StatusBox = true;
+        SqlConnection conn = new SqlConnection(connStr);
+        try
+        {
+            conn.Open();
+            String query = "select pk.PACKAGE_CODE from [dbo].[TRN_XM_BOX] bx inner join [dbo].[TRN_XM_PACKAGE] pk on bx.BOX_CODE = pk.BOX_CODE WHERE pk.PACKAGE_STATUS != 'S' and bx.BOX_CODE = @boxcode ";
+            SqlCommand command = new SqlCommand(query, conn);
+            command.Parameters.AddWithValue("@boxcode", boxcode);
+            SqlDataReader reader = command.ExecuteReader();
+            String pcode = "";
+            while (reader.Read())
+            {
+                pcode = reader["PACKAGE_CODE"].ToString();
+            }
+
+
+            if (pcode != "")
+            {
+                showMessage("คำเตือน!", "มีบางซองในกล่องนี้ยังไม่ยังไม่ถูกส่งคืน", "warning");
+                StatusBox = false;
+            }
+            else
+            {
+                StatusBox = true;
+
+            }
+
+            reader.Close();
+            conn.Close();
+
+        }
+        catch (Exception ex)
+        {
+            showMessage("ข้อผิดพลาด!", ex.Message, "error");
+        }
+        finally
+        {
+            if (conn != null && conn.State == ConnectionState.Open)
+            {
+                conn.Close();
+            }
+        }
+
+        return StatusBox;
+    }
 
     private Boolean CheckBoxStatus(String boxcode,String actionstatus)
     {
@@ -160,6 +220,7 @@ public partial class managebox : System.Web.UI.Page
                     showMessage("คำเตือน!", "สถานะกล่องใบนี้อยู่ในห้องมั่นคงอยู่แล้ว", "warning");
                     StatusBox = false;
                 }
+
             }
 
             reader.Close();

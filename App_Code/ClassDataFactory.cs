@@ -15,6 +15,7 @@ public class ClassDataFactory
     public string filetype { get; set; }
     public string fileimport { get; set; }
     public string filedate { get; set; }
+    public string filetools { get; set; }
 
     public ClassDataFactory()
     {

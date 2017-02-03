@@ -1,38 +1,34 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MainMasterPage.master" AutoEventWireup="true" CodeFile="managebox.aspx.cs" Inherits="managebox" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MainMasterPage.master" AutoEventWireup="true" CodeFile="Worktime.aspx.cs" Inherits="Worktime" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
     <div id="page_heading" data-uk-sticky="{ top: 48, media: 960 }">
         <div class="heading_actions">
             <a href="reportstatusbox.aspx" data-uk-tooltip="{pos:'bottom'}" title="รายงาน"><i class="md-icon material-icons">&#xE415;</i></a>
             <a href="#" data-uk-tooltip="{pos:'bottom'}" title="รับ-ส่ง" id="sendrecivebtn" data-uk-modal="{target:'#modal_send_recive'}"><i class="md-icon material-icons">&#xE03C;</i></a>
         </div>
-        <h1><i class="material-icons">&#xE80D;</i> รับ-ส่ง กล่องบรรจุใบบันทึกคะแนนอัตนัย</h1>
-        <span class="uk-text-upper uk-text-small">ข้อมูลรับ-ส่งกล่องบรรจุใบบันทึกคะแนนอัตนัย</span>
+        <h1><i class="material-icons md-24">&#xE855;</i> บันทึกเวลาปฏิบัติงาน</h1>
+        <span class="uk-text-upper uk-text-small">ลงเวลาเข้า-ออก ปฏิบัติงานตรวจกระดาษคำตอบอัตนัยของครูผู้ตรวจ (Rater)</span>
     </div>
 
-    <div id="page_content_inner">
+     <div id="page_content_inner">
         <div class="md-card">
             <div class="md-card-content">
                 <div class="uk-overflow-container uk-margin-bottom">
-                    <table class="uk-table" id="dt_individual_search">
+                    <table class="uk-table" id="dt_worktime_search">
                         <thead>
                             <tr>
                                 <th class="uk-text-center">ลำดับที่</th>
-                                <th>รหัสกล่อง</th>
-                                <th>จำนวนซอง</th>
-                                <th>สถานะกล่อง</th>
-                                <th>เครื่องมือ</th>
+                                <th>ชื่อผู้ตรวจ</th>
+                                <th>วันที่ปฏิบัติงาน</th>
                             </tr>
                         </thead>
                         <tfoot>
                              <tr>
                                 <th></th>
-                                <th>รหัสกล่อง</th>
-                                <th>จำนวนซอง</th>
-                                <th>สถานะกล่อง</th>
-                                 <th></th>
+                                <th>ชื่อผู้ตรวจ</th>
+                                <th>วันที่ปฏิบัติงาน</th>
                             </tr>
                         </tfoot>
                     </table>
@@ -42,10 +38,10 @@
     </div>
 
 
-    <div class="uk-modal" id="modal_send_recive">
+      <div class="uk-modal" id="modal_send_recive">
         <div class="uk-modal-dialog">
             <div class="uk-modal-header">
-                <h3 class="uk-modal-title">แบบฟอร์ม รับ-ส่ง กล่องบรรจุใบบันทึกคะแนนอัตนัย</h3>
+                <h3 class="uk-modal-title">แบบฟอร์ม ลงเวลาปฏิบัติงาน</h3>
             </div>
             <form id="form_validation" class="uk-form-stacked" runat="server" autocomplete="off">
                 <div class="uk-width-medium-3-3">
@@ -54,31 +50,8 @@
                         <div class="uk-grid" data-uk-grid-margin>
                             <div class="uk-width-medium-2-2">
                                 <div class="parsley-row">
-                                    <label for="boxcodetxt">รหัสกล่อง</label>
-                                    <input type="text" name="boxcodetxt" id="boxcodetxt" required="required" class="md-input" data-required-message="กรุณากรอกรหัสกล่อง" parsley-error-message="กรุณากรอกรหัสกล่อง" runat="server" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="uk-grid" data-uk-grid-margin>
-                            <div class="uk-width-medium-2-2">
-                                <div class="parsley-row">
-                                    <label for="ratercodetxt">รหัสเจ้าหน้าที่</label>
-                                    <input type="text" name="usercodetxt" id="usercodetxt" required class="md-input" runat="server" data-required-message="กรุณากรอกรหัสเจ้าหน้าที่" parsley-error-message="กรุณากรอกรหัสเจ้าหน้าที่" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="uk-grid" data-uk-grid-margin>
-                            <div class="uk-width-medium-2-2">
-                                <div class="parsley-row">
-                                    <select id="boxaction" name="boxaction" runat="server" required class="md-input" data-required-message="กรุณาเลือกสถานะกล่อง" parsley-error-message="กรุณาเลือกสถานะกล่อง">
-                                        <option value="">กรุณาเลือกสถานะกล่อง</option>
-                                        <option value="borrow">เบิกกล่องส่งตรวจ</option>
-                                        <option value="omr">ส่งกล่องอ่าน OMR</option>
-                                        <option value="return">ส่งกล่องคืนห้องมั่นคง</option>
-
-                                    </select>
+                                    <label for="ratercodetxt">รหัสผู้ตรวจ</label>
+                                    <input type="text" name="ratercodetxt" id="ratercodetxt" required="required" class="md-input" data-required-message="กรุณากรอกรหัสผู้ตรวจ" parsley-error-message="กรุณากรอกรหัสผู้ตรวจ" runat="server" />
                                 </div>
                             </div>
                         </div>
@@ -92,11 +65,11 @@
             </form>
         </div>
     </div>
+
 </asp:Content>
-<asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
+<asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder2" Runat="Server">
 
-
-    <!-- page specific plugins -->
+       <!-- page specific plugins -->
     <!-- datatables -->
     <script src="bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
     <!-- datatables colVis-->
@@ -107,8 +80,7 @@
     <script src="assets/js/custom/datatables_uikit.min.js"></script>
 
 
-
-    <script>
+     <script>
         // load parsley config (altair_admin_common.js)
         altair_forms.parsley_validation_config();
         //Modal
@@ -120,9 +92,7 @@
 
             'hide.uk.modal': function () {
                 //        console.log("Element is not visible.");
-                $("#<%=boxcodetxt.ClientID%>").val('');
-                $("#<%=usercodetxt.ClientID%>").val('');
-                $("#<%=boxaction.ClientID%>").val('');
+                $("#<%=ratercodetxt.ClientID%>").val('');
                 $('#form_validation').parsley().reset();
 
 
@@ -132,18 +102,19 @@
 
 
     </script>
-    <script src="bower_components/parsleyjs/dist/parsley.js"></script>
+        <script src="bower_components/parsleyjs/dist/parsley.js"></script>
     <!--  issues list functions -->
-  
-       <script>
+
+
+    <script>
 
         $(document).ready(function () {
             $.ajax({
                 type: "POST",
                 dataType: "json",
-                url: "DataboxService.asmx/GetDats",
+                url: "DataworkService.asmx/GetDats",
                 success: function (data) {
-                    var datatableVariable = $('#dt_individual_search').DataTable({
+                    var datatableVariable = $('#dt_worktime_search').DataTable({
 
                         oLanguage: {
                             sLengthMenu: "แสดง _MENU_ รายการต่อหน้า",
@@ -160,8 +131,7 @@
                             }
                         },
                         columnDefs: [
-                          { searchable: false, orderable: false, "aTargets": [0,4] },
-                          { className: "dt-center", "targets": [0, 3, 4] },
+                          { className: "dt-center", "targets": [0, 2] },
                           { className: "dt-left", "targets": "1" },
                           { width: "8%", "targets": 0 }
                         ],
@@ -169,27 +139,13 @@
                         data: data,
                         columns: [
                             { 'data': 'no' },
-                            { 'data': 'boxcode' },
-                            { 'data': 'packagenum' },
-                            { 'data': 'boxstatus' },
-                            {
-                                'data': 'boxtools', 'render': function (status, type, full) {
-                                     return "<a href='boxdetail.aspx?seq=" + status + "'><i class='material-icons uk-text-success md-24'>&#xE417;</i></a>";
-                                 }
-                            }
+                            { 'data': 'ratername' },
+                            { 'data': 'workdate' }
                             ]
-/*
-                            {
-                                'data': 'dateOfBirth', 'render': function (date) {
-                                    var date = new Date(parseInt(date.substr(6)));
-                                    var month = date.getMonth() + 1;
-                                    return date.getDate() + "/" + month + "/" + date.getFullYear();
-                                }
-                            }*/
                     });
-                    $('#dt_individual_search tfoot th').each(function () {
+                    $('#dt_worktime_search tfoot th').each(function () {
                         if ($(this).index() != 0 && $(this).index() != 5) {
-                            var placeHolderTitle = $('#dt_individual_search thead th').eq($(this).index()).text();
+                            var placeHolderTitle = $('#dt_worktime_search thead th').eq($(this).index()).text();
                             $(this).html('<input type="text" class="form-control input input-sm" placeholder = "ค้นหา ' + placeHolderTitle + '" />');
                         }
                     });
@@ -205,10 +161,6 @@
         });
 
     </script>
-
-
-
-
 
 
 </asp:Content>

@@ -34,10 +34,10 @@ public partial class managepackage : System.Web.UI.Page
         {
             StatusRater = CheckRaterStatus(ratercode);
         }
-        else if(actionstatus == "omr" || actionstatus == "modify" || actionstatus == "final")
+     /*   else if(actionstatus == "omr" || actionstatus == "modify" || actionstatus == "final")
         {
             StatusRater = CheckUserStatus(ratercode);
-        }
+        }*/
 
         
 
@@ -54,9 +54,9 @@ public partial class managepackage : System.Web.UI.Page
                 {
                     case "rater": package_status = "R"; break; //ส่งให้ rater ตรวจ
                     case "return": package_status = "S"; break; // rater ส่งคืน
-                    case "omr": package_status = "O"; break; // ส่งเข้าห้องอ่าน OMR
-                    case "modify": package_status = "N"; break; // ส่งแก้ไขข้อมูล
-                    case "final": package_status = "F"; break; // ดำเนินการเสร็จเรียบร้อย
+               //     case "omr": package_status = "O"; break; // ส่งเข้าห้องอ่าน OMR
+               //     case "modify": package_status = "N"; break; // ส่งแก้ไขข้อมูล
+               //     case "final": package_status = "F"; break; // ดำเนินการเสร็จเรียบร้อย
                 }
 
                 conn.Open();

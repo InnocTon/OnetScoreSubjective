@@ -19,12 +19,6 @@ public partial class importdatafactory : System.Web.UI.Page
     {
 
 
-      
-
-
-
-
-
 
 
     }
@@ -122,8 +116,34 @@ public partial class importdatafactory : System.Web.UI.Page
                                         countline++;
                                     }
                                     conn.Close();
-                                    //  showMessage("สำเร็จ", "นำเข้าข้อมูลกล่องจากโรงงานเรียบร้อยแล้ว", "success");
-                                    ScriptManager.RegisterStartupScript(this, GetType(), "message", "swal({   title: 'สำเร็จ',   text: 'นำเข้าข้อมูลใบบันทึกคะแนนจากโรงงานเรียบร้อยแล้ว',   type: 'success',  confirmButtonText: 'ตกลง',   closeOnConfirm: false }, function(){ window.location = 'importdatafactory.aspx'; });", true);
+
+
+                                    //ADD TO SYS_LOG
+                                    SqlTransaction trans = null;
+                                    query = "INSERT INTO SYS_LOG([LOG_NAME],[LOG_DESC],[LOG_DATE],[LOG_TYPE],[LOG_CODE]) values(@logname , @logdesc, getdate() , @logtype , @logcode)";
+                                    command = new SqlCommand(query, conn);
+                                    command.Parameters.AddWithValue("@logname", "Import Data Paper Success");
+                                    command.Parameters.AddWithValue("@logtype", "IMPORTPAPER");
+                                    command.Parameters.AddWithValue("@logcode", Session["USER_ID"].ToString());
+                                    command.Parameters.AddWithValue("@logdesc", "นำเข้าไฟล์ " + s_oldfilename + " สำเร็จ");
+                                    conn.Open();
+                                    trans = conn.BeginTransaction();
+                                    command.Transaction = trans;
+                                    result = command.ExecuteNonQuery();
+                                    if (result == 1)
+                                    {
+                                        trans.Commit();
+                                        conn.Close();
+                                        ScriptManager.RegisterStartupScript(this, GetType(), "message", "swal({   title: 'สำเร็จ',   text: 'นำเข้าข้อมูลใบบันทึกคะแนนจากโรงงานเรียบร้อยแล้ว',   type: 'success',  confirmButtonText: 'ตกลง',   closeOnConfirm: false }, function(){ window.location = 'importdatafactory.aspx'; });", true);
+                                    }
+                                    else
+                                    {
+                                        trans.Rollback();
+                                        conn.Close();
+                                        ScriptManager.RegisterStartupScript(this, GetType(), "message", "swal({   title: 'ผิดพลาด',   text: 'ไม่สามารถนำเข้าข้อมูลใบบันทึกคะแนนจากโรงงาน กรุณาลองใหม่อีกครั้ง',   type: 'error',  confirmButtonText: 'ตกลง',   closeOnConfirm: false }, function(){ window.location = 'importdatafactory.aspx'; });", true);
+                                    }
+
+                               
                                 }
 
 
@@ -241,8 +261,32 @@ public partial class importdatafactory : System.Web.UI.Page
                                         countline++;
                                     }
                                     conn.Close();
-                                    //  showMessage("สำเร็จ", "นำเข้าข้อมูลกล่องจากโรงงานเรียบร้อยแล้ว", "success");
-                                    ScriptManager.RegisterStartupScript(this, GetType(), "message", "swal({   title: 'สำเร็จ',   text: 'นำเข้าข้อมูลซองจากโรงงานเรียบร้อยแล้ว',   type: 'success',  confirmButtonText: 'ตกลง',   closeOnConfirm: false }, function(){ window.location = 'importdatafactory.aspx'; });", true);
+
+                                    //ADD TO SYS_LOG
+                                    SqlTransaction trans = null;
+                                    query = "INSERT INTO SYS_LOG([LOG_NAME],[LOG_DESC],[LOG_DATE],[LOG_TYPE],[LOG_CODE]) values(@logname , @logdesc, getdate() , @logtype , @logcode)";
+                                    command = new SqlCommand(query, conn);
+                                    command.Parameters.AddWithValue("@logname", "Import Data Package Success");
+                                    command.Parameters.AddWithValue("@logtype", "IMPORTPACKAGE");
+                                    command.Parameters.AddWithValue("@logcode", Session["USER_ID"].ToString());
+                                    command.Parameters.AddWithValue("@logdesc", "นำเข้าไฟล์ " + s_oldfilename + " สำเร็จ");
+                                    conn.Open();
+                                    trans = conn.BeginTransaction();
+                                    command.Transaction = trans;
+                                    result = command.ExecuteNonQuery();
+                                    if (result == 1)
+                                    {
+                                        trans.Commit();
+                                        conn.Close();
+                                        ScriptManager.RegisterStartupScript(this, GetType(), "message", "swal({   title: 'สำเร็จ',   text: 'นำเข้าข้อมูลซองจากโรงงานเรียบร้อยแล้ว',   type: 'success',  confirmButtonText: 'ตกลง',   closeOnConfirm: false }, function(){ window.location = 'importdatafactory.aspx'; });", true);
+                                    }
+                                    else
+                                    {
+                                        trans.Rollback();
+                                        conn.Close();
+                                        ScriptManager.RegisterStartupScript(this, GetType(), "message", "swal({   title: 'ผิดพลาด',   text: 'ไม่สามารถนำเข้าข้อมูลซองจากโรงงาน กรุณาลองใหม่อีกครั้ง',   type: 'error',  confirmButtonText: 'ตกลง',   closeOnConfirm: false }, function(){ window.location = 'importdatafactory.aspx'; });", true);
+                                    }
+                                    
                                 }
 
 
@@ -362,8 +406,34 @@ public partial class importdatafactory : System.Web.UI.Page
                                         countline++;
                                     }
                                     conn.Close();
+
+
+                                    //ADD TO SYS_LOG
+                                    SqlTransaction trans = null;
+                                    query = "INSERT INTO SYS_LOG([LOG_NAME],[LOG_DESC],[LOG_DATE],[LOG_TYPE],[LOG_CODE]) values(@logname , @logdesc, getdate() , @logtype , @logcode)";
+                                    command = new SqlCommand(query, conn);
+                                    command.Parameters.AddWithValue("@logname", "Import Data Box Success");
+                                    command.Parameters.AddWithValue("@logtype", "IMPORTBOX");
+                                    command.Parameters.AddWithValue("@logcode", Session["USER_ID"].ToString());
+                                    command.Parameters.AddWithValue("@logdesc", "นำเข้าไฟล์ "+ s_oldfilename + " สำเร็จ");
+                                    conn.Open();
+                                    trans = conn.BeginTransaction();
+                                    command.Transaction = trans;
+                                    result = command.ExecuteNonQuery();
+                                    if (result == 1)
+                                    {
+                                        trans.Commit();
+                                        conn.Close();
+                                        ScriptManager.RegisterStartupScript(this, GetType(), "message", "swal({   title: 'สำเร็จ',   text: 'นำเข้าข้อมูลกล่องจากโรงงานเรียบร้อยแล้ว',   type: 'success',  confirmButtonText: 'ตกลง',   closeOnConfirm: false }, function(){ window.location = 'importdatafactory.aspx'; });", true);
+                                    }
+                                    else
+                                    {
+                                        trans.Rollback();
+                                        conn.Close();
+                                        ScriptManager.RegisterStartupScript(this, GetType(), "message", "swal({   title: 'ผิดพลาด',   text: 'ไม่สามารถนำเข้าข้อมูลกล่องจากโรงงาน กรุณาลองใหม่อีกครั้ง',   type: 'error',  confirmButtonText: 'ตกลง',   closeOnConfirm: false }, function(){ window.location = 'importdatafactory.aspx'; });", true);
+                                    }
                                     //  showMessage("สำเร็จ", "นำเข้าข้อมูลกล่องจากโรงงานเรียบร้อยแล้ว", "success");
-                                    ScriptManager.RegisterStartupScript(this, GetType(), "message", "swal({   title: 'สำเร็จ',   text: 'นำเข้าข้อมูลกล่องจากโรงงานเรียบร้อยแล้ว',   type: 'success',  confirmButtonText: 'ตกลง',   closeOnConfirm: false }, function(){ window.location = 'importdatafactory.aspx'; });", true);
+                                   
                                 }
                             }
                             else

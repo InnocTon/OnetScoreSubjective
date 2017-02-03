@@ -73,17 +73,19 @@
                                 <th>ประเภท</th>
                                 <th>ผู้นำเข้า</th>
                                 <th>วันที่นำเข้า</th>
+                                <th>เครื่องมือ</th>
                             </tr>
                         </thead>
 
                         <tfoot>
                             <tr>
-                                <th>ลำดับที่</th>
+                                <th></th>
                                 <th>ชื่อไฟล์</th>
                                 <th>สถานะ</th>
                                 <th>ประเภท</th>
                                 <th>ผู้นำเข้า</th>
                                 <th>วันที่นำเข้า</th>
+                                <th></th>
                             </tr>
                         </tfoot>
                     </table>
@@ -130,7 +132,7 @@
 
                         oLanguage: {
                             sLengthMenu: "แสดง _MENU_ รายการต่อหน้า",
-                            sZeroRecords: "ไม่เจอข้อมูลที่ค้นหา",
+                            sZeroRecords: "ไม่พบข้อมูล",
                             sInfo: "แสดงรายการที่ _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
                             sInfoEmpty: "แสดง 0 ถึง 0 ของทั้งหมด 0 รายการ",
                             sInfoFiltered: "(จากเร็คคอร์ดทั้งหมด _MAX_ เร็คคอร์ด)",
@@ -142,7 +144,12 @@
                             sPrevious: "ก่อนหน้า" // ปุ่ม กลับ
                             }
                         },
-
+                        columnDefs: [
+                           { searchable: false, orderable: false, "aTargets": [0,6] },
+                           { className: "dt-center", "targets": [0, 6] },
+                           { className: "dt-left", "targets": "1" },
+                           { width: "8%", "targets": 0 }
+                        ],
                         lengthMenu: [[5,10, 25, 50, -1], [5,10, 25, 50, "All"]],
                         data: data,
                         columns: [
@@ -156,20 +163,20 @@
                            },
                             { 'data': 'filetype' },
                             { 'data': 'fileimport' },
-                            { 'data': 'filedate' }
+                            { 'data': 'filedate' },
+                             {
+                                 'data': 'filetools', 'render': function (status, type, full) {
+                                    
+                                     return "<a href='#' onclick='confirmdelete(" + status + ",\"" + full.filename + "\");'><i class='md-icon material-icons uk-text-danger md-24'>&#xE872;</i></a> ";
+                                 }
+                             }
                             ]
-/*
-                            {
-                                'data': 'dateOfBirth', 'render': function (date) {
-                                    var date = new Date(parseInt(date.substr(6)));
-                                    var month = date.getMonth() + 1;
-                                    return date.getDate() + "/" + month + "/" + date.getFullYear();
-                                }
-                            }*/
                     });
                     $('#dt_individual_search tfoot th').each(function () {
-                        var placeHolderTitle = $('#studentTable thead th').eq($(this).index()).text();
-                        $(this).html('<input type="text" class="form-control input input-sm" placeholder = "คำค้น ' + placeHolderTitle + '" />');
+                        if ($(this).index() != 0 && $(this).index() != 6) {
+                            var placeHolderTitle = $('#dt_individual_search thead th').eq($(this).index()).text();
+                            $(this).html('<input type="text" class="form-control input input-sm" placeholder = "ค้นหา ' + placeHolderTitle + '" />');
+                        }
                     });
                     datatableVariable.columns().every(function () {
                         var column = this;
@@ -177,14 +184,61 @@
                             column.search(this.value).draw();
                         });
                     });
-                    $('.showHide').on('click', function () {
-                        var tableColumn = datatableVariable.column($(this).attr('data-columnindex'));
-                        tableColumn.visible(!tableColumn.visible());
-                    });
                 }
             });
 
         });
+
+
+        function confirmdelete(impseq,impfilename) {
+            UIkit.modal.confirm('กรุณายืนยันการลบข้อมูลของ ' + impfilename , function () {
+
+
+                var parms = { filecode: impseq };
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'deletefileimport.aspx/delfile',
+
+                    data: '{\'fcode\':\'' + JSON.stringify(parms) + '\'}',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    async: true,
+                    success: function (msg) {
+                        var msgReturn = $.parseJSON(msg.d);
+
+                        if (msgReturn == '1') {
+                            swal({
+                                title: 'สำเร็จ',
+                                text: 'ลบข้อมูล ' + impfilename + ' เรียบร้อย',
+                                type: 'success',
+                                confirmButtonText: 'ตกลง',
+                                closeOnConfirm: true
+                            },
+                             function () {
+                                 window.location = 'importdatafactory.aspx';
+                             });
+                        } else {
+                            swal({
+                                title: 'ผิดพาด!',
+                                text: msgReturn,
+                                type: 'error',
+                                confirmButtonText: 'ตกลง',
+                                closeOnConfirm: true
+                            },
+                               function () {
+
+                               });
+                        }
+
+
+                    }
+
+
+                });
+
+            });
+        }
 
     </script>
 
