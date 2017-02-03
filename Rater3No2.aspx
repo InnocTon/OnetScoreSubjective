@@ -62,6 +62,7 @@
                 <%
                     string connStr = ConfigurationManager.ConnectionStrings["SqlConnectionString"].ConnectionString;
                     System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(connStr);
+                    Boolean chkNodiff = true;
 
                     try
                     {
@@ -151,6 +152,7 @@
                         else
                         {
                             ///Response.Write(" ไม่มีผลคะแนนต่างเกิน 15%");
+                            chkNodiff = false;
                         }
 
                         conn.Close();
@@ -169,7 +171,7 @@
 
                             %>
 
-                <div class="uk-width-xLarge-2-5 uk-width-large-2-5"><!-- Left -->
+                <div class="uk-width-xLarge-1-2 uk-width-large-1-2"><!-- Left -->
                     <div class="md-card">
                         <div class="md-card-toolbar">
                             <h3 class="md-card-toolbar-heading-text">
@@ -186,12 +188,13 @@
                                 <a href="<% Response.Write(paperURL); %>" data-uk-lightbox="{group:'gallery'}" class="itemHide">
                                     <img src="<% Response.Write(paperURL); %>" alt="" class=""/>
                                 </a>
+                                <% if (!chkNodiff) { Response.Write("ไม่มีผลต่างคะแนนกันเกินค่าที่กำหนด"); } %>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="uk-width-xLarge-3-5  uk-width-large-3-5">
+                <div class="uk-width-xLarge-1-2  uk-width-large-1-2">
                     <div class="md-card"><!-- Right -->
                         <div class="md-card-toolbar">
                             <h3 class="md-card-toolbar-heading-text">
@@ -292,7 +295,7 @@
             </div>
         </div>
 
-    <div class="md-fab-wrapper">
+    <div class="md-fab-wrapper" <% if (!chkNodiff) { Response.Write("style='visibility:hidden'"); } %>>
         <a class="md-fab md-fab-primary" href="#" id="score_submit">
             <i class="material-icons">&#xE161;</i>
         </a>

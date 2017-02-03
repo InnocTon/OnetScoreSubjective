@@ -62,6 +62,7 @@
                 <%
                     string connStr = ConfigurationManager.ConnectionStrings["SqlConnectionString"].ConnectionString;
                     System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(connStr);
+                    Boolean chkNodiff = true;
 
                     try
                     {
@@ -150,7 +151,9 @@
                         }
                         else
                         {
-                            Response.Write(" ไม่มีผลคะแนนต่างเกิน 15%");
+                            //Response.Write("ไม่มีผลคะแนนต่างเกิน 15%");
+                            //ScriptManager.RegisterStartupScript(this, GetType(), "login", "swal({   title: 'ไม่มีข้อมูล',   text: 'ไม่มีผลคะแนนต่างเกิน 15%',   type: 'success',  confirmButtonText: 'ตกลง',   closeOnConfirm: true }, function(){ });", true);
+                            chkNodiff= false;
                         }
 
                         conn.Close();
@@ -186,6 +189,7 @@
                                 <a href="<% Response.Write(paperURL); %>" data-uk-lightbox="{group:'gallery'}" class="itemHide">
                                     <img src="<% Response.Write(paperURL); %>" alt="" class=""/>
                                 </a>
+                                 <% if (!chkNodiff) { Response.Write("ไม่มีผลต่างคะแนนกันเกินค่าที่กำหนด"); } %>
                             </div>
                         </div>
                     </div>
@@ -319,9 +323,9 @@
             </div>
         </div>
 
-    <div class="md-fab-wrapper">
+    <div class="md-fab-wrapper"  <% if (!chkNodiff) { Response.Write("style='visibility:hidden'"); } %>>
         <a class="md-fab md-fab-primary" href="#" id="score_submit">
-            <i class="material-icons">&#xE161;</i>
+            <i class="material-icons" >&#xE161;</i>
         </a>
     </div>   
 </asp:Content>
