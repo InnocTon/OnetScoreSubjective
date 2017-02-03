@@ -178,6 +178,12 @@
                             <a href="Rater3No2.aspx">ข้อที่ 2</a></li>
                     </ul>
                 </li>
+                <li title="นำข้อมูลออก (Export)" <% if (pageName == "exportTofactory") Response.Write("class='current_section'"); %>>
+                    <a href="exportToFactory.aspx">
+                        <span class="menu_icon"><i class="material-icons">&#xE0AF;</i></span>
+                        <span class="menu_title">นำข้อมูลออก (Export)</span>
+                    </a>
+                </li>
 
                
 

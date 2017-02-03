@@ -62,6 +62,7 @@
                 <%
                     string connStr = ConfigurationManager.ConnectionStrings["SqlConnectionString"].ConnectionString;
                     System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(connStr);
+                    Boolean chkNodiff = true;
 
                     try
                     {
@@ -150,7 +151,9 @@
                         }
                         else
                         {
-                            Response.Write(" ไม่มีผลคะแนนต่างเกิน 15%");
+                            //Response.Write("ไม่มีผลคะแนนต่างเกิน 15%");
+                            //ScriptManager.RegisterStartupScript(this, GetType(), "login", "swal({   title: 'ไม่มีข้อมูล',   text: 'ไม่มีผลคะแนนต่างเกิน 15%',   type: 'success',  confirmButtonText: 'ตกลง',   closeOnConfirm: true }, function(){ });", true);
+                            chkNodiff= false;
                         }
 
                         conn.Close();
@@ -186,6 +189,7 @@
                                 <a href="<% Response.Write(paperURL); %>" data-uk-lightbox="{group:'gallery'}" class="itemHide">
                                     <img src="<% Response.Write(paperURL); %>" alt="" class=""/>
                                 </a>
+                                 <% if (!chkNodiff) { Response.Write("ไม่มีผลต่างคะแนนกันเกินค่าที่กำหนด"); } %>
                             </div>
                         </div>
                     </div>
@@ -308,6 +312,15 @@
                                     <td class="uk-text-center stripRowNone"></td>
                                     <td class="uk-text-center stripRowNone"></td>
                                 </tr>
+                                <tr>
+                                    <td class="rowPadLeft">๓.๕ เขียนน้อยกว่า ๔ บรรทัด</td>
+                                    <td class="uk-text-center"><input type="checkbox" name="score3_5" id="score3_5_00" value="True" data-md-icheck /></td>
+                                    <td class="uk-text-center stripRowNone"></td>
+                                    <td class="uk-text-center stripRowNone"></td>
+                                    <td class="uk-text-center stripRowNone"></td>
+                                    <td class="uk-text-center stripRowNone"></td>
+                                    <td class="uk-text-center stripRowNone"></td>
+                                </tr>
                                 </tbody>
                             </table>
                             </div>
@@ -319,9 +332,9 @@
             </div>
         </div>
 
-    <div class="md-fab-wrapper">
+    <div class="md-fab-wrapper"  <% if (!chkNodiff) { Response.Write("style='visibility:hidden'"); } %>>
         <a class="md-fab md-fab-primary" href="#" id="score_submit">
-            <i class="material-icons">&#xE161;</i>
+            <i class="material-icons" >&#xE161;</i>
         </a>
     </div>   
 </asp:Content>
@@ -359,17 +372,20 @@
 
             //alert(ischeck);
             if (ischeck == 8) {
+                var chk4Min = '';
                 var scoreValue = $("#score_form").serializeObject();
                 var sumScore = Number(scoreValue.score1_1) + Number(scoreValue.score1_2) + Number(scoreValue.score2_1) + Number(scoreValue.score2_2) + Number(scoreValue.score3_1) + Number(scoreValue.score3_2) + Number(scoreValue.score3_3) + Number(scoreValue.score3_4);
-                UIkit.modal.confirm('<div><p>ยืนยันการให้คะแนน :</p><pre><table style="border:0px;" align="center">' +
-                    '<tr><td>๑.๑ ความยาว :</td><td>' + scoreValue.score1_1 +
-                    '</td><tr><td>๑.๒ เขียนเรื่อง :</td><td>' + scoreValue.score1_2 +
-                    '</td><tr><td>๒.๑ แนวคิด :</td><td>' + scoreValue.score2_1 +
-                    '</td><tr><td>๒.๒ ลำดับ :</td><td>' + scoreValue.score2_2 +
-                    '</td><tr><td>๓.๑ สะกด :</td><td>' + scoreValue.score3_1 +
-                    '</td><tr><td>๓.๒ การใช้คำ :</td><td>' + scoreValue.score3_2 +
-                    '</td><tr><td>๓.๓ ประโยค :</td><td>' + scoreValue.score3_3 +
-                    '</td><tr><td>๓.๔ วรรคตอน :</td><td>' + scoreValue.score3_4 +
+                if (scoreValue.score3_5 == 'True') { chk4Min = '<i class="material-icons">&#xE876;</i>'; chk4MinScore = 'T'; } else { chk4Min = '<i class="material-icons">&#xE5CD;</i>'; chk4MinScore = 'F'; }
+                UIkit.modal.confirm('<div><p>ยืนยันการให้คะแนน :</p><pre><table style="border:0px; font-size:18px;" align="center">' +
+                    '<tr><td>๑.๑ ความยาว </td><td>' + scoreValue.score1_1 +
+                    '</td><tr><td>๑.๒ เขียนเรื่อง </td><td>' + scoreValue.score1_2 +
+                    '</td><tr><td>๒.๑ แนวคิด </td><td>' + scoreValue.score2_1 +
+                    '</td><tr><td>๒.๒ ลำดับ </td><td>' + scoreValue.score2_2 +
+                    '</td><tr><td>๓.๑ สะกด </td><td>' + scoreValue.score3_1 +
+                    '</td><tr><td>๓.๒ การใช้คำ </td><td>' + scoreValue.score3_2 +
+                    '</td><tr><td>๓.๓ ประโยค </td><td>' + scoreValue.score3_3 +
+                    '</td><tr><td>๓.๔ วรรคตอน </td><td>' + scoreValue.score3_4 +
+                    '</td><tr><td>๓.๕ เขียนไม่เกิน ๔ บรรทัด </td><td>' + chk4Min +
                     '</td><tr><td><strong>คะแนนรวม :<strong></td><td><strong>' + sumScore +
                     '</strong></td></tr></table></pre></div>',
                     function () {
@@ -395,7 +411,5 @@
                 
             }
         });
-
-        
     </script>
 </asp:Content>
