@@ -6,7 +6,6 @@
     <div id="page_heading" data-uk-sticky="{ top: 48, media: 960 }">
         <div class="heading_actions">
             <a href="#" data-uk-tooltip="{pos:'bottom'}" title="รายงาน"><i class="md-icon material-icons">&#xE415;</i></a>
-            <a href="#" data-uk-tooltip="{pos:'bottom'}" title="พิมพ์"><i class="md-icon material-icons">&#xE8AD;</i></a>
             <a href="#" data-uk-tooltip="{pos:'bottom'}" title="เพิ่มรายชื่อ" id="addnewbtn" data-uk-modal="{target:'#modal_send_recive'}"><i class="md-icon material-icons">&#xE03C;</i></a>
         </div>
         <h1><i class="material-icons md-24">&#xE8B9;</i> ตั้งค่าผู้ตรวจ</h1>
@@ -59,8 +58,8 @@
                         <div class="uk-grid" data-uk-grid-margin>
                             <div class="uk-width-medium-2-2">
                                 <div class="parsley-row">
-                                    <label for="boxcodetxt">รหัสผู้ตรวจ (11 หลัก)</label>
-                                    <input type="text" name="ratercodetxt" id="ratercodetxt" required="required" class="md-input" data-required-message="กรุณากรอกรหัสผู้ตรวจ" parsley-error-message="กรุณากรอกรหัสผู้ตรวจ" runat="server" data-parsley-minlength="11" data-parsley-maxlength="11" maxlength="11" />
+                                    <label for="boxcodetxt">รหัสผู้ตรวจ (7 หลัก)</label>
+                                    <input type="text" name="ratercodetxt" id="ratercodetxt" required="required" class="md-input" data-required-message="กรุณากรอกรหัสผู้ตรวจ" parsley-error-message="กรุณากรอกรหัสผู้ตรวจ" runat="server" data-parsley-minlength="7" data-parsley-maxlength="7" maxlength="7" />
                                 </div>
                             </div>
                         </div>
@@ -104,11 +103,29 @@
                         <div class="uk-grid" data-uk-grid-margin>
                             <div class="uk-width-medium-2-2">
                                 <div class="parsley-row">
+                                    <label for="grouptxt">กลุ่มที่ตรวจ</label>
+                                    <input type="text" name="grouptxt" id="grouptxt" required class="md-input" runat="server" data-required-message="กรุณากรอกกลุ่มที่ตรวจ" parsley-error-message="กรุณากรอกกลุ่มที่ตรวจ" />
+                                </div>
+                            </div>
+                        </div>
+
+                         <div class="uk-grid" data-uk-grid-margin>
+                            <div class="uk-width-medium-2-2">
+                                <div class="parsley-row">
+                                    <label for="grouptxt">เลขที่นั่งตรวจ</label>
+                                    <input type="text" name="seattxt" id="seattxt" required class="md-input" runat="server" data-required-message="กรุณากรอกเลขที่นั่งตรวจ" parsley-error-message="กรุณากรอกเลขที่นั่งตรวจ" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="uk-grid" data-uk-grid-margin>
+                            <div class="uk-width-medium-2-2">
+                                <div class="parsley-row">
                                     <select id="placeaction" name="placeaction" runat="server" required class="md-input" data-required-message="กรุณาเลือกสถานที่ตรวจ" parsley-error-message="กรุณาเลือกสถานที่ตรวจ">
                                         <option value="">กรุณาเลือกสถานที่ตรวจ</option>
-                                        <option value="ม.บูรพา">ม.บูรพา</option>
-                                        <option value="ม.ศิลปากร">ม.ศิลปากร</option>
-                                        <option value="ม.สุโขทัยธรรมาธิราช">ม.สุโขทัยธรรมาธิราช</option>
+                                        <option value="มบ.">ม.บูรพา</option>
+                                        <option value="มศก.">ม.ศิลปากร</option>
+                                        <option value="มสธ.">ม.สุโขทัยธรรมาธิราช</option>
                                     </select>
                                 </div>
                             </div>
@@ -156,6 +173,8 @@
                 $("#<%=lnametxt.ClientID%>").val('');
                 $("#<%=citizentxt.ClientID%>").val('');
                 $("#<%=placeaction.ClientID%>").val('');
+                $("#<%=seattxt.ClientID%>").val('');
+                $("#<%=grouptxt.ClientID%>").val('');
                 $('#form_validation').parsley().reset();
 
             }

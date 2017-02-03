@@ -153,7 +153,7 @@ public partial class deletefileimport : System.Web.UI.Page
             command.Parameters.AddWithValue("@uby", HttpContext.Current.Session["USER_ID"].ToString());
             command.Transaction = trans;
             int result = command.ExecuteNonQuery();
-            if (result == 1)
+            if (result > 0)
             {
                 trans.Commit();
                 delete_result = "";

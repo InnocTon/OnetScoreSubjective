@@ -123,6 +123,15 @@
     <script>
 
         $(document).ready(function () {
+
+      //      ScriptManager.RegisterStartupScript(this, GetType(), "login", "altair_helpers.content_preloader_show();", true);
+
+            $("#<%=listdirectorybtn.ClientID%>").click(function () {
+                altair_helpers.content_preloader_show();
+            });
+
+          
+
             $.ajax({
                 type: "POST",
                 dataType: "json",

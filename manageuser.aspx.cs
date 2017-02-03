@@ -23,6 +23,8 @@ public partial class manageuser : System.Web.UI.Page
         String user_name = nametxt.Value.ToString();
         String user_type = typeaction.Value.ToString();
         String user_pass = passwordtxt.Value.ToString();
+        String user_citizen = citizenidtxt.Value.ToString();
+        String user_place = placetxt.Value.ToString();
 
         Boolean StatusUser = CheckUserDuplicate(user_code);
 
@@ -36,12 +38,14 @@ public partial class manageuser : System.Web.UI.Page
                 conn.Open();
                 trans = conn.BeginTransaction();
 
-                String query = "INSERT INTO [dbo].[SYS_USER] ([USER_ID],[USER_NAME],[USER_TYPE],[USER_STATUS],[USER_PASS]) VALUES (@USER_ID,@USER_NAME,@USER_TYPE,'N',@USER_PASS)";
+                String query = "INSERT INTO [dbo].[SYS_USER] ([USER_ID],[USER_NAME],[USER_TYPE],[USER_STATUS],[USER_PASS],[USER_CITIZENID],[USER_PLACE]) VALUES (@USER_ID,@USER_NAME,@USER_TYPE,'N',@USER_PASS,@USER_CITIZENID,@USER_PLACE)";
                 SqlCommand command = new SqlCommand(query, conn);
                 command.Parameters.AddWithValue("@USER_ID", user_code);
                 command.Parameters.AddWithValue("@USER_NAME", user_name);
                 command.Parameters.AddWithValue("@USER_TYPE", user_type);
                 command.Parameters.AddWithValue("@USER_PASS", user_pass);
+                command.Parameters.AddWithValue("@USER_CITIZENID", user_citizen);
+                command.Parameters.AddWithValue("@USER_PLACE", user_place);
                 command.Transaction = trans;
                 int result = command.ExecuteNonQuery();
 
@@ -55,7 +59,8 @@ public partial class manageuser : System.Web.UI.Page
                     nametxt.Value = "";
                     typeaction.Value = "";
                     passwordtxt.Value = "";
-
+                    citizenidtxt.Value = "";
+                    placetxt.Value = "";
 
                 }
                 else

@@ -207,9 +207,9 @@
                         <span class="menu_title">ตั้งค่าโปรแกรม</span>
                     </a>
                     <ul>
-                        <li <% if (pageName == "manageuser" || pageName == "userdetail") Response.Write("class='act_item'"); %>>
+                        <li <% if (pageName == "manageuser" || pageName == "userdetail" || pageName == "agentnametag") Response.Write("class='act_item'"); %>>
                             <a href="manageuser.aspx">ตั้งค่าผู้ใช้งาน</a></li>
-                        <li <% if (pageName == "managerater" || pageName == "raterdetail") Response.Write("class='act_item'"); %>>
+                        <li <% if (pageName == "managerater" || pageName == "raterdetail" || pageName == "nametag") Response.Write("class='act_item'"); %>>
                             <a href="managerater.aspx">ตั้งค่าผู้ตรวจ</a></li>
                          <li <% if (pageName == "manageexportdata") Response.Write("class='act_item'"); %>>
                             <a href="manageexportdata.aspx">นำส่งข้อมูล</a></li>

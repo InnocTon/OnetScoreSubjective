@@ -107,7 +107,7 @@
                                     </li>
                                 </ul> -->
                             </div>
-                            <a class="md-fab md-fab-small md-fab-accent" href="nametag.aspx?rater_seq=<%=Request.QueryString["seq"].ToString() %>" title="พิมพ์บัตรประจำตัว">
+                            <a class="md-fab md-fab-small md-fab-accent" href="agentnametag.aspx?rater_seq=<%=Request.QueryString["seq"].ToString() %>" title="พิมพ์บัตรประจำตัว">
                                 <i class="material-icons">&#xE8A3;</i>
                             </a>
                         </div>

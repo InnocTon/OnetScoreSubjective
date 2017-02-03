@@ -26,6 +26,8 @@ public partial class managerater : System.Web.UI.Page
         String rater_lname = lnametxt.Value.ToString();
         String rater_citizenid = citizentxt.Value.ToString();
         String rater_place = placeaction.Value.ToString();
+        String rater_group = grouptxt.Value.ToString();
+        String rater_seat = seattxt.Value.ToString();
 
         Boolean StatusRater = CheckRaterDuplicate(rater_citizenid);
 
@@ -55,18 +57,36 @@ public partial class managerater : System.Web.UI.Page
 
                 if (result == 1)
                 {
-                    trans.Commit();
-                    showMessage("สำเร็จ", "เพิ่มข้อมูลผู้ตรวจเรียบร้อยแล้ว", "success");
+
+                    query = "INSERT INTO [dbo].[TRN_XM_SEATNO]([BARCODE],[FNAME],[LNAME],[GROUPID],[SEATNO],[PLACENAME]) VALUES (@RATER_CODE,@RATER_FNAME,@RATER_LNAME,@GROUPID,@SEATNO,@RATER_PLACE)";
+                    command = new SqlCommand(query, conn);
+                    command.Parameters.AddWithValue("@RATER_CODE", rater_code);
+                    command.Parameters.AddWithValue("@RATER_FNAME", rater_fname);
+                    command.Parameters.AddWithValue("@RATER_LNAME", rater_lname);
+                    command.Parameters.AddWithValue("@GROUPID", rater_group);
+                    command.Parameters.AddWithValue("@SEATNO", rater_seat);
+                    command.Parameters.AddWithValue("@RATER_PLACE", rater_place);
+                    command.Transaction = trans;
+                    result = command.ExecuteNonQuery();
+
+                    if(result == 1)
+                    {
+                        trans.Commit();
+                        showMessage("สำเร็จ", "เพิ่มข้อมูลผู้ตรวจเรียบร้อยแล้ว", "success");
 
 
-                    ratercodetxt.Value = "";
-                    prenametxt.Value = "";
-                    fnametxt.Value = "";
-                    lnametxt.Value = "";
-                    citizentxt.Value = "";
-                    placeaction.Value = "";
-
-
+                        ratercodetxt.Value = "";
+                        prenametxt.Value = "";
+                        fnametxt.Value = "";
+                        lnametxt.Value = "";
+                        citizentxt.Value = "";
+                        placeaction.Value = "";
+                    }
+                    else
+                    {
+                        trans.Rollback();
+                        showMessage("ผิดพลาด", "ไม่สามารถเพิ่มข้อมูลผู้ตรวจได้  (ที่นั่งตรวจ)", "error");
+                    }
                 }
                 else
                 {

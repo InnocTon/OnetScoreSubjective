@@ -30,13 +30,13 @@
                         </thead>
                         <tfoot>
                              <tr>
-                                <th class="uk-text-center">ลำดับที่</th>
+                                <th class="uk-text-center"></th>
                                 <th>ชื่อไฟล์</th>
                                 <th>จำนวนข้อมูล</th>
                                 <th>สถานะการนำเข้า</th>
                                 <th>ผู้นำเข้า</th>
                                 <th>วันที่นำเข้า</th>
-                                <th>เครื่องมือ</th>
+                                <th></th>
                             </tr>
                         </tfoot>
                     </table>

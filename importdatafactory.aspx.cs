@@ -55,6 +55,7 @@ public partial class importdatafactory : System.Web.UI.Page
                 if (fileExtension == allowedExtensions[i])
                 {
                     SqlConnection conn = new SqlConnection(connStr);
+                    SqlTransaction trans = null;
                     try
                     {
                         //CHECK FILE NAME
@@ -67,21 +68,23 @@ public partial class importdatafactory : System.Web.UI.Page
                                 DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + fileExtension;
                             fu.PostedFile.SaveAs(filepath + s_newfilename);
 
-                            if (File.Exists(Server.MapPath("~/factoryfile/paper/" + s_newfilename)))
+                            // if (File.Exists(Server.MapPath("~/factoryfile/paper/" + s_newfilename)))
+                            if (!CheckImportDuplicate(s_oldfilename))
                             {
                                 //INSERT TRN_FACTORY_IMPORT
                                 String query = "INSERT INTO [TRN_FAC_IMPORT]([NEW_FILE_NAME],[IMPTYPE_CODE],[IMP_BY],[IMP_DATETIME],[IMP_STATUS],[OLD_FILE_NAME]) VALUES( '" + s_newfilename + "', 'PAPER' , '" + Session["USER_ID"].ToString() + "', getdate(), 'N', '" + s_oldfilename + "')";
                                 //Label1.Text = query;
                                 SqlCommand command = new SqlCommand(query, conn);
                                 conn.Open();
+                                trans = conn.BeginTransaction();
+                                command.Transaction = trans;
                                 int result = command.ExecuteNonQuery();
-                                conn.Close();
                                 if (result > 0)
                                 {
                                     String IMP_SEQ = "";
                                     query = "SELECT IMP_SEQ FROM TRN_FAC_IMPORT WHERE NEW_FILE_NAME = '" + s_newfilename + "'";
                                     command = new SqlCommand(query, conn);
-                                    conn.Open();
+                                    command.Transaction = trans;
                                     SqlDataReader reader = command.ExecuteReader();
                                     while (reader.Read())
                                     {
@@ -89,7 +92,6 @@ public partial class importdatafactory : System.Web.UI.Page
                                     }
 
                                     reader.Close();
-                                    conn.Close();
 
                                     //READ FILE
                                     String line;
@@ -97,7 +99,6 @@ public partial class importdatafactory : System.Web.UI.Page
                                     StreamReader filereader = File.OpenText(path);
                                     int countline = 0;
                                     result = 0;
-                                    conn.Open();
                                     while ((line = filereader.ReadLine()) != null)
                                     {
                                         String[] sline = line.Split(',');
@@ -112,29 +113,36 @@ public partial class importdatafactory : System.Web.UI.Page
                                         command.Parameters.AddWithValue("@paperlithocode", PAPER_LITHOCODE);
                                         command.Parameters.AddWithValue("@impseq", IMP_SEQ);
                                         command.Parameters.AddWithValue("@createby", Session["USER_ID"].ToString());
+                                        command.Transaction = trans;
                                         result += command.ExecuteNonQuery();
                                         countline++;
                                     }
-                                    conn.Close();
 
+                                    filereader.Dispose();
 
-                                    //ADD TO SYS_LOG
-                                    SqlTransaction trans = null;
-                                    query = "INSERT INTO SYS_LOG([LOG_NAME],[LOG_DESC],[LOG_DATE],[LOG_TYPE],[LOG_CODE]) values(@logname , @logdesc, getdate() , @logtype , @logcode)";
-                                    command = new SqlCommand(query, conn);
-                                    command.Parameters.AddWithValue("@logname", "Import Data Paper Success");
-                                    command.Parameters.AddWithValue("@logtype", "IMPORTPAPER");
-                                    command.Parameters.AddWithValue("@logcode", Session["USER_ID"].ToString());
-                                    command.Parameters.AddWithValue("@logdesc", "นำเข้าไฟล์ " + s_oldfilename + " สำเร็จ");
-                                    conn.Open();
-                                    trans = conn.BeginTransaction();
-                                    command.Transaction = trans;
-                                    result = command.ExecuteNonQuery();
-                                    if (result == 1)
+                                    if (result == countline)
                                     {
-                                        trans.Commit();
-                                        conn.Close();
-                                        ScriptManager.RegisterStartupScript(this, GetType(), "message", "swal({   title: 'สำเร็จ',   text: 'นำเข้าข้อมูลใบบันทึกคะแนนจากโรงงานเรียบร้อยแล้ว',   type: 'success',  confirmButtonText: 'ตกลง',   closeOnConfirm: false }, function(){ window.location = 'importdatafactory.aspx'; });", true);
+                                        //ADD TO SYS_LOG
+                                        query = "INSERT INTO SYS_LOG([LOG_NAME],[LOG_DESC],[LOG_DATE],[LOG_TYPE],[LOG_CODE]) values(@logname , @logdesc, getdate() , @logtype , @logcode)";
+                                        command = new SqlCommand(query, conn);
+                                        command.Parameters.AddWithValue("@logname", "Import Data Paper Success");
+                                        command.Parameters.AddWithValue("@logtype", "IMPORTPAPER");
+                                        command.Parameters.AddWithValue("@logcode", Session["USER_ID"].ToString());
+                                        command.Parameters.AddWithValue("@logdesc", "นำเข้าไฟล์ " + s_oldfilename + " สำเร็จ");
+                                        command.Transaction = trans;
+                                        result = command.ExecuteNonQuery();
+                                        if (result == 1)
+                                        {
+                                            trans.Commit();
+                                            conn.Close();
+                                            ScriptManager.RegisterStartupScript(this, GetType(), "message", "swal({   title: 'สำเร็จ',   text: 'นำเข้าข้อมูลใบบันทึกคะแนนจากโรงงานเรียบร้อยแล้ว',   type: 'success',  confirmButtonText: 'ตกลง',   closeOnConfirm: false }, function(){ window.location = 'importdatafactory.aspx'; });", true);
+                                        }
+                                        else
+                                        {
+                                            trans.Rollback();
+                                            conn.Close();
+                                            ScriptManager.RegisterStartupScript(this, GetType(), "message", "swal({   title: 'ผิดพลาด',   text: 'ไม่สามารถนำเข้าข้อมูลใบบันทึกคะแนนจากโรงงาน กรุณาลองใหม่อีกครั้ง',   type: 'error',  confirmButtonText: 'ตกลง',   closeOnConfirm: false }, function(){ window.location = 'importdatafactory.aspx'; });", true);
+                                        }
                                     }
                                     else
                                     {
@@ -143,7 +151,12 @@ public partial class importdatafactory : System.Web.UI.Page
                                         ScriptManager.RegisterStartupScript(this, GetType(), "message", "swal({   title: 'ผิดพลาด',   text: 'ไม่สามารถนำเข้าข้อมูลใบบันทึกคะแนนจากโรงงาน กรุณาลองใหม่อีกครั้ง',   type: 'error',  confirmButtonText: 'ตกลง',   closeOnConfirm: false }, function(){ window.location = 'importdatafactory.aspx'; });", true);
                                     }
 
-                               
+
+                                }
+                                else
+                                {
+                                    trans.Rollback();
+                                    conn.Close();
                                 }
 
 
@@ -189,6 +202,8 @@ public partial class importdatafactory : System.Web.UI.Page
 
     private void importPackage(FileUpload fileupload)
     {
+
+
         FileUpload fu = fileupload;
         if (fileupload.HasFile)
         {
@@ -200,6 +215,7 @@ public partial class importdatafactory : System.Web.UI.Page
                 if (fileExtension == allowedExtensions[i])
                 {
                     SqlConnection conn = new SqlConnection(connStr);
+                    SqlTransaction trans = null;
                     try
                     {
                         //CHECK FILE NAME
@@ -212,21 +228,23 @@ public partial class importdatafactory : System.Web.UI.Page
                                 DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + fileExtension;
                             fu.PostedFile.SaveAs(filepath + s_newfilename);
 
-                            if (File.Exists(Server.MapPath("~/factoryfile/package/" + s_newfilename)))
+                            //if (File.Exists(Server.MapPath("~/factoryfile/package/" + s_newfilename)))
+                            if (!CheckImportDuplicate(s_oldfilename))
                             {
                                 //INSERT TRN_FACTORY_IMPORT
                                 String query = "INSERT INTO [TRN_FAC_IMPORT]([NEW_FILE_NAME],[IMPTYPE_CODE],[IMP_BY],[IMP_DATETIME],[IMP_STATUS],[OLD_FILE_NAME]) VALUES( '" + s_newfilename + "', 'PACKAGE' , '" + Session["USER_ID"].ToString() + "', getdate(), 'N', '" + s_oldfilename + "')";
                                 //Label1.Text = query;
                                 SqlCommand command = new SqlCommand(query, conn);
                                 conn.Open();
+                                trans = conn.BeginTransaction();
+                                command.Transaction = trans;
                                 int result = command.ExecuteNonQuery();
-                                conn.Close();
                                 if (result > 0)
                                 {
                                     String IMP_SEQ = "";
                                     query = "SELECT IMP_SEQ FROM TRN_FAC_IMPORT WHERE NEW_FILE_NAME = '" + s_newfilename + "'";
                                     command = new SqlCommand(query, conn);
-                                    conn.Open();
+                                    command.Transaction = trans;
                                     SqlDataReader reader = command.ExecuteReader();
                                     while (reader.Read())
                                     {
@@ -234,7 +252,7 @@ public partial class importdatafactory : System.Web.UI.Page
                                     }
 
                                     reader.Close();
-                                    conn.Close();
+
 
                                     //READ FILE
                                     String line;
@@ -242,7 +260,6 @@ public partial class importdatafactory : System.Web.UI.Page
                                     StreamReader filereader = File.OpenText(path);
                                     int countline = 0;
                                     result = 0;
-                                    conn.Open();
                                     while ((line = filereader.ReadLine()) != null)
                                     {
                                         String[] sline = line.Split(',');
@@ -257,36 +274,50 @@ public partial class importdatafactory : System.Web.UI.Page
                                         command.Parameters.AddWithValue("@papernum", PACKAGE_NUM);
                                         command.Parameters.AddWithValue("@impseq", IMP_SEQ);
                                         command.Parameters.AddWithValue("@createby", Session["USER_ID"].ToString());
+                                        command.Transaction = trans;
                                         result += command.ExecuteNonQuery();
                                         countline++;
                                     }
-                                    conn.Close();
+                                    filereader.Dispose();
 
-                                    //ADD TO SYS_LOG
-                                    SqlTransaction trans = null;
-                                    query = "INSERT INTO SYS_LOG([LOG_NAME],[LOG_DESC],[LOG_DATE],[LOG_TYPE],[LOG_CODE]) values(@logname , @logdesc, getdate() , @logtype , @logcode)";
-                                    command = new SqlCommand(query, conn);
-                                    command.Parameters.AddWithValue("@logname", "Import Data Package Success");
-                                    command.Parameters.AddWithValue("@logtype", "IMPORTPACKAGE");
-                                    command.Parameters.AddWithValue("@logcode", Session["USER_ID"].ToString());
-                                    command.Parameters.AddWithValue("@logdesc", "นำเข้าไฟล์ " + s_oldfilename + " สำเร็จ");
-                                    conn.Open();
-                                    trans = conn.BeginTransaction();
-                                    command.Transaction = trans;
-                                    result = command.ExecuteNonQuery();
-                                    if (result == 1)
+                                    if (result == countline)
                                     {
-                                        trans.Commit();
-                                        conn.Close();
-                                        ScriptManager.RegisterStartupScript(this, GetType(), "message", "swal({   title: 'สำเร็จ',   text: 'นำเข้าข้อมูลซองจากโรงงานเรียบร้อยแล้ว',   type: 'success',  confirmButtonText: 'ตกลง',   closeOnConfirm: false }, function(){ window.location = 'importdatafactory.aspx'; });", true);
+                                        //ADD TO SYS_LOG
+                                        query = "INSERT INTO SYS_LOG([LOG_NAME],[LOG_DESC],[LOG_DATE],[LOG_TYPE],[LOG_CODE]) values(@logname , @logdesc, getdate() , @logtype , @logcode)";
+                                        command = new SqlCommand(query, conn);
+                                        command.Parameters.AddWithValue("@logname", "Import Data Package Success");
+                                        command.Parameters.AddWithValue("@logtype", "IMPORTPACKAGE");
+                                        command.Parameters.AddWithValue("@logcode", Session["USER_ID"].ToString());
+                                        command.Parameters.AddWithValue("@logdesc", "นำเข้าไฟล์ " + s_oldfilename + " สำเร็จ");
+                                        command.Transaction = trans;
+                                        result = command.ExecuteNonQuery();
+                                        if (result == 1)
+                                        {
+                                            trans.Commit();
+                                            conn.Close();
+                                            ScriptManager.RegisterStartupScript(this, GetType(), "message", "swal({   title: 'สำเร็จ',   text: 'นำเข้าข้อมูลซองจากโรงงานเรียบร้อยแล้ว',   type: 'success',  confirmButtonText: 'ตกลง',   closeOnConfirm: false }, function(){ window.location = 'importdatafactory.aspx'; });", true);
+                                        }
+                                        else
+                                        {
+                                            trans.Rollback();
+                                            conn.Close();
+                                            ScriptManager.RegisterStartupScript(this, GetType(), "message", "swal({   title: 'ผิดพลาด',   text: 'ไม่สามารถนำเข้าข้อมูลซองจากโรงงาน กรุณาลองใหม่อีกครั้ง',   type: 'error',  confirmButtonText: 'ตกลง',   closeOnConfirm: false }, function(){ window.location = 'importdatafactory.aspx'; });", true);
+                                        }
                                     }
                                     else
                                     {
                                         trans.Rollback();
                                         conn.Close();
                                         ScriptManager.RegisterStartupScript(this, GetType(), "message", "swal({   title: 'ผิดพลาด',   text: 'ไม่สามารถนำเข้าข้อมูลซองจากโรงงาน กรุณาลองใหม่อีกครั้ง',   type: 'error',  confirmButtonText: 'ตกลง',   closeOnConfirm: false }, function(){ window.location = 'importdatafactory.aspx'; });", true);
+
                                     }
-                                    
+                                    conn.Close();
+
+                                }
+                                else
+                                {
+                                    trans.Rollback();
+                                    conn.Close();
                                 }
 
 
@@ -342,6 +373,7 @@ public partial class importdatafactory : System.Web.UI.Page
                 if (fileExtension == allowedExtensions[i])
                 {
                     SqlConnection conn = new SqlConnection(connStr);
+                    SqlTransaction trans = null;
                     try
                     {
                         //CHECK FILE NAME
@@ -357,15 +389,17 @@ public partial class importdatafactory : System.Web.UI.Page
                             fu.PostedFile.SaveAs(filepath + s_newfilename);
 
 
-                            if (File.Exists(Server.MapPath("~/factoryfile/box/" + s_newfilename)))
+                            //if (File.Exists(Server.MapPath("~/factoryfile/box/" + s_newfilename)))
+                            if (!CheckImportDuplicate(s_oldfilename))
                             {
                                 //INSERT TRN_FACTORY_IMPORT
                                 String query = "INSERT INTO [TRN_FAC_IMPORT]([NEW_FILE_NAME],[IMPTYPE_CODE],[IMP_BY],[IMP_DATETIME],[IMP_STATUS],[OLD_FILE_NAME]) VALUES( '" + s_newfilename + "', 'BOX' , '" + Session["USER_ID"].ToString() + "', getdate(), 'N', '" + s_oldfilename + "')";
                                 //Label1.Text = query;
                                 SqlCommand command = new SqlCommand(query, conn);
                                 conn.Open();
+                                trans = conn.BeginTransaction();
+                                command.Transaction = trans;
                                 int result = command.ExecuteNonQuery();
-                                conn.Close();
 
 
                                 if (result > 0)
@@ -373,7 +407,7 @@ public partial class importdatafactory : System.Web.UI.Page
                                     String IMP_SEQ = "";
                                     query = "SELECT IMP_SEQ FROM TRN_FAC_IMPORT WHERE NEW_FILE_NAME = '" + s_newfilename + "'";
                                     command = new SqlCommand(query, conn);
-                                    conn.Open();
+                                    command.Transaction = trans;
                                     SqlDataReader reader = command.ExecuteReader();
                                     while (reader.Read())
                                     {
@@ -381,7 +415,7 @@ public partial class importdatafactory : System.Web.UI.Page
                                     }
 
                                     reader.Close();
-                                    conn.Close();
+
 
                                     //READ FILE
                                     String line;
@@ -389,7 +423,6 @@ public partial class importdatafactory : System.Web.UI.Page
                                     StreamReader filereader = File.OpenText(path);
                                     int countline = 0;
                                     result = 0;
-                                    conn.Open();
                                     while ((line = filereader.ReadLine()) != null)
                                     {
                                         String[] sline = line.Split(',');
@@ -402,29 +435,36 @@ public partial class importdatafactory : System.Web.UI.Page
                                         command.Parameters.AddWithValue("@boxnum", BOX_NUM);
                                         command.Parameters.AddWithValue("@impseq", IMP_SEQ);
                                         command.Parameters.AddWithValue("@createby", Session["USER_ID"].ToString());
+                                        command.Transaction = trans;
                                         result += command.ExecuteNonQuery();
                                         countline++;
                                     }
-                                    conn.Close();
 
+                                    filereader.Dispose();
 
-                                    //ADD TO SYS_LOG
-                                    SqlTransaction trans = null;
-                                    query = "INSERT INTO SYS_LOG([LOG_NAME],[LOG_DESC],[LOG_DATE],[LOG_TYPE],[LOG_CODE]) values(@logname , @logdesc, getdate() , @logtype , @logcode)";
-                                    command = new SqlCommand(query, conn);
-                                    command.Parameters.AddWithValue("@logname", "Import Data Box Success");
-                                    command.Parameters.AddWithValue("@logtype", "IMPORTBOX");
-                                    command.Parameters.AddWithValue("@logcode", Session["USER_ID"].ToString());
-                                    command.Parameters.AddWithValue("@logdesc", "นำเข้าไฟล์ "+ s_oldfilename + " สำเร็จ");
-                                    conn.Open();
-                                    trans = conn.BeginTransaction();
-                                    command.Transaction = trans;
-                                    result = command.ExecuteNonQuery();
-                                    if (result == 1)
+                                    if (result == countline)
                                     {
-                                        trans.Commit();
-                                        conn.Close();
-                                        ScriptManager.RegisterStartupScript(this, GetType(), "message", "swal({   title: 'สำเร็จ',   text: 'นำเข้าข้อมูลกล่องจากโรงงานเรียบร้อยแล้ว',   type: 'success',  confirmButtonText: 'ตกลง',   closeOnConfirm: false }, function(){ window.location = 'importdatafactory.aspx'; });", true);
+                                        //ADD TO SYS_LOG
+                                        query = "INSERT INTO SYS_LOG([LOG_NAME],[LOG_DESC],[LOG_DATE],[LOG_TYPE],[LOG_CODE]) values(@logname , @logdesc, getdate() , @logtype , @logcode)";
+                                        command = new SqlCommand(query, conn);
+                                        command.Parameters.AddWithValue("@logname", "Import Data Box Success");
+                                        command.Parameters.AddWithValue("@logtype", "IMPORTBOX");
+                                        command.Parameters.AddWithValue("@logcode", Session["USER_ID"].ToString());
+                                        command.Parameters.AddWithValue("@logdesc", "นำเข้าไฟล์ " + s_oldfilename + " สำเร็จ");
+                                        command.Transaction = trans;
+                                        result = command.ExecuteNonQuery();
+                                        if (result == 1)
+                                        {
+                                            trans.Commit();
+                                            conn.Close();
+                                            ScriptManager.RegisterStartupScript(this, GetType(), "message", "swal({   title: 'สำเร็จ',   text: 'นำเข้าข้อมูลกล่องจากโรงงานเรียบร้อยแล้ว',   type: 'success',  confirmButtonText: 'ตกลง',   closeOnConfirm: false }, function(){ window.location = 'importdatafactory.aspx'; });", true);
+                                        }
+                                        else
+                                        {
+                                            trans.Rollback();
+                                            conn.Close();
+                                            ScriptManager.RegisterStartupScript(this, GetType(), "message", "swal({   title: 'ผิดพลาด',   text: 'ไม่สามารถนำเข้าข้อมูลกล่องจากโรงงาน กรุณาลองใหม่อีกครั้ง',   type: 'error',  confirmButtonText: 'ตกลง',   closeOnConfirm: false }, function(){ window.location = 'importdatafactory.aspx'; });", true);
+                                        }
                                     }
                                     else
                                     {
@@ -432,13 +472,23 @@ public partial class importdatafactory : System.Web.UI.Page
                                         conn.Close();
                                         ScriptManager.RegisterStartupScript(this, GetType(), "message", "swal({   title: 'ผิดพลาด',   text: 'ไม่สามารถนำเข้าข้อมูลกล่องจากโรงงาน กรุณาลองใหม่อีกครั้ง',   type: 'error',  confirmButtonText: 'ตกลง',   closeOnConfirm: false }, function(){ window.location = 'importdatafactory.aspx'; });", true);
                                     }
+
+                                    conn.Close();
+
+
+
                                     //  showMessage("สำเร็จ", "นำเข้าข้อมูลกล่องจากโรงงานเรียบร้อยแล้ว", "success");
-                                   
+
+                                }
+                                else
+                                {
+                                    trans.Rollback();
+                                    conn.Close();
                                 }
                             }
                             else
                             {
-                                showMessage("ผิดพลาด!", "ไม่สามารถอัพโหลดไฟล์ที่เลือกได้", "error");
+                                showMessage("ผิดพลาด!", "ไม่สามารถอัพโหลดไฟล์ที่เลือกได้ มีไฟล์นี้แล้วในระบบ", "error");
                             }
 
 
@@ -481,6 +531,45 @@ public partial class importdatafactory : System.Web.UI.Page
     private void showMessage(String title, String text, String type)
     {
         ScriptManager.RegisterStartupScript(this, GetType(), "message", "swal({   title: '" + title + "',   text: '" + text + "',   type: '" + type + "',  confirmButtonText: 'ตกลง',   closeOnConfirm: true }, function(){ });", true);
+    }
+
+    private Boolean CheckImportDuplicate(String filename)
+    {
+        SqlConnection conn = new SqlConnection(connStr);
+        Boolean isdup = true;
+        String IMP_SEQ = "";
+        String query = "SELECT [IMP_SEQ] FROM [TRN_FAC_IMPORT] WHERE [OLD_FILE_NAME] = @filename AND [IMP_STATUS] = 'N'";
+        SqlCommand command = new SqlCommand(query, conn);
+        try
+        {
+            conn.Open();
+            command.Parameters.AddWithValue("@filename", filename);
+            SqlDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                IMP_SEQ = reader["IMP_SEQ"].ToString();
+            }
+            reader.Close();
+            conn.Close();
+
+            if (IMP_SEQ == "") isdup = false;
+            else isdup = true;
+        }
+        catch (Exception ex)
+        {
+
+        }
+        finally
+        {
+            if (conn != null && conn.State == ConnectionState.Open)
+            {
+                conn.Close();
+            }
+        }
+
+        return isdup;
+
+
     }
 
 }

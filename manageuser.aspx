@@ -7,7 +7,6 @@
     <div id="page_heading" data-uk-sticky="{ top: 48, media: 960 }">
         <div class="heading_actions">
             <a href="#" data-uk-tooltip="{pos:'bottom'}" title="รายงาน"><i class="md-icon material-icons">&#xE415;</i></a>
-            <a href="#" data-uk-tooltip="{pos:'bottom'}" title="พิมพ์"><i class="md-icon material-icons">&#xE8AD;</i></a>
             <a href="#" data-uk-tooltip="{pos:'bottom'}" title="เพิ่มรายชื่อ" id="addnewbtn" data-uk-modal="{target:'#modal_send_recive'}"><i class="md-icon material-icons">&#xE03C;</i></a>
         </div>
         <h1><i class="material-icons md-24">&#xE8B9;</i> ตั้งค่าผู้ใช้งานระบบ</h1>
@@ -77,7 +76,25 @@
                             <div class="uk-width-medium-2-2">
                                 <div class="parsley-row">
                                     <label for="passwordtxt">รหัสผ่าน</label>
-                                    <input type="text" name="passwordtxt" id="passwordtxt" required class="md-input" runat="server" data-required-message="กรุณากรอกเลขบัตรประชาชน" parsley-error-message="กรุณากรอกเลขบัตรประชาชน" data-parsley-minlength="4" data-parsley-maxlength="8" maxlength="8" />
+                                    <input type="text" name="passwordtxt" id="passwordtxt" required class="md-input" runat="server" data-required-message="กรุณากรอกรหัสผ่าน" parsley-error-message="กรุณากรอกรหัสผ่าน" data-parsley-minlength="4" data-parsley-maxlength="13" maxlength="13" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="uk-grid" data-uk-grid-margin>
+                            <div class="uk-width-medium-2-2">
+                                <div class="parsley-row">
+                                    <label for="citizenidtxt">รหัสประชาชน</label>
+                                    <input type="text" name="citizenidtxt" id="citizenidtxt" required class="md-input" runat="server" data-required-message="กรุณากรอกเลขบัตรประชาชน" parsley-error-message="กรุณากรอกเลขบัตรประชาชน" data-parsley-minlength="13" data-parsley-maxlength="13" maxlength="13" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="uk-grid" data-uk-grid-margin>
+                            <div class="uk-width-medium-2-2">
+                                <div class="parsley-row">
+                                    <label for="passwordtxt">ศูนย์ตรวจ</label>
+                                    <input type="text" name="placetxt" id="placetxt" required class="md-input" runat="server" data-required-message="กรุณากรอกศูนย์ตรวจ" parsley-error-message="กรุณากรอกศูนย์ตรวจ" />
                                 </div>
                             </div>
                         </div>
@@ -136,8 +153,10 @@
                 $("#<%=nametxt.ClientID%>").val('');
                 $("#<%=passwordtxt.ClientID%>").val('');
                 $("#<%=typeaction.ClientID%>").val('');
+                $("#<%=citizenidtxt.ClientID%>").val('');
+                $("#<%=placetxt.ClientID%>").val('');
                 $('#form_validation').parsley().reset();
-
+                
             }
         });
 
@@ -198,7 +217,7 @@
                             {
                                 'data': 'usertools', 'render': function (status, type, full) {
                                     if (full.usertype != "admin") {
-                                        return "<a href='#'><i class='material-icons uk-text-success md-24'>&#xE417;</i></a> <a href='#' onclick='confirmdelete(" + full.usercode + ",\"" + full.username + "\");'><i class='md-icon material-icons uk-text-danger md-24'>&#xE872;</i></a> ";
+                                        return "<a href='userdetail.aspx?seq=" + status + "'><i class='material-icons uk-text-success md-24'>&#xE417;</i></a> <a href='#' onclick='confirmdelete(" + full.usercode + ",\"" + full.username + "\");'><i class='md-icon material-icons uk-text-danger md-24'>&#xE872;</i></a> ";
                                     } else {
                                         return "<a href='userdetail.aspx?seq=" + status + "'><i class='material-icons uk-text-success md-24'>&#xE417;</i></a>";
                                     }

@@ -82,44 +82,56 @@ public partial class importomr : System.Web.UI.Page
                     ispass = 0;
                     ErrorMessage = "";
 
-                    while ((line = reader.ReadLine()) != null)
+                    try
+                    {
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            BatchNo = line.Substring(0, 11);
+                            SerialNo = line.Substring(11, 4);
+                            SeatNo = line.Substring(16, 7);
+                            ExamKey = line.Substring(24, 9);
+                            LithoCode = line.Substring(33, 7);
+                            MachineName = line.Substring(41, 5);
+
+
+                            //ตรวจสอบเลขที่ใบบันทึกคะแนน
+                            if (LithoCode != SeatNo)
+                            {
+                                ispass++;
+                                ErrorMessage += "- พบข้อมูล Seatno กับ LithoCode ไม่ตรงกัน ลำดับที่ : " + SerialNo + " <br/>";
+                            }
+
+                            //ตรวจสอบข้อมูลคะแนนเป็นดอกจัน
+                            if (ExamKey.Contains("*"))
+                            {
+                                ispass++;
+                                ErrorMessage += "- พบข้อมูลดอกจัน ลำดับที่ : " + SerialNo + " <br/>";
+                            }
+
+                            //ตรวจสอบข้อมูลคะแนนเป็นค่าว่าง
+                        /*    if (ExamKey.Contains(" "))
+                            {
+                                //  ispass++;
+                                ErrorMessage += "- พบข้อมูลค่าว่าง ลำดับที่ : " + SerialNo + " <br/>";
+                            } */
+
+                            LithoCodeArray.Add(LithoCode);
+                            countline++;
+                        }
+
+                        reader.Close();
+                        reader.Dispose();
+
+
+                    }
+                    catch (Exception ex)
+                    {
+                        showMessage("ข้อผิดพลาด!", ex.Message, "error");
+                    }
+                    finally
                     {
 
-                        BatchNo = line.Substring(0, 10);
-                        SerialNo = line.Substring(11, 4);
-                        SeatNo = line.Substring(16, 7);
-                        ExamKey = line.Substring(24, 8);
-                        LithoCode = line.Substring(33, 7);
-                        MachineName = line.Substring(41, 5);
-
-
-                        //ตรวจสอบเลขที่ใบบันทึกคะแนน
-                        if (LithoCode != SeatNo)
-                        {
-                            ispass++;
-                            ErrorMessage += "- พบข้อมูล Seatno กับ LithoCode ไม่ตรงกัน ลำดับที่ : " + SerialNo + " <br/>";
-                        }
-
-                        //ตรวจสอบข้อมูลคะแนนเป็นดอกจัน
-                        if (ExamKey.Contains("*"))
-                        {
-                            ispass++;
-                            ErrorMessage += "- พบข้อมูลดอกจัน ลำดับที่ : " + SerialNo + " <br/>";
-                        }
-
-                        //ตรวจสอบข้อมูลคะแนนเป็นค่าว่าง
-                        if (ExamKey.Contains(" "))
-                        {
-                            //  ispass++;
-                            ErrorMessage += "- พบข้อมูลค่าว่าง ลำดับที่ : " + SerialNo + " <br/>";
-                        }
-
-                        LithoCodeArray.Add(LithoCode);
-                        countline++;
                     }
-
-                    reader.Close();
-                    reader.Dispose();
 
                     // ตรวจสอบจำนวน
                     int numpaper = CheckPackagePaperNumber(filename);
@@ -199,12 +211,14 @@ public partial class importomr : System.Web.UI.Page
                                 while ((line = reader.ReadLine()) != null)
                                 {
 
-                                    BatchNo = line.Substring(0, 10);
+                                    BatchNo = line.Substring(0, 11);
                                     SerialNo = line.Substring(11, 4);
                                     SeatNo = line.Substring(16, 7);
-                                    ExamKey = line.Substring(24, 8);
+                                    ExamKey = line.Substring(24, 9);
                                     LithoCode = line.Substring(33, 7);
                                     MachineName = line.Substring(41, 5);
+
+
                                     // INSERT INTO TRN_XM_BATCH_DETAIL
                                     query = "INSERT INTO TRN_XM_BATCH_DETAIL(IMP_SEQ,BATCH_NO,SERIAL_NO,SEAT_NO,LITHO_CODE,EXAM_KEY,OMR_MACHINE,CREATE_BY,CREATE_DATETIME,SHEET_STATUS) VALUES(@impseq,@batchno,@serialno,@seatno,@lithocode,@examkey,@machine,@createby,getdate(),'N')";
 
@@ -369,46 +383,61 @@ public partial class importomr : System.Web.UI.Page
                     ispass = 0;
                     ErrorMessage = "";
 
-                    while ((line = reader.ReadLine()) != null)
+                    try
                     {
 
-                        BatchNo = line.Substring(0, 11);
-                        SerialNo = line.Substring(11, 4);
-                        SeatNo = line.Substring(16, 7);
-                        ExamKey = line.Substring(24, 4);
-                        LithoCode = line.Substring(29, 7);
-                        MachineName = line.Substring(37, 5);
-
-
-                        //ตรวจสอบเลขที่ใบบันทึกคะแนน
-                        if (LithoCode != SeatNo)
+                        while ((line = reader.ReadLine()) != null)
                         {
-                            ispass++;
-                            ErrorMessage += "- พบข้อมูล Seatno กับ LithoCode ไม่ตรงกัน ลำดับที่ : " + SerialNo + " <br/>";
+
+                            BatchNo = line.Substring(0, 11);
+                            SerialNo = line.Substring(11, 4);
+                            SeatNo = line.Substring(16, 7);
+                            ExamKey = line.Substring(24, 4);
+                            LithoCode = line.Substring(34, 7);
+                            MachineName = line.Substring(42, 5);
+
+
+                            //ตรวจสอบเลขที่ใบบันทึกคะแนน
+                            if (LithoCode != SeatNo)
+                            {
+                                ispass++;
+                                ErrorMessage += "- พบข้อมูล Seatno กับ LithoCode ไม่ตรงกัน ลำดับที่ : " + SerialNo + " <br/>";
+                            }
+
+                            //ตรวจสอบข้อมูลคะแนนเป็นดอกจัน
+                            if (ExamKey.Contains("*"))
+                            {
+                                ispass++;
+                                ErrorMessage += "- พบข้อมูลดอกจัน ลำดับที่ : " + SerialNo + " <br/>";
+                            }
+
+                            //ตรวจสอบข้อมูลคะแนนเป็นค่าว่าง
+                            if (ExamKey.Contains(" "))
+                            {
+                                //  ispass++;
+                                ErrorMessage += "- พบข้อมูลค่าว่าง ลำดับที่ : " + SerialNo + " <br/>";
+                            }
+
+                            LithoCodeArray.Add(LithoCode);
+                            countline++;
+
+
                         }
+                        reader.Close();
+                        reader.Dispose();
 
-                        //ตรวจสอบข้อมูลคะแนนเป็นดอกจัน
-                        if (ExamKey.Contains("*"))
-                        {
-                            ispass++;
-                            ErrorMessage += "- พบข้อมูลดอกจัน ลำดับที่ : " + SerialNo + " <br/>";
-                        }
-
-                        //ตรวจสอบข้อมูลคะแนนเป็นค่าว่าง
-                        if (ExamKey.Contains(" "))
-                        {
-                            //  ispass++;
-                            ErrorMessage += "- พบข้อมูลค่าว่าง ลำดับที่ : " + SerialNo + " <br/>";
-                        }
-
-                        LithoCodeArray.Add(LithoCode);
-                        countline++;
-
+                    }
+                    catch (Exception ex)
+                    {
+                        showMessage("ข้อผิดพลาด!", ex.Message, "error");
+                    }
+                    finally
+                    {
 
                     }
 
-                    reader.Close();
-                    reader.Dispose();
+
+
 
 
                     // ตรวจสอบจำนวน
@@ -491,8 +520,8 @@ public partial class importomr : System.Web.UI.Page
                                     SerialNo = line.Substring(11, 4);
                                     SeatNo = line.Substring(16, 7);
                                     ExamKey = line.Substring(24, 4);
-                                    LithoCode = line.Substring(29, 7);
-                                    MachineName = line.Substring(37, 5);
+                                    LithoCode = line.Substring(34, 7);
+                                    MachineName = line.Substring(42, 5);
 
                                     // INSERT INTO TRN_XM_BATCH_DETAIL
                                     query = "INSERT INTO TRN_XM_BATCH_DETAIL(IMP_SEQ,BATCH_NO,SERIAL_NO,SEAT_NO,LITHO_CODE,EXAM_KEY,OMR_MACHINE,CREATE_BY,CREATE_DATETIME,SHEET_STATUS) VALUES(@impseq,@batchno,@serialno,@seatno,@lithocode,@examkey,@machine,@createby,getdate(),'N')";
@@ -647,7 +676,7 @@ public partial class importomr : System.Web.UI.Page
             if (impseq == "") hasfile = false;
             else hasfile = true;
 
-           // showMessage("error", impseq.ToString(), "error");
+            // showMessage("error", impseq.ToString(), "error");
 
         }
         catch (Exception ex)
