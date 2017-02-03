@@ -312,6 +312,15 @@
                                     <td class="uk-text-center stripRowNone"></td>
                                     <td class="uk-text-center stripRowNone"></td>
                                 </tr>
+                                <tr>
+                                    <td class="rowPadLeft">๓.๕ เขียนน้อยกว่า ๔ บรรทัด</td>
+                                    <td class="uk-text-center"><input type="checkbox" name="score3_5" id="score3_5_00" value="True" data-md-icheck /></td>
+                                    <td class="uk-text-center stripRowNone"></td>
+                                    <td class="uk-text-center stripRowNone"></td>
+                                    <td class="uk-text-center stripRowNone"></td>
+                                    <td class="uk-text-center stripRowNone"></td>
+                                    <td class="uk-text-center stripRowNone"></td>
+                                </tr>
                                 </tbody>
                             </table>
                             </div>
@@ -363,17 +372,20 @@
 
             //alert(ischeck);
             if (ischeck == 8) {
+                var chk4Min = '';
                 var scoreValue = $("#score_form").serializeObject();
                 var sumScore = Number(scoreValue.score1_1) + Number(scoreValue.score1_2) + Number(scoreValue.score2_1) + Number(scoreValue.score2_2) + Number(scoreValue.score3_1) + Number(scoreValue.score3_2) + Number(scoreValue.score3_3) + Number(scoreValue.score3_4);
-                UIkit.modal.confirm('<div><p>ยืนยันการให้คะแนน :</p><pre><table style="border:0px;" align="center">' +
-                    '<tr><td>๑.๑ ความยาว :</td><td>' + scoreValue.score1_1 +
-                    '</td><tr><td>๑.๒ เขียนเรื่อง :</td><td>' + scoreValue.score1_2 +
-                    '</td><tr><td>๒.๑ แนวคิด :</td><td>' + scoreValue.score2_1 +
-                    '</td><tr><td>๒.๒ ลำดับ :</td><td>' + scoreValue.score2_2 +
-                    '</td><tr><td>๓.๑ สะกด :</td><td>' + scoreValue.score3_1 +
-                    '</td><tr><td>๓.๒ การใช้คำ :</td><td>' + scoreValue.score3_2 +
-                    '</td><tr><td>๓.๓ ประโยค :</td><td>' + scoreValue.score3_3 +
-                    '</td><tr><td>๓.๔ วรรคตอน :</td><td>' + scoreValue.score3_4 +
+                if (scoreValue.score3_5 == 'True') { chk4Min = '<i class="material-icons">&#xE876;</i>'; chk4MinScore = 'T'; } else { chk4Min = '<i class="material-icons">&#xE5CD;</i>'; chk4MinScore = 'F'; }
+                UIkit.modal.confirm('<div><p>ยืนยันการให้คะแนน :</p><pre><table style="border:0px; font-size:18px;" align="center">' +
+                    '<tr><td>๑.๑ ความยาว </td><td>' + scoreValue.score1_1 +
+                    '</td><tr><td>๑.๒ เขียนเรื่อง </td><td>' + scoreValue.score1_2 +
+                    '</td><tr><td>๒.๑ แนวคิด </td><td>' + scoreValue.score2_1 +
+                    '</td><tr><td>๒.๒ ลำดับ </td><td>' + scoreValue.score2_2 +
+                    '</td><tr><td>๓.๑ สะกด </td><td>' + scoreValue.score3_1 +
+                    '</td><tr><td>๓.๒ การใช้คำ </td><td>' + scoreValue.score3_2 +
+                    '</td><tr><td>๓.๓ ประโยค </td><td>' + scoreValue.score3_3 +
+                    '</td><tr><td>๓.๔ วรรคตอน </td><td>' + scoreValue.score3_4 +
+                    '</td><tr><td>๓.๕ เขียนไม่เกิน ๔ บรรทัด </td><td>' + chk4Min +
                     '</td><tr><td><strong>คะแนนรวม :<strong></td><td><strong>' + sumScore +
                     '</strong></td></tr></table></pre></div>',
                     function () {
@@ -399,7 +411,5 @@
                 
             }
         });
-
-        
     </script>
 </asp:Content>

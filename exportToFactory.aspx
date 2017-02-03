@@ -10,7 +10,7 @@
                     <div class="uk-grid uk-grid-divider" data-uk-grid-margin>
                         <div class="uk-width-large-2-2 uk-width-medium-2-2">
                             <h2><i class="material-icons">&#xE3EA;</i> Export Data</h2>
-                            <span class="uk-text-upper uk-text-small">Export ข้อมูลส่งให้ศูนย์กลาง</span>
+                            <span class="uk-text-upper uk-text-small">Export ข้อมูลส่งให้ศูนย์กลาง <br />Click ที่ปุ่มเพื่อ Export ไฟล์</span>
                         </div>
 
                         <div class="uk-grid" data-uk-grid-margin="">
