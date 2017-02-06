@@ -75,6 +75,7 @@
                     System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(connStr);
                     Boolean chkNodiff = true;
                     string stdCodeSelect = "0361200001016";
+                    //string stdCodeSelect = "";
 
                     try
                     {
@@ -83,7 +84,7 @@
                         conn.Open();
                         command2.Parameters.AddWithValue("@stdCode", stdCodeSelect );
                         System.Data.SqlClient.SqlDataReader reader2 = command2.ExecuteReader();
-                        
+
                         while (reader2.Read())
                         {
                             stdCode = reader2["STD_CODE"].ToString();
@@ -103,18 +104,18 @@
                             //paperURLName = sb.ToString();
                             //paperURLFolder = paperURLName.Substring(0, 11);
                             //paperURL = "factoryfile/image/" + paperURLFolder+ "/" + paperURLName+ ".jpg";
-                            Response.Write(totalScoreC1);
-                            Response.Write(" ");
-                            Response.Write(totalScoreC2);
-                            
+                            //Response.Write(totalScoreC1);
+                            //Response.Write(" ");
+                            //Response.Write(totalScoreC2);
+
                         }
-                        
+
                         reader2.Close();
                     }
                     catch(Exception ex)
                     {
                         Response.Write(ex.Message);
-                        
+
                     }
                     finally
                     {
@@ -123,7 +124,7 @@
                             conn.Close();
                         }
                     }
-                    
+
                             %>
 
                 <div class="uk-width-xLarge-1-2 uk-width-large-1-2"><!-- Left -->
@@ -261,7 +262,7 @@
             </div>
         </div>
 
-    <div class="md-fab-wrapper" <% if (!chkNodiff) { Response.Write("style='visibility:hidden'"); } %>>
+    <div class="md-fab-wrapper" <% if (String.IsNullOrEmpty(stdCodeSelect)) { Response.Write("style='visibility:hidden'"); } %>>
         <a class="md-fab md-fab-primary" href="#" id="score_submit">
             <i class="material-icons">&#xE161;</i>
         </a>

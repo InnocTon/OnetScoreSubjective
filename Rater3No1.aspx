@@ -83,6 +83,7 @@
                     System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(connStr);
                     Boolean chkNodiff = true;
                     string stdCodeSelect = "0161100071044";
+                    //string stdCodeSelect = "";
 
                     try
                     {
@@ -119,9 +120,9 @@
                             //paperURLName = sb.ToString();
                             //paperURLFolder = paperURLName.Substring(0, 11);
                             //paperURL = "factoryfile/image/" + paperURLFolder+ "/" + paperURLName+ ".jpg";
-                            Response.Write(totalScoreC1);
-                            Response.Write(" ");
-                            Response.Write(totalScoreC2);
+                            //Response.Write(totalScoreC1);
+                            //Response.Write(" ");
+                            //Response.Write(totalScoreC2);
 
                         }
 
@@ -321,7 +322,7 @@
             </div>
         </div>
 
-    <div class="md-fab-wrapper"  <% if (!chkNodiff) { Response.Write("style='visibility:hidden'"); } %>>
+    <div class="md-fab-wrapper"  <% if (String.IsNullOrEmpty(stdCodeSelect)) { Response.Write("style='visibility:hidden'"); } %>>
         <a class="md-fab md-fab-primary" href="#" id="score_submit">
             <i class="material-icons" >&#xE161;</i>
         </a>
