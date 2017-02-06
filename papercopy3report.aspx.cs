@@ -41,9 +41,9 @@ public partial class papercopy3report : System.Web.UI.Page
 
                 String packagename = Request.QueryString["papercode"].ToString().Substring(0, 5) + "3" + Request.QueryString["papercode"].ToString().Substring(5, 5);
 
-                String imgurl = @"D:\paperimg\" + packagename + "\\" + imgfilename + ".jpg";
+                String imgurl = Server.MapPath("factoryfile/image/" + packagename + "/" + imgfilename + ".jpg");
 
-              
+               
 
                 DataRow dr = dt.NewRow();
                 dr["PAPERCODE"] = Request.QueryString["papercode"].ToString();
@@ -89,7 +89,10 @@ public partial class papercopy3report : System.Web.UI.Page
 
                          packagename = reader["STD_CODE"].ToString().Substring(0, 5) + "3" + reader["STD_CODE"].ToString().Substring(5, 5);
 
-                         imgurl = @"D:\paperimg\" + packagename + "\\" + imgfilename + ".jpg";
+                   //      imgurl = @"D:\paperimg\" + packagename + "\\" + imgfilename + ".jpg";
+
+                         imgurl = Server.MapPath("factoryfile/image/" + packagename + "/" + imgfilename + ".jpg");
+
 
                         DataRow dr = dt.NewRow();
                         dr["PAPERCODE"] = reader["STD_CODE"].ToString();
