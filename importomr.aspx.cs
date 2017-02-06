@@ -90,8 +90,8 @@ public partial class importomr : System.Web.UI.Page
                             SerialNo = line.Substring(11, 4);
                             SeatNo = line.Substring(16, 7);
                             ExamKey = line.Substring(24, 9);
-                            LithoCode = line.Substring(33, 7);
-                            MachineName = line.Substring(41, 5);
+                            LithoCode = line.Substring(34, 7);
+                            MachineName = line.Substring(42, 5);
 
 
                             //ตรวจสอบเลขที่ใบบันทึกคะแนน
@@ -102,18 +102,18 @@ public partial class importomr : System.Web.UI.Page
                             }
 
                             //ตรวจสอบข้อมูลคะแนนเป็นดอกจัน
-                            if (ExamKey.Contains("*"))
-                            {
-                                ispass++;
-                                ErrorMessage += "- พบข้อมูลดอกจัน ลำดับที่ : " + SerialNo + " <br/>";
-                            }
+                            /*    if (ExamKey.Contains("*"))
+                               {
+                                   ispass++;
+                                   ErrorMessage += "- พบข้อมูลดอกจัน ลำดับที่ : " + SerialNo + " <br/>";
+                               } */
 
-                            //ตรวจสอบข้อมูลคะแนนเป็นค่าว่าง
-                        /*    if (ExamKey.Contains(" "))
-                            {
-                                //  ispass++;
-                                ErrorMessage += "- พบข้อมูลค่าว่าง ลำดับที่ : " + SerialNo + " <br/>";
-                            } */
+                               //ตรวจสอบข้อมูลคะแนนเป็นค่าว่าง
+                           /*    if (ExamKey.Contains(" "))
+                               {
+                                   //  ispass++;
+                                   ErrorMessage += "- พบข้อมูลค่าว่าง ลำดับที่ : " + SerialNo + " <br/>";
+                               } */
 
                             LithoCodeArray.Add(LithoCode);
                             countline++;
@@ -215,8 +215,8 @@ public partial class importomr : System.Web.UI.Page
                                     SerialNo = line.Substring(11, 4);
                                     SeatNo = line.Substring(16, 7);
                                     ExamKey = line.Substring(24, 9);
-                                    LithoCode = line.Substring(33, 7);
-                                    MachineName = line.Substring(41, 5);
+                                    LithoCode = line.Substring(34, 7);
+                                    MachineName = line.Substring(42, 5);
 
 
                                     // INSERT INTO TRN_XM_BATCH_DETAIL

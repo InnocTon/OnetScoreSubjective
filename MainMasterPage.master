@@ -160,7 +160,7 @@
                             <a href="importomr.aspx">นำเข้าข้อมูล</a></li>
                         <li <% if (pageName == "reportimportomr") Response.Write("class='act_item'"); %>>
                             <a href="reportimportomr.aspx">รายงานการนำเข้า</a></li>
-                        <li <% if (pageName == "managescorediff") Response.Write("class='act_item'"); %>>
+                        <li <% if (pageName == "managescorediff" || pageName == "papercopy3report") Response.Write("class='act_item'"); %>>
                             <a href="managescorediff.aspx">ประมวลผลค่า Diff</a></li>
                     </ul>
                 </li>
@@ -178,27 +178,20 @@
                             <a href="Rater3No2.aspx">ข้อที่ 2</a></li>
                     </ul>
                 </li>
-                <li title="นำข้อมูลออก (Export)" <% if (pageName == "exportTofactory") Response.Write("class='current_section'"); %>>
-                    <a href="exportToFactory.aspx">
-                        <span class="menu_icon"><i class="material-icons">&#xE0AF;</i></span>
-                        <span class="menu_title">นำข้อมูลออก (Export)</span>
-                    </a>
-                </li>
 
-               
-
-
-    <!--            <li>
+       <!--         <li>
                     <a href="#">
                         <span class="menu_icon"><i class="material-icons">&#xE02F;</i></span>
                         <span class="menu_title">รายงาน</span>
                     </a>
                     <ul>
-                        <li <% if (pageName == "report") Response.Write("class='act_item'"); %>>
-                            <a href="report.aspx">รายงาน</a></li>
+                        <li <% if (pageName == "reportdiffsummary") Response.Write("class='act_item'"); %>>
+                            <a href="reportdiffsumary.aspx">รายงานคะแนน Diff</a></li>
+                        <li <% if (pageName == "reportexportsummary") Response.Write("class='act_item'"); %>>
+                            <a href="reportdiffsumary.aspx">รายงานการนำส่งข้อมูล</a></li>
                     </ul>
                 </li> -->
-
+                
 
                 <li title="บันทึกเวลาปฏิบัติงาน" <% if (pageName == "Worktime") Response.Write("class='current_section'"); %>>
                     <a href="Worktime.aspx">
@@ -209,7 +202,7 @@
 
                 <li>
                     <a href="#">
-                        <span class="menu_icon"><i class="material-icons">&#xE8B9;</i></span>
+                        <span class="menu_icon"><i class="material-icons">&#xE8C0;</i></span>
                         <span class="menu_title">ตั้งค่าโปรแกรม</span>
                     </a>
                     <ul>
@@ -217,8 +210,8 @@
                             <a href="manageuser.aspx">ตั้งค่าผู้ใช้งาน</a></li>
                         <li <% if (pageName == "managerater" || pageName == "raterdetail" || pageName == "nametag") Response.Write("class='act_item'"); %>>
                             <a href="managerater.aspx">ตั้งค่าผู้ตรวจ</a></li>
-                         <li <% if (pageName == "manageexportdata") Response.Write("class='act_item'"); %>>
-                            <a href="manageexportdata.aspx">นำส่งข้อมูล</a></li>
+                         <li <% if (pageName == "exportToFactory") Response.Write("class='act_item'"); %>>
+                            <a href="exportToFactory.aspx">นำส่งข้อมูล</a></li>
                     </ul>
                 </li>
 
