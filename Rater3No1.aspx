@@ -74,6 +74,8 @@
         <div id="page_heading">
             <h1>ระบบบันทึกคะแนนอัตนัย วิชาภาษาไทย ข้อที่ ๑. การเขียนเล่าเรื่องจากภาพ</h1>
             <span class="uk-text-muted uk-text-upper uk-text-small">ชื่อผู้ตรวจ : <% Response.Write(HttpContext.Current.Session["USER_NAME"].ToString()); %></span>
+
+            <img src="file:/D:/16612300001016.jpg" />
         </div>
 
         <div id="page_content_inner">
