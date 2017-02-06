@@ -50,6 +50,17 @@
                 String paperURL = "";
                 String stdCode = "";
                 String reserve = "";
+                decimal totalScoreC1= 0;
+                decimal totalScoreC2= 0;
+                decimal totalScoreC1Cri1 = 0;
+                decimal totalScoreC1Cri2 = 0;
+                decimal totalScoreC1Cri3 = 0;
+                decimal totalScoreC1Cri4 = 0;
+                decimal totalScoreC2Cri1 = 0;
+                decimal totalScoreC2Cri2 = 0;
+                decimal totalScoreC2Cri3 = 0;
+                decimal totalScoreC2Cri4 = 0;
+                decimal QNO = 2;
             %>
     
         <div id="page_heading">
@@ -63,103 +74,47 @@
                     string connStr = ConfigurationManager.ConnectionStrings["SqlConnectionString"].ConnectionString;
                     System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(connStr);
                     Boolean chkNodiff = true;
+                    string stdCodeSelect = "0361200001016";
 
                     try
                     {
-                        String query = "SELECT TOP 1 * FROM [dbo].[TRN_XM_SCORE_COPY1] WHERE IS_DIFF='1' AND IS_COMPLETE='0'  AND QNO='2' AND RESERVE=@reserveID ORDER BY SCR_SEQ";
-
-                        System.Data.SqlClient.SqlCommand command = new System.Data.SqlClient.SqlCommand(query, conn);
+                        String query2 = "select cp1.SCR_SUM as Total1,cp1.scr_crit1 as c1cri1,cp1.scr_crit2 as c1cri2,cp1.scr_crit3 as c1cri3,cp1.scr_crit4 as c1cri4,cp1.scr_crit5 as c1cri5,cp1.scr_crit6 as c1cri6,cp1.scr_crit7 as c1cri7,cp1.scr_crit8 as c1cri8, cp2.SCR_SUM as Total2,cp2.scr_crit1 as c2cri1,cp2.scr_crit2 as c2cri2,cp2.scr_crit3 as c2cri3,cp2.scr_crit4 as c2cri4,cp2.scr_crit5 as c2cri5,cp2.scr_crit6 as c2cri6,cp2.scr_crit7 as c2cri7,cp2.scr_crit8 as c2cri8,* from [ONET_SUBJECTIVE].[dbo].[TRN_XM_SCORE_COPY1] cp1 inner join [ONET_SUBJECTIVE].[dbo].[TRN_XM_SCORE_COPY2] cp2 ON cp1.std_code=cp2.std_code AND cp1.QNO = cp2.QNO WHERE cp1.STD_CODE =@stdCode";
+                        System.Data.SqlClient.SqlCommand command2 = new System.Data.SqlClient.SqlCommand(query2, conn);
                         conn.Open();
-                        command.Parameters.AddWithValue("@reserveID", HttpContext.Current.Session["USER_ID"].ToString() );
-                        System.Data.SqlClient.SqlDataReader reader = command.ExecuteReader();
-                        if (reader.HasRows)
+                        command2.Parameters.AddWithValue("@stdCode", stdCodeSelect );
+                        System.Data.SqlClient.SqlDataReader reader2 = command2.ExecuteReader();
+                        
+                        while (reader2.Read())
                         {
-                            //Response.Write("HasRows");
-                        }else
-                        {
-                            reader.Close();
-                            try
-                            {
-                                String query2 = "SELECT TOP 1 * FROM [dbo].[TRN_XM_SCORE_COPY1] WHERE IS_DIFF='1' AND IS_COMPLETE='0' AND QNO='2' AND RESERVE IS NULL ORDER BY SCR_SEQ";
-                                System.Data.SqlClient.SqlCommand command2 = new System.Data.SqlClient.SqlCommand(query2, conn);
-                                System.Data.SqlClient.SqlDataReader reader2 = command2.ExecuteReader();
+                            stdCode = reader2["STD_CODE"].ToString();
+                            totalScoreC1 = Convert.ToDecimal(reader2["Total1"].ToString());
+                            totalScoreC1Cri1 = Convert.ToDecimal(reader2["c1cri1"].ToString());
+                            totalScoreC1Cri2 = Convert.ToDecimal(reader2["c1cri2"].ToString());
+                            totalScoreC1Cri3 = Convert.ToDecimal(reader2["c1cri3"].ToString());
+                            totalScoreC1Cri4 = Convert.ToDecimal(reader2["c1cri4"].ToString());
 
-                                while (reader2.Read())
-                                {
-                                    stdCode = reader2["STD_CODE"].ToString();
-                                    reserve = reader2["RESERVE"].ToString();
-                                    StringBuilder sb = new StringBuilder(reader2["PAPER_BARCODE"].ToString());
-                                    sb[5] = '3';
-                                    paperURLName = sb.ToString();
-                                    paperURLFolder = paperURLName.Substring(0, 11);
-                                    paperURL = "factoryfile/image/" + paperURLFolder+ "/" + paperURLName+ ".jpg";
-
-                                }
-                            }
-                            catch(Exception ex)
-                            {
-                                Response.Write(ex.Message);
-                            }
-                            finally
-                            {
-
-                            }
+                            totalScoreC2 = Convert.ToDecimal(reader2["Total2"].ToString());
+                            totalScoreC2Cri1 = Convert.ToDecimal(reader2["c2cri1"].ToString());
+                            totalScoreC2Cri2 = Convert.ToDecimal(reader2["c2cri2"].ToString());
+                            totalScoreC2Cri3 = Convert.ToDecimal(reader2["c2cri3"].ToString());
+                            totalScoreC2Cri4 = Convert.ToDecimal(reader2["c2cri4"].ToString());
+                            //StringBuilder sb = new StringBuilder(reader2["PAPER_BARCODE"].ToString());
+                            //sb[5] = '3';
+                            //paperURLName = sb.ToString();
+                            //paperURLFolder = paperURLName.Substring(0, 11);
+                            //paperURL = "factoryfile/image/" + paperURLFolder+ "/" + paperURLName+ ".jpg";
+                            Response.Write(totalScoreC1);
+                            Response.Write(" ");
+                            Response.Write(totalScoreC2);
+                            
                         }
-
-                        while (reader.Read())
-                        {
-                            stdCode = reader["STD_CODE"].ToString();
-                            reserve = reader["RESERVE"].ToString();
-                            StringBuilder sb = new StringBuilder(reader["PAPER_BARCODE"].ToString());
-                            sb[5] = '3';
-                            paperURLName = sb.ToString();
-                            paperURLFolder = paperURLName.Substring(0, 11);
-                            paperURL = "factoryfile/image/" + paperURLFolder+ "/" + paperURLName+ ".jpg";
-                            Response.Write("<br>");
-
-                        }
-                        reader.Close();
-                        conn.Close();
+                        
+                        reader2.Close();
                     }
-                    catch (Exception ex)
-                    {
-
-                    }
-                    finally
-                    {
-                        if (conn != null && conn.State == System.Data.ConnectionState.Open)
-                        {
-                            conn.Close();
-                        }
-                    }
-
-                    //Update Reserve
-                    try
-                    {
-
-                        String query = "UPDATE TRN_XM_SCORE_COPY1 SET RESERVE = @reserveby,RESERVE_DATETIME = getdate() WHERE STD_CODE = @stdCode;";
-
-                        System.Data.SqlClient.SqlCommand command = new System.Data.SqlClient.SqlCommand(query, conn);
-                        conn.Open();
-                        command.Parameters.AddWithValue("@stdCode", stdCode );
-                        command.Parameters.AddWithValue("@reserveby", HttpContext.Current.Session["USER_ID"].ToString());
-
-                        int result = command.ExecuteNonQuery();
-                        if (result == 1)
-                        {
-                            //Response.Write("Success");
-                        }
-                        else
-                        {
-                            ///Response.Write(" ไม่มีผลคะแนนต่างเกิน 15%");
-                            chkNodiff = false;
-                        }
-
-                        conn.Close();
-                    }
-                    catch (Exception ex)
+                    catch(Exception ex)
                     {
                         Response.Write(ex.Message);
+                        
                     }
                     finally
                     {
@@ -168,7 +123,7 @@
                             conn.Close();
                         }
                     }
-
+                    
                             %>
 
                 <div class="uk-width-xLarge-1-2 uk-width-large-1-2"><!-- Left -->
@@ -289,6 +244,17 @@
                             </div>
                         </div>
                             <input type="hidden" value="<% Response.Write(stdCode); %>" name="stdCode" id="stdCode" />
+                            <input type="hidden" value="<% Response.Write(totalScoreC1); %>" name="totalScoreC1" id="totalScoreC1" />
+                            <input type="hidden" value="<% Response.Write(totalScoreC2); %>" name="totalScoreC2" id="totalScoreC2" />
+                            <input type="hidden" value="<% Response.Write(totalScoreC1Cri1); %>" name="totalScoreC1Cri1" id="totalScoreC1Cri1" />
+                            <input type="hidden" value="<% Response.Write(totalScoreC1Cri2); %>" name="totalScoreC1Cri2" id="totalScoreC1Cri2" />
+                            <input type="hidden" value="<% Response.Write(totalScoreC1Cri3); %>" name="totalScoreC1Cri3" id="totalScoreC1Cri3" />
+                            <input type="hidden" value="<% Response.Write(totalScoreC1Cri4); %>" name="totalScoreC1Cri4" id="totalScoreC1Cri4" />
+                            <input type="hidden" value="<% Response.Write(totalScoreC2Cri1); %>" name="totalScoreC2Cri1" id="totalScoreC2Cri1" />
+                            <input type="hidden" value="<% Response.Write(totalScoreC2Cri2); %>" name="totalScoreC2Cri2" id="totalScoreC2Cri2" />
+                            <input type="hidden" value="<% Response.Write(totalScoreC2Cri3); %>" name="totalScoreC2Cri3" id="totalScoreC2Cri3" />
+                            <input type="hidden" value="<% Response.Write(totalScoreC2Cri4); %>" name="totalScoreC2Cri4" id="totalScoreC2Cri4" />
+                             <input type="hidden" value="<% Response.Write(QNO); %>" name="QNO" id="QNO" />
                       </form>
                     </div>                    
                 </div>
@@ -323,9 +289,64 @@
 
             //alert(ischeck);
             if (ischeck == 4) {
+                var chk4Min = '';
                 var scoreValue = $("#score_form").serializeObject();
                 var sumScore = Number(scoreValue.score1_1) + Number(scoreValue.score1_2) + Number(scoreValue.score2_1) + Number(scoreValue.score2_2);
-                UIkit.modal.confirm('<div><p>ยืนยันการให้คะแนน :</p><pre><table style="border:0px;" align="center">' +
+
+                var compare1 = Math.abs(scoreValue.totalScoreC1 - sumScore);
+                var compare2 = Math.abs(scoreValue.totalScoreC2 - sumScore);
+
+                if (compare1 < compare2) {
+                    alert('is C1  = ' + compare1);
+                    if (compare1 <= 1.5) {
+                        //C1+R3 /2
+                        //alert('C1 < 1.5 Do it');
+                        //alert('C1= ' + scoreValue.totalScoreC1);
+                        //alert('sumScore= ' + sumScore);
+                        scoreValue.useScoreSum = (sumScore + Number(scoreValue.totalScoreC1)) / 2;
+                        scoreValue.useScore1_1 = (Number(scoreValue.score1_1) + Number(scoreValue.totalScoreC1Cri1)) / 2;
+                        scoreValue.useScore1_2 = (Number(scoreValue.score1_2) + Number(scoreValue.totalScoreC1Cri2)) / 2;
+                        scoreValue.useScore1_3 = (Number(scoreValue.score2_1) + Number(scoreValue.totalScoreC1Cri3)) / 2;
+                        scoreValue.useScore1_4 = (Number(scoreValue.score2_2) + Number(scoreValue.totalScoreC1Cri4)) / 2;
+
+                        //alert(scoreValue.useScore1_1);
+                    } else {
+                        alert('คะแนนนี้ยังไม่ผ่านเงื่อนไข ระบบจะไม่บันทึกคะแนน ไปหน้าต้น : C1');
+                    }
+                } else if (compare2 < compare1) {
+                    alert('is C2  = ' + compare2);
+                    if (compare2 <= 1.5) {
+                        //C2+R3 /2
+                        //alert('C2 < 1.5 Do it');
+                        scoreValue.useScoreSum = (sumScore + Number(scoreValue.totalScoreC2)) / 2;
+                        scoreValue.useScore1_1 = (Number(scoreValue.score1_1) + Number(scoreValue.totalScoreC2Cri1)) / 2;
+                        scoreValue.useScore1_2 = (Number(scoreValue.score1_2) + Number(scoreValue.totalScoreC2Cri2)) / 2;
+                        scoreValue.useScore1_3 = (Number(scoreValue.score2_1) + Number(scoreValue.totalScoreC2Cri3)) / 2;
+                        scoreValue.useScore1_4 = (Number(scoreValue.score2_2) + Number(scoreValue.totalScoreC2Cri4)) / 2;
+                    } else {
+                        alert('คะแนนนี้ยังไม่ผ่านเงื่อนไข ระบบจะไม่บันทึกคะแนน ไปหน้าต้น : C2');
+                    }
+                } else if (compare2 == compare1) {
+                    alert('C1 = C2');
+
+                    if (compare1 <= 1.5) {
+                        //C1+C2+R3 /3
+                        //alert('C1,C2 < 1.5 Do it');
+                        scoreValue.useScoreSum = (sumScore + Number(scoreValue.totalScoreC1) + Number(scoreValue.totalScoreC2)) / 3;
+                        scoreValue.useScore1_1 = (Number(scoreValue.score1_1) + Number(scoreValue.totalScoreC1Cri1) + Number(scoreValue.totalScoreC2Cri1)) / 3;
+                        scoreValue.useScore1_2 = (Number(scoreValue.score1_2) + Number(scoreValue.totalScoreC1Cri2) + Number(scoreValue.totalScoreC2Cri2)) / 3;
+                        scoreValue.useScore1_3 = (Number(scoreValue.score2_1) + Number(scoreValue.totalScoreC1Cri3) + Number(scoreValue.totalScoreC2Cri3)) / 3;
+                        scoreValue.useScore1_4 = (Number(scoreValue.score2_2) + Number(scoreValue.totalScoreC1Cri4) + Number(scoreValue.totalScoreC2Cri4)) / 3;
+                    } else {
+                        //alert('C1,C2 > 1.5 Error!');
+                        alert('คะแนนนี้ยังไม่ผ่านเงื่อนไข ระบบจะไม่บันทึกคะแนน ไปหน้าต้น : C1=C2');
+                    }
+                }
+
+                scoreValue.sumScore = sumScore;
+                console.log(scoreValue);
+
+                UIkit.modal.confirm('<div><p>ยืนยันการให้คะแนน :</p><pre><table style="border:0px; font-size:18px;" align="center">' +
                     '<tr><td>๑.๑ ประเด็น :</td><td>' + scoreValue.score1_1 +
                     '</td><tr><td>๑.๒ กลวิธีสรุปความ :</td><td>' + scoreValue.score1_2 +
                     '</td><tr><td>๒.๑ การันต์และเครื่องหมาย :</td><td>' + scoreValue.score2_1 +

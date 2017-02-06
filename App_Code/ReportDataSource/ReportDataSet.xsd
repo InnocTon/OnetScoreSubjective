@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ReportDataSet" targetNamespace="http://tempuri.org/ReportDataSet.xsd" xmlns:mstns="http://tempuri.org/ReportDataSet.xsd" xmlns="http://tempuri.org/ReportDataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="ReportDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_DataSetName="ReportDataSet" msprop:Generator_UserDSName="ReportDataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="UserData" msprop:Generator_TableClassName="UserDataDataTable" msprop:Generator_TableVarName="tableUserData" msprop:Generator_TablePropName="UserData" msprop:Generator_RowDeletingName="UserDataRowDeleting" msprop:Generator_RowChangingName="UserDataRowChanging" msprop:Generator_RowEvHandlerName="UserDataRowChangeEventHandler" msprop:Generator_RowDeletedName="UserDataRowDeleted" msprop:Generator_UserTableName="UserData" msprop:Generator_RowChangedName="UserDataRowChanged" msprop:Generator_RowEvArgName="UserDataRowChangeEvent" msprop:Generator_RowClassName="UserDataRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="USER_ID" msprop:Generator_ColumnVarNameInTable="columnUSER_ID" msprop:Generator_ColumnPropNameInRow="USER_ID" msprop:Generator_ColumnPropNameInTable="USER_IDColumn" msprop:Generator_UserColumnName="USER_ID" type="xs:string" minOccurs="0" />
+              <xs:element name="USER_NAME" msprop:Generator_ColumnVarNameInTable="columnUSER_NAME" msprop:Generator_ColumnPropNameInRow="USER_NAME" msprop:Generator_ColumnPropNameInTable="USER_NAMEColumn" msprop:Generator_UserColumnName="USER_NAME" type="xs:string" minOccurs="0" />
+              <xs:element name="USER_TYPE" msprop:Generator_ColumnVarNameInTable="columnUSER_TYPE" msprop:Generator_ColumnPropNameInRow="USER_TYPE" msprop:Generator_ColumnPropNameInTable="USER_TYPEColumn" msprop:Generator_UserColumnName="USER_TYPE" type="xs:string" minOccurs="0" />
+              <xs:element name="USER_STATUS" msprop:Generator_ColumnVarNameInTable="columnUSER_STATUS" msprop:Generator_ColumnPropNameInRow="USER_STATUS" msprop:Generator_ColumnPropNameInTable="USER_STATUSColumn" msprop:Generator_UserColumnName="USER_STATUS" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="diffData" msprop:Generator_TableClassName="diffDataDataTable" msprop:Generator_TableVarName="tablediffData" msprop:Generator_TablePropName="diffData" msprop:Generator_RowDeletingName="diffDataRowDeleting" msprop:Generator_RowChangingName="diffDataRowChanging" msprop:Generator_RowEvHandlerName="diffDataRowChangeEventHandler" msprop:Generator_RowDeletedName="diffDataRowDeleted" msprop:Generator_UserTableName="diffData" msprop:Generator_RowChangedName="diffDataRowChanged" msprop:Generator_RowEvArgName="diffDataRowChangeEvent" msprop:Generator_RowClassName="diffDataRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="OMR_SEQ" msprop:Generator_ColumnVarNameInTable="columnOMR_SEQ" msprop:Generator_ColumnPropNameInRow="OMR_SEQ" msprop:Generator_ColumnPropNameInTable="OMR_SEQColumn" msprop:Generator_UserColumnName="OMR_SEQ" type="xs:string" minOccurs="0" />
+              <xs:element name="STD_CODE" msprop:Generator_ColumnVarNameInTable="columnSTD_CODE" msprop:Generator_ColumnPropNameInRow="STD_CODE" msprop:Generator_ColumnPropNameInTable="STD_CODEColumn" msprop:Generator_UserColumnName="STD_CODE" type="xs:string" minOccurs="0" />
+              <xs:element name="PAPER_BARCODE" msprop:Generator_ColumnVarNameInTable="columnPAPER_BARCODE" msprop:Generator_ColumnPropNameInRow="PAPER_BARCODE" msprop:Generator_ColumnPropNameInTable="PAPER_BARCODEColumn" msprop:Generator_UserColumnName="PAPER_BARCODE" type="xs:string" minOccurs="0" />
+              <xs:element name="Q_NO" msprop:Generator_ColumnVarNameInTable="columnQ_NO" msprop:Generator_ColumnPropNameInRow="Q_NO" msprop:Generator_ColumnPropNameInTable="Q_NOColumn" msprop:Generator_UserColumnName="Q_NO" type="xs:string" minOccurs="0" />
+              <xs:element name="COPY_NO" msprop:Generator_ColumnVarNameInTable="columnCOPY_NO" msprop:Generator_ColumnPropNameInRow="COPY_NO" msprop:Generator_ColumnPropNameInTable="COPY_NOColumn" msprop:Generator_UserColumnName="COPY_NO" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
