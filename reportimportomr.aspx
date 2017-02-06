@@ -69,7 +69,7 @@
 
                         oLanguage: {
                             sLengthMenu: "แสดง _MENU_ รายการต่อหน้า",
-                            sZeroRecords: "ไม่เจอข้อมูลที่ค้นหา",
+                            sZeroRecords: "ไม่พบข้อมูล",
                             sInfo: "แสดงรายการที่ _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
                             sInfoEmpty: "แสดง 0 ถึง 0 ของทั้งหมด 0 รายการ",
                             sInfoFiltered: "(จากเร็คคอร์ดทั้งหมด _MAX_ เร็คคอร์ด)",

@@ -159,7 +159,7 @@
                            { className: "dt-left", "targets": "1" },
                            { width: "8%", "targets": 0 }
                         ],
-                        lengthMenu: [[5,10, 25, 50, -1], [5,10, 25, 50, "All"]],
+                        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
                         data: data,
                         columns: [
                             { 'data': 'no' },

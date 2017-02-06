@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="Paper3DataSet" targetNamespace="http://tempuri.org/Paper3DataSet.xsd" xmlns:mstns="http://tempuri.org/Paper3DataSet.xsd" xmlns="http://tempuri.org/Paper3DataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="Paper3DataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_DataSetName="Paper3DataSet" msprop:Generator_UserDSName="Paper3DataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="PAPERTABLE" msprop:Generator_TableClassName="PAPERTABLEDataTable" msprop:Generator_TableVarName="tablePAPERTABLE" msprop:Generator_TablePropName="PAPERTABLE" msprop:Generator_RowDeletingName="PAPERTABLERowDeleting" msprop:Generator_RowChangingName="PAPERTABLERowChanging" msprop:Generator_RowEvHandlerName="PAPERTABLERowChangeEventHandler" msprop:Generator_RowDeletedName="PAPERTABLERowDeleted" msprop:Generator_UserTableName="PAPERTABLE" msprop:Generator_RowChangedName="PAPERTABLERowChanged" msprop:Generator_RowEvArgName="PAPERTABLERowChangeEvent" msprop:Generator_RowClassName="PAPERTABLERow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="PAPERCODE" msprop:Generator_ColumnVarNameInTable="columnPAPERCODE" msprop:Generator_ColumnPropNameInRow="PAPERCODE" msprop:Generator_ColumnPropNameInTable="PAPERCODEColumn" msprop:Generator_UserColumnName="PAPERCODE" type="xs:string" minOccurs="0" />
+              <xs:element name="IMGURL" msprop:Generator_ColumnVarNameInTable="columnIMGURL" msprop:Generator_ColumnPropNameInRow="IMGURL" msprop:Generator_ColumnPropNameInTable="IMGURLColumn" msprop:Generator_UserColumnName="IMGURL" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
