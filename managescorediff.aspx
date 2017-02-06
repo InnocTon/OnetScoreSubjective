@@ -4,17 +4,13 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <form id="form1" runat="server">
+
+        <div id="page_heading" data-uk-sticky="{ top: 48, media: 960 }">
+            <h1><i class="material-icons md-24">&#xE3EA;</i> ประมวลผลค่า Diff</h1>
+            <span class="uk-text-upper uk-text-small">ประมวลผลคะแนนหาค่าผลต่าของคะแนนเกิน 15%</span>
+        </div>
+
         <div id="page_content_inner">
-            <div class="md-card">
-                <div class="md-card-content">
-                    <div class="uk-grid uk-grid-divider" data-uk-grid-margin>
-                        <div class="uk-width-large-2-2 uk-width-medium-2-2">
-                            <h2><i class="material-icons md-24">&#xE3EA;</i> ประมวลผลค่า Diff</h2>
-                            <span class="uk-text-upper uk-text-small">ประมวลผลคะแนนหาค่าผลต่าของคะแนนเกิน 15%</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div class="md-card uk-margin-medium-bottom">
                 <div class="md-card-content">
                     <div class="uk-overflow-container uk-margin-bottom">
@@ -73,6 +69,10 @@
 
     <script>
         $(document).ready(function () {
+
+            
+
+
             $.ajax({
                 type: "POST",
                 dataType: "json",
@@ -108,7 +108,15 @@
                             { 'data': 'qno' },
                             {
                                 'data': 'difftools', 'render': function (value, type, full) {
-                                    return "<a href='papercopy3report.aspx?papercode=" + value + "&qno=" + full.qno + "'><i class='md-icon material-icons uk-text-danger'>&#xE8AD;</i></a> <a href='#'><i class='md-icon material-icons uk-text-primary material-icons'>&#xE150;</i></a>";
+
+                                    if (full.qno == '1') {
+                                        return "<a href='papercopy3report.aspx?papercode=" + value + "&qno=" + full.qno + "'><i class='md-icon material-icons uk-text-danger'>&#xE8AD;</i></a> <a href='Rater3No1.aspx?stdcode=" + full.stdcode + "'><i class='md-icon material-icons uk-text-primary material-icons'>&#xE150;</i></a>";
+                                    } else {
+                                        return "<a href='papercopy3report.aspx?papercode=" + value + "&qno=" + full.qno + "'><i class='md-icon material-icons uk-text-danger'>&#xE8AD;</i></a> <a href='Rater3No2.aspx?stdcode=" + full.stdcode + "'><i class='md-icon material-icons uk-text-primary material-icons'>&#xE150;</i></a>";
+                                    }
+                                    
+
+                                   
                                 }
                             }
                         ]
@@ -138,6 +146,18 @@
                 //     UIkit.modal.alert('Hello ' + (val || 'Mr noname') + '!');
                 window.location = "papercopy3report.aspx?papercode=all&qno=" + (val || '1');
             });
+        });
+
+        $("#reportdiff").click(function () {
+
+            UIkit.modal.prompt('ข้อที่ต้องการพิมพ์ :', '', function (val) {
+                //    alert(val || '1');
+                //     UIkit.modal.alert('Hello ' + (val || 'Mr noname') + '!');
+                window.location = "reportdiff.aspx?qno=" + (val || '1');
+            });
+
+
+            
         });
 
     </script>

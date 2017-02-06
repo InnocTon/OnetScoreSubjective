@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ClassDataDiffReport" targetNamespace="http://tempuri.org/ClassDataDiffReport.xsd" xmlns:mstns="http://tempuri.org/ClassDataDiffReport.xsd" xmlns="http://tempuri.org/ClassDataDiffReport.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="ClassDataDiffReport" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_DataSetName="ClassDataDiffReport" msprop:Generator_UserDSName="ClassDataDiffReport">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="DIFFTABLE" msprop:Generator_TableClassName="DIFFTABLEDataTable" msprop:Generator_TableVarName="tableDIFFTABLE" msprop:Generator_TablePropName="DIFFTABLE" msprop:Generator_RowDeletingName="DIFFTABLERowDeleting" msprop:Generator_RowChangingName="DIFFTABLERowChanging" msprop:Generator_RowEvHandlerName="DIFFTABLERowChangeEventHandler" msprop:Generator_RowDeletedName="DIFFTABLERowDeleted" msprop:Generator_UserTableName="DIFFTABLE" msprop:Generator_RowChangedName="DIFFTABLERowChanged" msprop:Generator_RowEvArgName="DIFFTABLERowChangeEvent" msprop:Generator_RowClassName="DIFFTABLERow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="NO" msprop:Generator_ColumnVarNameInTable="columnNO" msprop:Generator_ColumnPropNameInRow="NO" msprop:Generator_ColumnPropNameInTable="NOColumn" msprop:Generator_UserColumnName="NO" type="xs:string" minOccurs="0" />
+              <xs:element name="STDCODE" msprop:Generator_ColumnVarNameInTable="columnSTDCODE" msprop:Generator_ColumnPropNameInRow="STDCODE" msprop:Generator_ColumnPropNameInTable="STDCODEColumn" msprop:Generator_UserColumnName="STDCODE" type="xs:string" minOccurs="0" />
+              <xs:element name="QNO" msprop:Generator_ColumnVarNameInTable="columnQNO" msprop:Generator_ColumnPropNameInRow="QNO" msprop:Generator_ColumnPropNameInTable="QNOColumn" msprop:Generator_UserColumnName="QNO" type="xs:string" minOccurs="0" />
+              <xs:element name="PAPERCODE" msprop:Generator_ColumnVarNameInTable="columnPAPERCODE" msprop:Generator_ColumnPropNameInRow="PAPERCODE" msprop:Generator_ColumnPropNameInTable="PAPERCODEColumn" msprop:Generator_UserColumnName="PAPERCODE" type="xs:string" minOccurs="0" />
+              <xs:element name="CREATEDATE" msprop:Generator_ColumnVarNameInTable="columnCREATEDATE" msprop:Generator_ColumnPropNameInRow="CREATEDATE" msprop:Generator_ColumnPropNameInTable="CREATEDATEColumn" msprop:Generator_UserColumnName="CREATEDATE" type="xs:string" minOccurs="0" />
+              <xs:element name="PRINTBY" msprop:Generator_ColumnVarNameInTable="columnPRINTBY" msprop:Generator_ColumnPropNameInRow="PRINTBY" msprop:Generator_ColumnPropNameInTable="PRINTBYColumn" msprop:Generator_UserColumnName="PRINTBY" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -160,24 +160,12 @@
                             <a href="importomr.aspx">นำเข้าข้อมูล</a></li>
                         <li <% if (pageName == "reportimportomr") Response.Write("class='act_item'"); %>>
                             <a href="reportimportomr.aspx">รายงานการนำเข้า</a></li>
-                        <li <% if (pageName == "managescorediff" || pageName == "papercopy3report") Response.Write("class='act_item'"); %>>
+                        <li <% if (pageName == "managescorediff" || pageName == "papercopy3report" || pageName=="Rater3No1" || pageName == "Rater3No2") Response.Write("class='act_item'"); %>>
                             <a href="managescorediff.aspx">ประมวลผลค่า Diff</a></li>
                     </ul>
                 </li>
 
 
-                <li>
-                    <a href="#">
-                        <span class="menu_icon"><i class="material-icons">&#xE312;</i></span>
-                        <span class="menu_title">บันทึกคะแนนชุดที่ 3</span>
-                    </a>
-                    <ul>
-                        <li <% if (pageName == "Rater3No1") Response.Write("class='act_item'"); %>>
-                            <a href="Rater3No1.aspx">ข้อที่ 1</a></li>
-                        <li <% if (pageName == "Rater3No2") Response.Write("class='act_item'"); %>>
-                            <a href="Rater3No2.aspx">ข้อที่ 2</a></li>
-                    </ul>
-                </li>
 
        <!--         <li>
                     <a href="#">
