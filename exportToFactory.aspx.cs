@@ -36,8 +36,8 @@ public partial class exportToFactory : System.Web.UI.Page
             SqlCommand command = new SqlCommand(query, conn);
             SqlDataReader reader = command.ExecuteReader();
             var dtNow = DateTime.Now.ToString("yyyy-MM-dd--HH-mm-ss");
-            string exportName = @"D:\ExportData\DataExport-" + dtNow + ".csv";
-            string exportNameShow = "D:\\ExportData\\DataExport-" + dtNow + ".csv";
+            string exportName = @"C:\Users\Public\ExportData\\DataExport-" + dtNow + ".csv";
+            string exportNameShow = "C:\\Users\\Public\\ExportData\\DataExport-" + dtNow + ".csv";
             SqlTransaction trans = null;
 
             Response.Write(HttpContext.Current.Session["USER_ID"].ToString()); 
@@ -68,10 +68,12 @@ public partial class exportToFactory : System.Web.UI.Page
                         sb.Append(reader.GetName(14).ToString() + ",");
                         sb.Append(reader.GetName(15).ToString() + ",");
                         sb.Append(reader.GetName(16).ToString() + ",");
+                        sb.Append(reader.GetName(17).ToString() + ",");
                         sb.AppendLine();
                     }
                     sb.Append(reader["SCORE_SEQ"].ToString() + ",");
                     sb.Append(reader["STD_CODE"].ToString() + ",");
+                    sb.Append(reader["QNO"].ToString() + ",");
                     sb.Append(reader["SCORE_TOTAL"].ToString() + ",");
                     sb.Append(reader["CRITERION1"].ToString() + ",");
                     sb.Append(reader["CRITERION2"].ToString() + ",");

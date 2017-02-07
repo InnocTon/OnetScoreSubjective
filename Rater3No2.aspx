@@ -328,7 +328,7 @@
                 var compare2 = Math.abs(scoreValue.totalScoreC2 - sumScore);
 
                 if (compare1 < compare2) {
-                    alert('is C1  = ' + compare1);
+                    //alert('is C1  = ' + compare1);
                     if (compare1 <= 1.5) {
                         //C1+R3 /2
                         //alert('C1 < 1.5 Do it');
@@ -342,10 +342,12 @@
 
                         //alert(scoreValue.useScore1_1);
                     } else {
-                        alert('คะแนนนี้ยังไม่ผ่านเงื่อนไข ระบบจะไม่บันทึกคะแนน ไปหน้าต้น : C1');
+                        UIkit.modal.confirm('<p> คะแนนนี้ยังไม่ผ่านเงื่อนไข 15% ระบบจะไม่บันทึกคะแนน<br>กรุณาพิมพ์และให้คะแนนใหม่</p>',
+                                function () { window.location = "papercopy3report.aspx?papercode=" + scoreValue.stdCode + "&qno=2"; }
+                                );
                     }
                 } else if (compare2 < compare1) {
-                    alert('is C2  = ' + compare2);
+                    //alert('is C2  = ' + compare2);
                     if (compare2 <= 1.5) {
                         //C2+R3 /2
                         //alert('C2 < 1.5 Do it');
@@ -355,10 +357,12 @@
                         scoreValue.useScore1_3 = (Number(scoreValue.score2_1) + Number(scoreValue.totalScoreC2Cri3)) / 2;
                         scoreValue.useScore1_4 = (Number(scoreValue.score2_2) + Number(scoreValue.totalScoreC2Cri4)) / 2;
                     } else {
-                        alert('คะแนนนี้ยังไม่ผ่านเงื่อนไข ระบบจะไม่บันทึกคะแนน ไปหน้าต้น : C2');
+                        UIkit.modal.confirm('<p> คะแนนนี้ยังไม่ผ่านเงื่อนไข 15% ระบบจะไม่บันทึกคะแนน<br>กรุณาพิมพ์และให้คะแนนใหม่</p>',
+                                function () { window.location = "papercopy3report.aspx?papercode=" + scoreValue.stdCode + "&qno=2"; }
+                                );
                     }
                 } else if (compare2 == compare1) {
-                    alert('C1 = C2');
+                    //alert('C1 = C2');
 
                     if (compare1 <= 1.5) {
                         //C1+C2+R3 /3
@@ -369,8 +373,9 @@
                         scoreValue.useScore1_3 = (Number(scoreValue.score2_1) + Number(scoreValue.totalScoreC1Cri3) + Number(scoreValue.totalScoreC2Cri3)) / 3;
                         scoreValue.useScore1_4 = (Number(scoreValue.score2_2) + Number(scoreValue.totalScoreC1Cri4) + Number(scoreValue.totalScoreC2Cri4)) / 3;
                     } else {
-                        //alert('C1,C2 > 1.5 Error!');
-                        alert('คะแนนนี้ยังไม่ผ่านเงื่อนไข ระบบจะไม่บันทึกคะแนน ไปหน้าต้น : C1=C2');
+                        UIkit.modal.confirm('<p> คะแนนนี้ยังไม่ผ่านเงื่อนไข 15% ระบบจะไม่บันทึกคะแนน<br>กรุณาพิมพ์และให้คะแนนใหม่</p>',
+                                function () { window.location = "papercopy3report.aspx?papercode=" + scoreValue.stdCode + "&qno=2"; }
+                                );
                     }
                 }
 
@@ -394,8 +399,8 @@
                             async: true,
                             success: function (msg) {
                                 var msgReturn = $.parseJSON(msg.d);
-                                UIkit.modal.confirm('<p> บันทึกคะแนนเรียบร้อย ต้องการตรวจต่อหรือไม่?</p>',
-                                function () { location.reload(); }
+                                UIkit.modal.confirm('<p>บันทึกคะแนนเรียบร้อย ดำเนินการต่อ</p>',
+                                function () { window.location = "managescorediff.aspx"; }
                                 );
 
                             }

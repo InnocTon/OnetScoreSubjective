@@ -78,6 +78,7 @@
         decimal totalScoreC2Cri7 = 0;
         decimal totalScoreC2Cri8 = 0;
         decimal QNO = 1;
+        
     %>
 
     <div id="page_heading">
@@ -169,7 +170,7 @@
                         </h3>
                         <div class="md-card-toolbar">
                             <div class="md-card-toolbar-actions hidden-print" onclick="setTimeout(function () {window.print();}, 300)">
-                                <i class="md-icon material-icons" id="invoice_print">&#xE8ad;</i>
+                                <!--<i class="md-icon material-icons" id="invoice_print">&#xE8ad;</i>-->
                             </div>
                         </div>
                     </div>
@@ -370,7 +371,7 @@
         </div>
     </div>
 
-    <div class="md-fab-wrapper" <% if (!chkNodiff) { Response.Write("style='visibility:hidden'"); } %>>
+    <div class="md-fab-wrapper" <% if (string.IsNullOrEmpty(stdCodeSelect)) { Response.Write("style='visibility:hidden'"); } %>>
         <a class="md-fab md-fab-primary" href="#" id="score_submit">
             <i class="material-icons">&#xE161;</i>
         </a>
@@ -500,7 +501,7 @@
                 var compare2 = Math.abs(scoreValue.totalScoreC2 - sumScore);
 
                 if (compare1 < compare2) {
-                    alert('is C1  = ' + compare1);
+                    //alert('is C1  = ' + compare1);
                     if (compare1 <= 1.5) {
                         //C1+R3 /2
                         //alert('C1 < 1.5 Do it');
@@ -518,10 +519,12 @@
 
                         //alert(scoreValue.useScore1_1);
                     } else {
-                        alert('คะแนนนี้ยังไม่ผ่านเงื่อนไข ระบบจะไม่บันทึกคะแนน ไปหน้าต้น : C1');
+                        UIkit.modal.confirm('<p> คะแนนนี้ยังไม่ผ่านเงื่อนไข 15% ระบบจะไม่บันทึกคะแนน<br>กรุณาพิมพ์และให้คะแนนใหม่</p>',
+                                function () { window.location = "papercopy3report.aspx?papercode=" + scoreValue.stdCode + "&qno=1"; }
+                                );
                     }
                 } else if (compare2 < compare1) {
-                    alert('is C2  = ' + compare2);
+                    //alert('is C2  = ' + compare2);
                     if (compare2 <= 1.5) {
                         //C2+R3 /2
                         //alert('C2 < 1.5 Do it');
@@ -535,10 +538,12 @@
                         scoreValue.useScore1_7 = (Number(scoreValue.score3_3) + Number(scoreValue.totalScoreC2Cri7)) / 2;
                         scoreValue.useScore1_8 = (Number(scoreValue.score3_4) + Number(scoreValue.totalScoreC2Cri8)) / 2;
                     } else {
-                        alert('คะแนนนี้ยังไม่ผ่านเงื่อนไข ระบบจะไม่บันทึกคะแนน ไปหน้าต้น : C2');
+                        UIkit.modal.confirm('<p> คะแนนนี้ยังไม่ผ่านเงื่อนไข 15% ระบบจะไม่บันทึกคะแนน<br>กรุณาพิมพ์และให้คะแนนใหม่</p>',
+                                function () { window.location = "papercopy3report.aspx?papercode=" + scoreValue.stdCode + "&qno=1"; }
+                                );
                     }
                 } else if (compare2 == compare1) {
-                    alert('C1 = C2');
+                    //alert('C1 = C2');
 
                     if (compare1 <= 1.5) {
                         //C1+C2+R3 /3
@@ -553,8 +558,9 @@
                         scoreValue.useScore1_7 = (Number(scoreValue.score3_3) + Number(scoreValue.totalScoreC1Cri7) + Number(scoreValue.totalScoreC2Cri7)) / 3;
                         scoreValue.useScore1_8 = (Number(scoreValue.score3_4) + Number(scoreValue.totalScoreC1Cri8) + Number(scoreValue.totalScoreC2Cri8)) / 3;
                     } else {
-                        //alert('C1,C2 > 1.5 Error!');
-                        alert('คะแนนนี้ยังไม่ผ่านเงื่อนไข ระบบจะไม่บันทึกคะแนน ไปหน้าต้น : C1=C2');
+                        UIkit.modal.confirm('<p> คะแนนนี้ยังไม่ผ่านเงื่อนไข 15% ระบบจะไม่บันทึกคะแนน<br>กรุณาพิมพ์และให้คะแนนใหม่</p>',
+                                function () { window.location = "papercopy3report.aspx?papercode=" + scoreValue.stdCode + "&qno=1"; }
+                                );
                     }
                 }
 
@@ -583,8 +589,8 @@
                             success: function (msg) {
                                 var msgReturn = $.parseJSON(msg.d);
                                 console.log(msgReturn);
-                                UIkit.modal.confirm('<p> บันทึกคะแนนเรียบร้อย ต้องการตรวจต่อหรือไม่?</p>',
-                                function () { location.reload(); }
+                                UIkit.modal.confirm('<p> บันทึกคะแนนเรียบร้อย ดำเนินการต่อ</p>',
+                                function () { window.location = "managescorediff.aspx"; }
                                 );
 
                             }
