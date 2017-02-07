@@ -31,7 +31,7 @@ public partial class nametag : System.Web.UI.Page
                 conn.Open();
 
 
-                String query = "select RATER_PRENAME + ' ' + RATER_FNAME + ' ' + RATER_LNAME AS RATER_NAME,RATER_CITIZENID AS RATER_PID,RATER_CODE,RATER_PLACE,[GROUPID] AS RATER_GROUP,[SEATNO] AS RATER_SEATNO from trn_xm_rater inner join [dbo].[TRN_XM_SEATNO] on trn_xm_rater.RATER_CODE = [TRN_XM_SEATNO].BARCODE where RATER_STATUS = 'N' and RATER_SEQ = @seq";
+                String query = "select RATER_PRENAME + ' ' + RATER_FNAME + ' ' + RATER_LNAME AS RATER_NAME,RATER_CITIZENID AS RATER_PID,RATER_CODE,RATER_PLACE,[GROUPID] AS RATER_GROUP,[SECTNO] AS RATER_SEATNO from trn_xm_rater inner join [dbo].[TRN_XM_SEATNO] on trn_xm_rater.RATER_CODE = [TRN_XM_SEATNO].BARCODE where RATER_STATUS = 'N' and RATER_SEQ = @seq";
                 SqlCommand command = new SqlCommand(query, conn);
                 command.Parameters.AddWithValue("@seq", Request.QueryString["rater_seq"].ToString());
                 dtAdapter.SelectCommand = command;
