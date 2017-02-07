@@ -5,7 +5,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <div id="page_heading" data-uk-sticky="{ top: 48, media: 960 }">
         <div class="heading_actions">
-            <a href="reportstatuspackage.aspx" data-uk-tooltip="{pos:'bottom'}" title="รายงาน"><i class="md-icon material-icons">&#xE415;</i></a>
+            <a href="reportstatuspackage.aspx" data-uk-tooltip="{pos:'bottom'}" title="รายงานสถานะซอง"><i class="md-icon material-icons">&#xE415;</i></a>
             <a href="#" data-uk-tooltip="{pos:'bottom'}" title="รับ-ส่ง" id="sendrecivebtn" data-uk-modal="{target:'#modal_send_recive'}"><i class="md-icon material-icons">&#xE03C;</i></a>
         </div>
         <h1><i class="material-icons">&#xE80D;</i> รับ-ส่ง ซองบรรจุใบบันทึกคะแนนอัตนัย</h1>
