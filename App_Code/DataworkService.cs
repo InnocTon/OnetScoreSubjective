@@ -36,7 +36,7 @@ public class DataworkService : System.Web.Services.WebService
         var boxs = new List<ClassDataWork>();
         using (var con = new SqlConnection(connStr))
         {
-            String query = " SELECT ROW_NUMBER() OVER(ORDER BY WORK_SEQ ASC) AS Row#,RATER_CODE,WORK_DATE FROM TRN_XM_WORKDATE";
+            String query = "SELECT ROW_NUMBER() OVER(ORDER BY WD.WORK_SEQ ASC) AS Row#,RT.RATER_FNAME + ' ' + RT.RATER_FNAME + ' ' + RT.RATER_LNAME AS RATER_NAME,WD.WORK_DATE FROM TRN_XM_WORKDATE WD INNER JOIN [dbo].[TRN_XM_RATER] RT ON WD.RATER_CODE = RT.RATER_CODE";
             var cmd = new SqlCommand(query, con) { CommandType = CommandType.Text };
             con.Open();
             var dr = cmd.ExecuteReader();
@@ -45,7 +45,7 @@ public class DataworkService : System.Web.Services.WebService
                 var box = new ClassDataWork
                 {
                     no = dr["Row#"].ToString(),
-                    ratername = dr["RATER_CODE"].ToString(),
+                    ratername = dr["RATER_NAME"].ToString(),
                     workdate = dr["WORK_DATE"].ToString()
                 };
                 boxs.Add(box);

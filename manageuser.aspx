@@ -7,7 +7,7 @@
     <div id="page_heading" data-uk-sticky="{ top: 48, media: 960 }">
         <div class="heading_actions">
             <a href="#" data-uk-tooltip="{pos:'bottom'}" title="รายงาน"><i class="md-icon material-icons">&#xE415;</i></a>
-            <a href="#" data-uk-tooltip="{pos:'bottom'}" title="เพิ่มรายชื่อ" id="addnewbtn" data-uk-modal="{target:'#modal_send_recive'}"><i class="md-icon material-icons">&#xE03C;</i></a>
+            <a href="#" data-uk-tooltip="{pos:'bottom'}" title="เพิ่มรายชื่อ" id="addnewbtn"><i class="md-icon material-icons">&#xE03C;</i></a>
         </div>
         <h1><i class="material-icons md-24">&#xE8B9;</i> ตั้งค่าผู้ใช้งานระบบ</h1>
         <span class="uk-text-upper uk-text-small">ข้อมูลรายละเอียดผู้ใช้งานระบบ</span>
@@ -156,7 +156,7 @@
                 $("#<%=citizenidtxt.ClientID%>").val('');
                 $("#<%=placetxt.ClientID%>").val('');
                 $('#form_validation').parsley().reset();
-                
+
             }
         });
 
@@ -169,6 +169,17 @@
 
     <script>
         $(document).ready(function () {
+
+
+            $("#addnewbtn").click(function () {
+                UIkit.modal.confirm('คำเตือน : ก่อนทำการเพิ่มรายชื่อจะต้องได้รับความเห็นชอบจาก ผอ. หรือ รอง ผอ. ก่อนเท่านั้น!', function () {
+                   // UIkit.modal.alert('Confirmed!');
+                    UIkit.modal("#modal_send_recive").show();
+                });
+            });
+
+
+
             $.ajax({
                 type: "POST",
                 dataType: "json",
