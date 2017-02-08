@@ -4,10 +4,6 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <div id="page_heading" data-uk-sticky="{ top: 48, media: 960 }">
-        <div class="heading_actions">
-            <a href="#" data-uk-tooltip="{pos:'bottom'}" title="รายงาน"><i class="md-icon material-icons">&#xE415;</i></a>
-            <a href="#" data-uk-tooltip="{pos:'bottom'}" title="พิมพ์"><i class="md-icon material-icons">&#xE8AD;</i></a>
-        </div>
         <h1><i class="material-icons md-24">&#xE3EA;</i> รายงานการนำเข้าข้อมูล OMR</h1>
         <span class="uk-text-upper uk-text-small">รายละเอียดการนำข้อมูล OMR เข้าสู่ระบบ</span>
     </div>

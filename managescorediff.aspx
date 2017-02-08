@@ -40,6 +40,8 @@
         </div>
 
 
+ 
+       
 
 
         <div class="md-fab-wrapper">
@@ -48,10 +50,42 @@
                 <div class="md-fab-toolbar-actions">
                     <button type="button" id="processdiff" runat="server" onserverclick="listdirectorybtn_Click" data-uk-tooltip="{cls:'uk-tooltip-small',pos:'bottom'}" title="ประมวลผลค่า Diff"><i class="material-icons md-color-white">&#xE627;</i></button>
                     <button type="button" id="printdiffall" data-uk-tooltip="{cls:'uk-tooltip-small',pos:'bottom'}" title="พิมพ์ใบบันทึกคะแนน ชุดที่ 3 (ทั้งหมด)"><i class="material-icons md-color-white">&#xE555;</i></button>
-                    <button type="button" id="reportdiff" data-uk-tooltip="{cls:'uk-tooltip-small',pos:'bottom'}" title="รายงานการประมวลผลคะแนน"><i class="material-icons md-color-white">&#xE415;</i></button>
+                    <button type="button" id="reportdiff" data-uk-tooltip="{cls:'uk-tooltip-small',pos:'bottom'}" 
+                        data-uk-modal="{target:'#modal_send_recive'}"
+                        title="รายงานการประมวลผลคะแนน"><i class="material-icons md-color-white">&#xE415;</i></button>
                 </div>
             </div>
         </div>
+
+
+   <div class="uk-modal" id="modal_send_recive">
+        <div class="uk-modal-dialog">
+            <div class="uk-modal-header">
+                <h3 class="uk-modal-title">พิมพ์รายงานการประมวลผลคะแนน</h3>
+            </div>
+            <form id="form_validation" class="uk-form-stacked" autocomplete="off">
+                <div class="uk-width-medium-3-3">
+                    <div class="uk-form-row">
+                        <div class="uk-grid" data-uk-grid-margin>
+                            <div class="uk-width-medium-2-2">
+                                <div class="parsley-row">
+                                    <select id="questionaction" name="questionaction" required class="md-input" data-required-message="กรุณาเลือกข้อที่ต้องการพิมพ์" parsley-error-message="กรุณาเลือกข้อที่ต้องการพิมพ์">
+                                        <option value="">กรุณาเลือกข้อที่ต้องการพิมพ์</option>
+                                        <option value="1">ข้อ 33 จงเขียนเล่าเรื่องจากภาพ</option>
+                                        <option value="2">ข้อ 34 จงเขียนสรุปใจความสำคัญของบทอ่าน</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="uk-modal-footer uk-text-right">
+                            <button type="button" class="md-btn md-btn-flat uk-modal-close">ยกเลิก</button>
+                            <button type="submit" id="adddatabtn" class="md-btn md-btn-flat md-btn-flat-primary">ตกลง</button>
+                        </div>
+                    </div>
+            </form>
+        </div>
+    </div>
+
 
     </form>
 </asp:Content>
@@ -68,13 +102,35 @@
     <script src="assets/js/custom/datatables_uikit.min.js"></script>
 
 
-        <script src="bower_components/parsleyjs/dist/parsley.js"></script>
+
+
+
+        <script>
+        // load parsley config (altair_admin_common.js)
+        altair_forms.parsley_validation_config();
+        //Modal
+        $('.uk-modal').on({
+
+            'show.uk.modal': function () {
+                //  console.log("Modal is visible.");
+            },
+
+            'hide.uk.modal': function () {
+                //        console.log("Element is not visible.");
+                $('#questionaction').val('');
+                $('#form_validation').parsley().reset();
+
+            }
+        });
+
+
+
+    </script>
+    <script src="bower_components/parsleyjs/dist/parsley.js"></script>
     <!--  issues list functions -->
 
     <script>
         $(document).ready(function () {
-
-            
 
 
             $.ajax({
@@ -113,15 +169,15 @@
                             {
                                 'data': 'difftools', 'render': function (value, type, full) {
                                     return "<a href='papercopy3report.aspx?papercode=" + value + "&qno=" + full.qno + "'><i class='md-icon material-icons uk-text-danger'>&#xE8AD;</i></a>";
-                                /*    if (full.qno == '1') {
-                                        return "<a href='papercopy3report.aspx?papercode=" + value + "&qno=" + full.qno + "'><i class='md-icon material-icons uk-text-danger'>&#xE8AD;</i></a> <a href='Rater3No1.aspx?stdcode=" + full.stdcode + "'><i class='md-icon material-icons uk-text-primary material-icons'>&#xE150;</i></a>";
-                                    } else {
-                                        return "<a href='papercopy3report.aspx?papercode=" + value + "&qno=" + full.qno + "'><i class='md-icon material-icons uk-text-danger'>&#xE8AD;</i></a> <a href='Rater3No2.aspx?stdcode=" + full.stdcode + "'><i class='md-icon material-icons uk-text-primary material-icons'>&#xE150;</i></a>";
-                                    }
-                                  */
+                                    /*    if (full.qno == '1') {
+                                            return "<a href='papercopy3report.aspx?papercode=" + value + "&qno=" + full.qno + "'><i class='md-icon material-icons uk-text-danger'>&#xE8AD;</i></a> <a href='Rater3No1.aspx?stdcode=" + full.stdcode + "'><i class='md-icon material-icons uk-text-primary material-icons'>&#xE150;</i></a>";
+                                        } else {
+                                            return "<a href='papercopy3report.aspx?papercode=" + value + "&qno=" + full.qno + "'><i class='md-icon material-icons uk-text-danger'>&#xE8AD;</i></a> <a href='Rater3No2.aspx?stdcode=" + full.stdcode + "'><i class='md-icon material-icons uk-text-primary material-icons'>&#xE150;</i></a>";
+                                        }
+                                      */
 
 
-                                   
+
                                 }
                             }
                         ]
@@ -153,7 +209,13 @@
             });
         });
 
-        $("#reportdiff").click(function () {
+        $("#adddatabtn").click(function () {
+            var qno = $('#questionaction').val();
+            window.location = "reportdiff.aspx?qno=" + (qno || '1');
+            return false;
+        });
+
+    /*    $("#reportdiff").click(function () {
 
             UIkit.modal.prompt('ข้อที่ต้องการพิมพ์ :', '', function (val) {
                 //    alert(val || '1');
@@ -162,8 +224,8 @@
             });
 
 
-            
-        });
+
+        });*/
 
     </script>
 

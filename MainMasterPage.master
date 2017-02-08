@@ -160,7 +160,7 @@
                             <a href="importomr.aspx">นำข้อมูล OMR เข้าระบบ</a></li>
                         <li <% if (pageName == "reportimportomr") Response.Write("class='act_item'"); %>>
                             <a href="reportimportomr.aspx">รายงานการนำเข้า</a></li>
-                        <li <% if (pageName == "managescorediff" || pageName == "papercopy3report") Response.Write("class='act_item'"); %>>
+                        <li <% if (pageName == "managescorediff" || pageName == "papercopy3report" || pageName == "reportdiff") Response.Write("class='act_item'"); %>>
                             <a href="managescorediff.aspx">ประมวลผลค่า Diff</a></li>
                     </ul>
                 </li>
