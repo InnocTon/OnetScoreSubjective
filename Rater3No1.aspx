@@ -82,7 +82,7 @@
     %>
 
     <div id="page_heading">
-        <h1>ระบบบันทึกคะแนนอัตนัย วิชาภาษาไทย ข้อที่ ๑. การเขียนเล่าเรื่องจากภาพ</h1>
+        <h1>ระบบบันทึกคะแนนอัตนัย วิชาภาษาไทย ข้อที่ ๓๓. การเขียนเล่าเรื่องจากภาพ</h1>
         <!--<div class="uk-grid" data-uk-grid-margin>-->
         <div class="uk-width-large-1-2 uk-width-medium-1-2">
             <span class="uk-text-muted uk-text-upper uk-text-small">ชื่อผู้ตรวจ : <% Response.Write(HttpContext.Current.Session["USER_NAME"].ToString()); %></span>
@@ -105,59 +105,65 @@
                 string connStr = ConfigurationManager.ConnectionStrings["SqlConnectionString"].ConnectionString;
                 System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(connStr);
                 Boolean chkNodiff = true;
-                //string stdCodeSelect = Request.QueryString["stdcode"].ToString();//"0161100071044";
-                string stdCodeSelect = "0161100071016";
+                string stdCodeSelect = Request.QueryString["stdcode"].ToString();//"0161100071044";
+                //string stdCodeSelect = "0161100071006";
                 string stdCodePrint = "papercopy3report.aspx?papercode=" + stdCodeSelect + "&qno=1";
 
                 try
                 {
-                    String query2 = "select cp1.SCR_SUM as Total1,cp1.scr_crit1 as c1cri1,cp1.scr_crit2 as c1cri2,cp1.scr_crit3 as c1cri3,cp1.scr_crit4 as c1cri4,cp1.scr_crit5 as c1cri5,cp1.scr_crit6 as c1cri6,cp1.scr_crit7 as c1cri7,cp1.scr_crit8 as c1cri8, cp2.SCR_SUM as Total2,cp2.scr_crit1 as c2cri1,cp2.scr_crit2 as c2cri2,cp2.scr_crit3 as c2cri3,cp2.scr_crit4 as c2cri4,cp2.scr_crit5 as c2cri5,cp2.scr_crit6 as c2cri6,cp2.scr_crit7 as c2cri7,cp2.scr_crit8 as c2cri8,* from [ONET_SUBJECTIVE].[dbo].[TRN_XM_SCORE_COPY1] cp1 inner join [ONET_SUBJECTIVE].[dbo].[TRN_XM_SCORE_COPY2] cp2 ON cp1.std_code=cp2.std_code AND cp1.QNO = cp2.QNO WHERE cp1.STD_CODE =@stdCode";
+                    String query2 = "select cp1.SCR_SUM as Total1,cp1.scr_crit1 as c1cri1,cp1.scr_crit2 as c1cri2,cp1.scr_crit3 as c1cri3,cp1.scr_crit4 as c1cri4,cp1.scr_crit5 as c1cri5,cp1.scr_crit6 as c1cri6,cp1.scr_crit7 as c1cri7,cp1.scr_crit8 as c1cri8, cp2.SCR_SUM as Total2,cp2.scr_crit1 as c2cri1,cp2.scr_crit2 as c2cri2,cp2.scr_crit3 as c2cri3,cp2.scr_crit4 as c2cri4,cp2.scr_crit5 as c2cri5,cp2.scr_crit6 as c2cri6,cp2.scr_crit7 as c2cri7,cp2.scr_crit8 as c2cri8,* from [ONET_SUBJECTIVE].[dbo].[TRN_XM_SCORE_COPY1] cp1 inner join [ONET_SUBJECTIVE].[dbo].[TRN_XM_SCORE_COPY2] cp2 ON cp1.std_code=cp2.std_code AND cp1.QNO = cp2.QNO WHERE cp1.STD_CODE = @stdCode AND cp1.IS_DIFF='1' AND cp1.IS_COMPLETE='0'";
                     System.Data.SqlClient.SqlCommand command2 = new System.Data.SqlClient.SqlCommand(query2, conn);
                     conn.Open();
                     command2.Parameters.AddWithValue("@stdCode", stdCodeSelect);
                     System.Data.SqlClient.SqlDataReader reader2 = command2.ExecuteReader();
 
-                    while (reader2.Read())
+                    if (reader2.HasRows)
                     {
-                        stdCode = reader2["STD_CODE"].ToString();
-                        totalScoreC1 = Convert.ToDecimal(reader2["Total1"].ToString());
-                        totalScoreC1Cri1 = Convert.ToDecimal(reader2["c1cri1"].ToString());
-                        totalScoreC1Cri2 = Convert.ToDecimal(reader2["c1cri2"].ToString());
-                        totalScoreC1Cri3 = Convert.ToDecimal(reader2["c1cri3"].ToString());
-                        totalScoreC1Cri4 = Convert.ToDecimal(reader2["c1cri4"].ToString());
-                        totalScoreC1Cri5 = Convert.ToDecimal(reader2["c1cri5"].ToString());
-                        totalScoreC1Cri6 = Convert.ToDecimal(reader2["c1cri6"].ToString());
-                        totalScoreC1Cri7 = Convert.ToDecimal(reader2["c1cri7"].ToString());
-                        totalScoreC1Cri8 = Convert.ToDecimal(reader2["c1cri8"].ToString());
+                        while (reader2.Read())
+                        {
+                            stdCode = reader2["STD_CODE"].ToString();
+                            totalScoreC1 = Convert.ToDecimal(reader2["Total1"].ToString());
+                            totalScoreC1Cri1 = Convert.ToDecimal(reader2["c1cri1"].ToString());
+                            totalScoreC1Cri2 = Convert.ToDecimal(reader2["c1cri2"].ToString());
+                            totalScoreC1Cri3 = Convert.ToDecimal(reader2["c1cri3"].ToString());
+                            totalScoreC1Cri4 = Convert.ToDecimal(reader2["c1cri4"].ToString());
+                            totalScoreC1Cri5 = Convert.ToDecimal(reader2["c1cri5"].ToString());
+                            totalScoreC1Cri6 = Convert.ToDecimal(reader2["c1cri6"].ToString());
+                            totalScoreC1Cri7 = Convert.ToDecimal(reader2["c1cri7"].ToString());
+                            totalScoreC1Cri8 = Convert.ToDecimal(reader2["c1cri8"].ToString());
 
-                        totalScoreC2 = Convert.ToDecimal(reader2["Total2"].ToString());
-                        totalScoreC2Cri1 = Convert.ToDecimal(reader2["c2cri1"].ToString());
-                        totalScoreC2Cri2 = Convert.ToDecimal(reader2["c2cri2"].ToString());
-                        totalScoreC2Cri3 = Convert.ToDecimal(reader2["c2cri3"].ToString());
-                        totalScoreC2Cri4 = Convert.ToDecimal(reader2["c2cri4"].ToString());
-                        totalScoreC2Cri5 = Convert.ToDecimal(reader2["c2cri5"].ToString());
-                        totalScoreC2Cri6 = Convert.ToDecimal(reader2["c2cri6"].ToString());
-                        totalScoreC2Cri7 = Convert.ToDecimal(reader2["c2cri7"].ToString());
-                        totalScoreC2Cri8 = Convert.ToDecimal(reader2["c2cri8"].ToString());
-                        //StringBuilder sb = new StringBuilder(reader2["PAPER_BARCODE"].ToString());
-                        //sb[5] = '3';
-                        //paperURLName = sb.ToString();
-                        //paperURLFolder = paperURLName.Substring(0, 11);
+                            totalScoreC2 = Convert.ToDecimal(reader2["Total2"].ToString());
+                            totalScoreC2Cri1 = Convert.ToDecimal(reader2["c2cri1"].ToString());
+                            totalScoreC2Cri2 = Convert.ToDecimal(reader2["c2cri2"].ToString());
+                            totalScoreC2Cri3 = Convert.ToDecimal(reader2["c2cri3"].ToString());
+                            totalScoreC2Cri4 = Convert.ToDecimal(reader2["c2cri4"].ToString());
+                            totalScoreC2Cri5 = Convert.ToDecimal(reader2["c2cri5"].ToString());
+                            totalScoreC2Cri6 = Convert.ToDecimal(reader2["c2cri6"].ToString());
+                            totalScoreC2Cri7 = Convert.ToDecimal(reader2["c2cri7"].ToString());
+                            totalScoreC2Cri8 = Convert.ToDecimal(reader2["c2cri8"].ToString());
+                            //StringBuilder sb = new StringBuilder(reader2["PAPER_BARCODE"].ToString());
+                            //sb[5] = '3';
+                            //paperURLName = sb.ToString();
+                            //paperURLFolder = paperURLName.Substring(0, 11);
 
-                        String imgfilename = stdCode.ToString().Substring(0, 5) + "3" + stdCode.ToString().Substring(5, 8);
+                            String imgfilename = stdCode.ToString().Substring(0, 5) + "3" + stdCode.ToString().Substring(5, 8);
 
-                        String packagename = stdCode.Substring(0, 5) + "3" + stdCode.ToString().Substring(5, 5);
+                            String packagename = stdCode.Substring(0, 5) + "3" + stdCode.ToString().Substring(5, 5);
 
-                        // paperURL = "/fac" + packagename + "\\" + imgfilename + ".jpg";
+                            // paperURL = "/fac" + packagename + "\\" + imgfilename + ".jpg";
 
-                        paperURL = "factoryfile/image/" + packagename+ "/" + imgfilename+ ".jpg";
-                        //Response.Write(paperURL);
+                            paperURL = "factoryfile/image/" + packagename + "/" + imgfilename + ".jpg";
+                            //Response.Write(paperURL);
 
-                        //paperURL = @"D:\paperimg\" + paperURLFolder + "\\" + paperURLName + ".jpg";
-                        //Response.Write(totalScoreC1);
-                        //Response.Write(" ");
-                        //Response.Write(totalScoreC2);
-
+                            //paperURL = @"D:\paperimg\" + paperURLFolder + "\\" + paperURLName + ".jpg";
+                            //Response.Write(totalScoreC1);
+                            //Response.Write(" ");
+                            //Response.Write(totalScoreC2);
+                        }
+                    }
+                    else
+                    {
+                        Response.Write("<script>alert('รหัสกระดาษคำตอบไม่ถูกต้อง'); window.location='rater3managediff.aspx';</script>");
                     }
 
                     reader2.Close();
@@ -169,6 +175,7 @@
                 }
                 finally
                 {
+
                     if (conn != null && conn.State == System.Data.ConnectionState.Open)
                     {
                         conn.Close();
@@ -619,7 +626,7 @@
                                 var msgReturn = $.parseJSON(msg.d);
                                 console.log(msgReturn);
                                 UIkit.modal.confirm('<p> บันทึกคะแนนเรียบร้อย ดำเนินการต่อ</p>',
-                                function () { window.location = "managescorediff.aspx"; }
+                                function () { window.location = "rater3managediff.aspx"; }
                                 );
 
                             }

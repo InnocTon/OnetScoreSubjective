@@ -73,7 +73,7 @@
     %>
 
     <div id="page_heading">
-        <h1>ระบบบันทึกคะแนนอัตนัย วิชาภาษาไทย ข้อที่ ๒. การเขียนสรุปใจความสำคัญของบทอ่าน</h1>
+        <h1>ระบบบันทึกคะแนนอัตนัย วิชาภาษาไทย ข้อที่ ๓๔. การเขียนสรุปใจความสำคัญของบทอ่าน</h1>
         <span class="uk-text-muted uk-text-upper uk-text-small">ชื่อผู้ตรวจ : <% Response.Write(HttpContext.Current.Session["USER_NAME"].ToString()); %></span>
     </div>
 
@@ -83,8 +83,8 @@
                 string connStr = ConfigurationManager.ConnectionStrings["SqlConnectionString"].ConnectionString;
                 System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(connStr);
                 Boolean chkNodiff = true;
-                //string stdCodeSelect = Request.QueryString["stdcode"].ToString();
-                string stdCodeSelect = "0361200001011";
+                string stdCodeSelect = Request.QueryString["stdcode"].ToString();
+                //string stdCodeSelect = "0361200001011";
                 string stdCodePrint = "papercopy3report.aspx?papercode=" + stdCodeSelect + "&qno=2";
 
                 try
@@ -95,36 +95,43 @@
                     command2.Parameters.AddWithValue("@stdCode", stdCodeSelect);
                     System.Data.SqlClient.SqlDataReader reader2 = command2.ExecuteReader();
 
-                    while (reader2.Read())
+                    if (reader2.HasRows)
                     {
-                        stdCode = reader2["STD_CODE"].ToString();
-                        totalScoreC1 = Convert.ToDecimal(reader2["Total1"].ToString());
-                        totalScoreC1Cri1 = Convert.ToDecimal(reader2["c1cri1"].ToString());
-                        totalScoreC1Cri2 = Convert.ToDecimal(reader2["c1cri2"].ToString());
-                        totalScoreC1Cri3 = Convert.ToDecimal(reader2["c1cri3"].ToString());
-                        totalScoreC1Cri4 = Convert.ToDecimal(reader2["c1cri4"].ToString());
+                        while (reader2.Read())
+                        {
+                            stdCode = reader2["STD_CODE"].ToString();
+                            totalScoreC1 = Convert.ToDecimal(reader2["Total1"].ToString());
+                            totalScoreC1Cri1 = Convert.ToDecimal(reader2["c1cri1"].ToString());
+                            totalScoreC1Cri2 = Convert.ToDecimal(reader2["c1cri2"].ToString());
+                            totalScoreC1Cri3 = Convert.ToDecimal(reader2["c1cri3"].ToString());
+                            totalScoreC1Cri4 = Convert.ToDecimal(reader2["c1cri4"].ToString());
 
-                        totalScoreC2 = Convert.ToDecimal(reader2["Total2"].ToString());
-                        totalScoreC2Cri1 = Convert.ToDecimal(reader2["c2cri1"].ToString());
-                        totalScoreC2Cri2 = Convert.ToDecimal(reader2["c2cri2"].ToString());
-                        totalScoreC2Cri3 = Convert.ToDecimal(reader2["c2cri3"].ToString());
-                        totalScoreC2Cri4 = Convert.ToDecimal(reader2["c2cri4"].ToString());
-                        //StringBuilder sb = new StringBuilder(reader2["PAPER_BARCODE"].ToString());
-                        //sb[5] = '3';
-                        //paperURLName = sb.ToString();
-                        //paperURLFolder = paperURLName.Substring(0, 11);
-                        //paperURL = "factoryfile/image/" + paperURLFolder+ "/" + paperURLName+ ".jpg";
-                        //Response.Write(totalScoreC1);
-                        // Response.Write(" ");
-                        //Response.Write(totalScoreC2);
-                        String imgfilename = stdCode.ToString().Substring(0, 5) + "3" + stdCode.ToString().Substring(5, 8);
+                            totalScoreC2 = Convert.ToDecimal(reader2["Total2"].ToString());
+                            totalScoreC2Cri1 = Convert.ToDecimal(reader2["c2cri1"].ToString());
+                            totalScoreC2Cri2 = Convert.ToDecimal(reader2["c2cri2"].ToString());
+                            totalScoreC2Cri3 = Convert.ToDecimal(reader2["c2cri3"].ToString());
+                            totalScoreC2Cri4 = Convert.ToDecimal(reader2["c2cri4"].ToString());
+                            //StringBuilder sb = new StringBuilder(reader2["PAPER_BARCODE"].ToString());
+                            //sb[5] = '3';
+                            //paperURLName = sb.ToString();
+                            //paperURLFolder = paperURLName.Substring(0, 11);
+                            //paperURL = "factoryfile/image/" + paperURLFolder+ "/" + paperURLName+ ".jpg";
+                            //Response.Write(totalScoreC1);
+                            //Response.Write(" ");
+                            //Response.Write(totalScoreC2);
+                            String imgfilename = stdCode.ToString().Substring(0, 5) + "3" + stdCode.ToString().Substring(5, 8);
 
-                        String packagename = stdCode.Substring(0, 5) + "3" + stdCode.ToString().Substring(5, 5);
+                            String packagename = stdCode.Substring(0, 5) + "3" + stdCode.ToString().Substring(5, 5);
 
-                        // paperURL = "/fac" + packagename + "\\" + imgfilename + ".jpg";
+                            // paperURL = "/fac" + packagename + "\\" + imgfilename + ".jpg";
 
-                        paperURL = "factoryfile/image/" + packagename + "/" + imgfilename + ".jpg";
+                            paperURL = "factoryfile/image/" + packagename + "/" + imgfilename + ".jpg";
 
+                        }
+                    }
+                    else
+                    {
+                        Response.Write("<script>alert('รหัสกระดาษคำตอบไม่ถูกต้อง'); window.location='rater3managediff.aspx';</script>");
                     }
 
                     reader2.Close();
@@ -412,7 +419,7 @@
                             success: function (msg) {
                                 var msgReturn = $.parseJSON(msg.d);
                                 UIkit.modal.confirm('<p>บันทึกคะแนนเรียบร้อย ดำเนินการต่อ</p>',
-                                function () { window.location = "managescorediff.aspx"; }
+                                function () { window.location = "rater3managediff.aspx"; }
                                 );
 
                             }
