@@ -107,6 +107,7 @@
                 Boolean chkNodiff = true;
                 //string stdCodeSelect = Request.QueryString["stdcode"].ToString();//"0161100071044";
                 string stdCodeSelect = "0161100071016";
+                string stdCodePrint = "papercopy3report.aspx?papercode=" + stdCodeSelect + "&qno=1";
 
                 try
                 {
@@ -147,15 +148,15 @@
 
                         String packagename = stdCode.Substring(0, 5) + "3" + stdCode.ToString().Substring(5, 5);
 
-                       // paperURL = "/fac" + packagename + "\\" + imgfilename + ".jpg";
+                        // paperURL = "/fac" + packagename + "\\" + imgfilename + ".jpg";
 
                         paperURL = "factoryfile/image/" + packagename+ "/" + imgfilename+ ".jpg";
                         //Response.Write(paperURL);
 
                         //paperURL = @"D:\paperimg\" + paperURLFolder + "\\" + paperURLName + ".jpg";
-                           Response.Write(totalScoreC1);
-                           Response.Write(" ");
-                           Response.Write(totalScoreC2);
+                        //Response.Write(totalScoreC1);
+                        //Response.Write(" ");
+                        //Response.Write(totalScoreC2);
 
                     }
 
@@ -183,8 +184,9 @@
                         <h3 class="md-card-toolbar-heading-text">คำตอบ
                         </h3>
                         <div class="md-card-toolbar">
-                            <div class="md-card-toolbar-actions hidden-print" onclick="setTimeout(function () {window.print();}, 300)">
-                                <i class="md-icon material-icons" id="invoice_print">&#xE8ad;</i>
+                            <!--<div class="md-card-toolbar-actions hidden-print" onclick="setTimeout(function () {window.print();}, 300)">-->
+                            <div class="md-card-toolbar-actions hidden-print" onclick="window.open('<% Response.Write(stdCodePrint); %>','_blank')">
+<i class="md-icon material-icons" id="invoice_print">&#xE8ad;</i>
                             </div>
                         </div>
                     </div>

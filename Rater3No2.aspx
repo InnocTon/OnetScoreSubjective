@@ -85,6 +85,7 @@
                 Boolean chkNodiff = true;
                 //string stdCodeSelect = Request.QueryString["stdcode"].ToString();
                 string stdCodeSelect = "0361200001011";
+                string stdCodePrint = "papercopy3report.aspx?papercode=" + stdCodeSelect + "&qno=2";
 
                 try
                 {
@@ -113,9 +114,9 @@
                         //paperURLName = sb.ToString();
                         //paperURLFolder = paperURLName.Substring(0, 11);
                         //paperURL = "factoryfile/image/" + paperURLFolder+ "/" + paperURLName+ ".jpg";
-                            Response.Write(totalScoreC1);
-                             Response.Write(" ");
-                            Response.Write(totalScoreC2);
+                        //Response.Write(totalScoreC1);
+                        // Response.Write(" ");
+                        //Response.Write(totalScoreC2);
                         String imgfilename = stdCode.ToString().Substring(0, 5) + "3" + stdCode.ToString().Substring(5, 8);
 
                         String packagename = stdCode.Substring(0, 5) + "3" + stdCode.ToString().Substring(5, 5);
@@ -150,7 +151,7 @@
                         <h3 class="md-card-toolbar-heading-text">คำตอบ
                         </h3>
                         <div class="md-card-toolbar">
-                            <div class="md-card-toolbar-actions hidden-print" onclick="setTimeout(function () {window.print();}, 300)">
+                            <div class="md-card-toolbar-actions hidden-print" onclick="window.open('<% Response.Write(stdCodePrint); %>','_blank')">
                                 <i class="md-icon material-icons" id="invoice_print">&#xE8ad;</i>
                             </div>
                         </div>
