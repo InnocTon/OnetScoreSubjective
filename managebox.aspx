@@ -21,18 +21,20 @@
                             <tr>
                                 <th class="uk-text-center">ลำดับที่</th>
                                 <th>รหัสกล่อง</th>
-                                <th>จำนวนซอง</th>
+                                <th>จำนวนซองทั้งหมด</th>
+                                <th>จำนวนซองที่ตรวจเสร็จ</th>
                                 <th>สถานะกล่อง</th>
                                 <th>เครื่องมือ</th>
                             </tr>
                         </thead>
                         <tfoot>
-                             <tr>
+                            <tr>
                                 <th></th>
                                 <th>รหัสกล่อง</th>
-                                <th>จำนวนซอง</th>
+                                <th>จำนวนซองทั้งหมด</th>
+                                <th>จำนวนซองที่ตรวจเสร็จ</th>
                                 <th>สถานะกล่อง</th>
-                                 <th></th>
+                                <th></th>
                             </tr>
                         </tfoot>
                     </table>
@@ -134,8 +136,8 @@
     </script>
     <script src="bower_components/parsleyjs/dist/parsley.js"></script>
     <!--  issues list functions -->
-  
-       <script>
+
+    <script>
 
         $(document).ready(function () {
             $.ajax({
@@ -153,17 +155,17 @@
                             sInfoFiltered: "(จากเร็คคอร์ดทั้งหมด _MAX_ เร็คคอร์ด)",
                             sSearch: "ค้นหา :",
                             oPaginate: {
-                            sFirst: "หน้าแรก",// ปุ่มกลับมาหน้าแรก
-                            sLast: "หน้าสุดท้าย",//ปุ่มไปหน้าสุดท้าย
-                            sNext: "ถัดไป",//ปุ่มหน้าถัดไป
-                            sPrevious: "ก่อนหน้า" // ปุ่ม กลับ
+                                sFirst: "หน้าแรก",// ปุ่มกลับมาหน้าแรก
+                                sLast: "หน้าสุดท้าย",//ปุ่มไปหน้าสุดท้าย
+                                sNext: "ถัดไป",//ปุ่มหน้าถัดไป
+                                sPrevious: "ก่อนหน้า" // ปุ่ม กลับ
                             }
                         },
                         columnDefs: [
-                          { searchable: false, orderable: false, "aTargets": [0,4] },
+                          { searchable: false, orderable: false, "aTargets": [0, 5] },
                           { className: "dt-center", "targets": [0, 3, 4] },
                           { className: "dt-left", "targets": "1" },
-                          { width: "8%", "targets": 0 }
+                          { width: "8%", "targets": [0, 2, 3] }
                         ],
                         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
                         data: data,
@@ -171,21 +173,32 @@
                             { 'data': 'no' },
                             { 'data': 'boxcode' },
                             { 'data': 'packagenum' },
-                            { 'data': 'boxstatus' },
+                            { 'data': 'packagenums' },
                             {
-                                'data': 'boxtools', 'render': function (status, type, full) {
-                                     return "<a href='boxdetail.aspx?seq=" + status + "'><i class='material-icons uk-text-success md-24'>&#xE417;</i></a>";
-                                 }
-                            }
-                            ]
-/*
-                            {
-                                'data': 'dateOfBirth', 'render': function (date) {
-                                    var date = new Date(parseInt(date.substr(6)));
-                                    var month = date.getMonth() + 1;
-                                    return date.getDate() + "/" + month + "/" + date.getFullYear();
+                                'data': 'boxstatusname', 'render': function (value, type, full) {
+                                    if (full.packagenum == full.packagenums) {
+                                        return "<span class='uk-badge uk-badge-success'>" + value + "</span>";
+                                    } else if (full.packagenums != 0) {
+                                        return "<span class='uk-badge uk-badge-warning'>" + value + "</span>";
+                                    } else {
+                                        return value;
+                                    }
                                 }
-                            }*/
+                            },
+                            {
+                                'data': 'boxtools', 'render': function (value, type, full) {
+                                    return "<a href='boxdetail.aspx?seq=" + value + "'><i class='material-icons uk-text-success md-24'>&#xE417;</i></a>";
+                                }
+                            }
+                        ]
+                        /*
+                                                    {
+                                                        'data': 'dateOfBirth', 'render': function (date) {
+                                                            var date = new Date(parseInt(date.substr(6)));
+                                                            var month = date.getMonth() + 1;
+                                                            return date.getDate() + "/" + month + "/" + date.getFullYear();
+                                                        }
+                                                    }*/
                     });
                     $('#dt_individual_search tfoot th').each(function () {
                         if ($(this).index() != 0 && $(this).index() != 5) {

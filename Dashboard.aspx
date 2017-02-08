@@ -6,45 +6,6 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
     <div id="page_content_inner">
      <!-- statistics (small charts) -->
-            <div class="uk-grid uk-grid-width-large-1-4 uk-grid-width-medium-1-2 uk-grid-medium uk-sortable sortable-handler hierarchical_show" data-uk-sortable data-uk-grid-margin>
-                <div>
-                    <div class="md-card">
-                        <div class="md-card-content">
-                            <div class="uk-float-right uk-margin-top uk-margin-small-right"><span class="peity_visitors peity_data">5,3,9,6,5,9,7</span></div>
-                            <span class="uk-text-muted uk-text-small">จำนวนกระดาษอัตนัย</span>
-                            <h2 class="uk-margin-remove"><span class="countUpMe">0<noscript><% Response.Write("4444");  %></noscript></span></h2>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div class="md-card">
-                        <div class="md-card-content">
-                            <div class="uk-float-right uk-margin-top uk-margin-small-right"><span class="peity_sale peity_data">5,3,9,6,5,9,7,3,5,2</span></div>
-                            <span class="uk-text-muted uk-text-small">จำนวนข้อมูล Diff</span>
-                            <h2 class="uk-margin-remove"><span class="countUpMe">0<noscript><% Response.Write("1234");  %></noscript></span></h2>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div class="md-card">
-                        <div class="md-card-content">
-                            <div class="uk-float-right uk-margin-top uk-margin-small-right"><span class="peity_orders peity_data">64/100</span></div>
-                            <span class="uk-text-muted uk-text-small">ปริมาณงานที่เสร็จ</span>
-                            <h2 class="uk-margin-remove"><span class="countUpMe">0<noscript>64</noscript></span>%</h2>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div class="md-card">
-                        <div class="md-card-content">
-                            <div class="uk-float-right uk-margin-top uk-margin-small-right"><span class="peity_visitors peity_data">5,3,9,6,5,9,7</span></div>
-                            <span class="uk-text-muted uk-text-small">จำนวนข้อมูลที่ส่งออก</span>
-                            <h2 class="uk-margin-remove"><span class="countUpMe">0<noscript>12456</noscript></span></h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         <div class="uk-grid uk-grid-width-large-1-1 uk-grid-medium uk-sortable sortable-handler hierarchical_show" data-uk-grid-margin>
             <div class="uk-width-large-1-1">
                         <div class="md-card">

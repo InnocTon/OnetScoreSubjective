@@ -157,14 +157,21 @@
                     </a>
                     <ul>
                         <li <% if (pageName == "importomr") Response.Write("class='act_item'"); %>>
-                            <a href="importomr.aspx">นำเข้าข้อมูล</a></li>
+                            <a href="importomr.aspx">นำข้อมูล OMR เข้าระบบ</a></li>
                         <li <% if (pageName == "reportimportomr") Response.Write("class='act_item'"); %>>
                             <a href="reportimportomr.aspx">รายงานการนำเข้า</a></li>
-                        <li <% if (pageName == "managescorediff" || pageName == "papercopy3report" || pageName=="Rater3No1" || pageName == "Rater3No2") Response.Write("class='act_item'"); %>>
+                        <li <% if (pageName == "managescorediff" || pageName == "papercopy3report") Response.Write("class='act_item'"); %>>
                             <a href="managescorediff.aspx">ประมวลผลค่า Diff</a></li>
                     </ul>
                 </li>
 
+
+                 <li title="บันทึกคะแนน Diff" <% if (pageName == "rater3managediff" || pageName=="Rater3No1" || pageName == "Rater3No2") Response.Write("class='current_section'"); %>>
+                    <a href="rater3managediff.aspx">
+                        <span class="menu_icon"><i class="uk-icon-keyboard-o uk-icon-small"></i></span>
+                        <span class="menu_title">บันทึกคะแนน Diff</span>
+                    </a>
+                </li>
 
 
        <!--         <li>

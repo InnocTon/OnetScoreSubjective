@@ -67,6 +67,10 @@
     <!-- datatables custom integration -->
     <script src="assets/js/custom/datatables_uikit.min.js"></script>
 
+
+        <script src="bower_components/parsleyjs/dist/parsley.js"></script>
+    <!--  issues list functions -->
+
     <script>
         $(document).ready(function () {
 
@@ -108,13 +112,14 @@
                             { 'data': 'qno' },
                             {
                                 'data': 'difftools', 'render': function (value, type, full) {
-
-                                    if (full.qno == '1') {
+                                    return "<a href='papercopy3report.aspx?papercode=" + value + "&qno=" + full.qno + "'><i class='md-icon material-icons uk-text-danger'>&#xE8AD;</i></a>";
+                                /*    if (full.qno == '1') {
                                         return "<a href='papercopy3report.aspx?papercode=" + value + "&qno=" + full.qno + "'><i class='md-icon material-icons uk-text-danger'>&#xE8AD;</i></a> <a href='Rater3No1.aspx?stdcode=" + full.stdcode + "'><i class='md-icon material-icons uk-text-primary material-icons'>&#xE150;</i></a>";
                                     } else {
                                         return "<a href='papercopy3report.aspx?papercode=" + value + "&qno=" + full.qno + "'><i class='md-icon material-icons uk-text-danger'>&#xE8AD;</i></a> <a href='Rater3No2.aspx?stdcode=" + full.stdcode + "'><i class='md-icon material-icons uk-text-primary material-icons'>&#xE150;</i></a>";
                                     }
-                                    
+                                  */
+
 
                                    
                                 }
