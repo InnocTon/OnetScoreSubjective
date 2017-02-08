@@ -83,7 +83,8 @@
                 string connStr = ConfigurationManager.ConnectionStrings["SqlConnectionString"].ConnectionString;
                 System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(connStr);
                 Boolean chkNodiff = true;
-                string stdCodeSelect = Request.QueryString["stdcode"].ToString();
+                //string stdCodeSelect = Request.QueryString["stdcode"].ToString();
+                string stdCodeSelect = "0361200001011";
 
                 try
                 {
@@ -112,9 +113,9 @@
                         //paperURLName = sb.ToString();
                         //paperURLFolder = paperURLName.Substring(0, 11);
                         //paperURL = "factoryfile/image/" + paperURLFolder+ "/" + paperURLName+ ".jpg";
-                        //    Response.Write(totalScoreC1);
-                        //     Response.Write(" ");
-                        //    Response.Write(totalScoreC2);
+                            Response.Write(totalScoreC1);
+                             Response.Write(" ");
+                            Response.Write(totalScoreC2);
                         String imgfilename = stdCode.ToString().Substring(0, 5) + "3" + stdCode.ToString().Substring(5, 8);
 
                         String packagename = stdCode.Substring(0, 5) + "3" + stdCode.ToString().Substring(5, 5);
@@ -326,6 +327,13 @@
 
                 var compare1 = Math.abs(scoreValue.totalScoreC1 - sumScore);
                 var compare2 = Math.abs(scoreValue.totalScoreC2 - sumScore);
+                scoreValue.paperComplete = 1;
+
+                scoreValue.useScoreSum = "";
+                scoreValue.useScore1_1 = "";
+                scoreValue.useScore1_2 = "";
+                scoreValue.useScore1_3 = "";
+                scoreValue.useScore1_4 = "";
 
                 if (compare1 < compare2) {
                     //alert('is C1  = ' + compare1);
@@ -342,9 +350,10 @@
 
                         //alert(scoreValue.useScore1_1);
                     } else {
-                        UIkit.modal.confirm('<p> คะแนนนี้ยังไม่ผ่านเงื่อนไข 15% ระบบจะไม่บันทึกคะแนน<br>กรุณาพิมพ์และให้คะแนนใหม่</p>',
-                                function () { window.location = "papercopy3report.aspx?papercode=" + scoreValue.stdCode + "&qno=2"; }
-                                );
+                        //UIkit.modal.confirm('<p> คะแนนนี้ยังไม่ผ่านเงื่อนไข 15% ระบบจะไม่บันทึกคะแนน<br>กรุณาพิมพ์และให้คะแนนใหม่</p>',
+                        //        function () { window.location = "papercopy3report.aspx?papercode=" + scoreValue.stdCode + "&qno=2"; }
+                        //        );
+                        scoreValue.paperComplete = 0;
                     }
                 } else if (compare2 < compare1) {
                     //alert('is C2  = ' + compare2);
@@ -357,9 +366,10 @@
                         scoreValue.useScore1_3 = (Number(scoreValue.score2_1) + Number(scoreValue.totalScoreC2Cri3)) / 2;
                         scoreValue.useScore1_4 = (Number(scoreValue.score2_2) + Number(scoreValue.totalScoreC2Cri4)) / 2;
                     } else {
-                        UIkit.modal.confirm('<p> คะแนนนี้ยังไม่ผ่านเงื่อนไข 15% ระบบจะไม่บันทึกคะแนน<br>กรุณาพิมพ์และให้คะแนนใหม่</p>',
-                                function () { window.location = "papercopy3report.aspx?papercode=" + scoreValue.stdCode + "&qno=2"; }
-                                );
+                        //UIkit.modal.confirm('<p> คะแนนนี้ยังไม่ผ่านเงื่อนไข 15% ระบบจะไม่บันทึกคะแนน<br>กรุณาพิมพ์และให้คะแนนใหม่</p>',
+                        //        function () { window.location = "papercopy3report.aspx?papercode=" + scoreValue.stdCode + "&qno=2"; }
+                        //        );
+                        scoreValue.paperComplete = 0;
                     }
                 } else if (compare2 == compare1) {
                     //alert('C1 = C2');
@@ -373,9 +383,10 @@
                         scoreValue.useScore1_3 = (Number(scoreValue.score2_1) + Number(scoreValue.totalScoreC1Cri3) + Number(scoreValue.totalScoreC2Cri3)) / 3;
                         scoreValue.useScore1_4 = (Number(scoreValue.score2_2) + Number(scoreValue.totalScoreC1Cri4) + Number(scoreValue.totalScoreC2Cri4)) / 3;
                     } else {
-                        UIkit.modal.confirm('<p> คะแนนนี้ยังไม่ผ่านเงื่อนไข 15% ระบบจะไม่บันทึกคะแนน<br>กรุณาพิมพ์และให้คะแนนใหม่</p>',
-                                function () { window.location = "papercopy3report.aspx?papercode=" + scoreValue.stdCode + "&qno=2"; }
-                                );
+                        //UIkit.modal.confirm('<p> คะแนนนี้ยังไม่ผ่านเงื่อนไข 15% ระบบจะไม่บันทึกคะแนน<br>กรุณาพิมพ์และให้คะแนนใหม่</p>',
+                        //        function () { window.location = "papercopy3report.aspx?papercode=" + scoreValue.stdCode + "&qno=2"; }
+                        //        );
+                        scoreValue.paperComplete = 0;
                     }
                 }
 

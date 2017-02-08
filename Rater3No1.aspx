@@ -83,7 +83,20 @@
 
     <div id="page_heading">
         <h1>ระบบบันทึกคะแนนอัตนัย วิชาภาษาไทย ข้อที่ ๑. การเขียนเล่าเรื่องจากภาพ</h1>
-        <span class="uk-text-muted uk-text-upper uk-text-small">ชื่อผู้ตรวจ : <% Response.Write(HttpContext.Current.Session["USER_NAME"].ToString()); %></span>
+        <!--<div class="uk-grid" data-uk-grid-margin>-->
+        <div class="uk-width-large-1-2 uk-width-medium-1-2">
+            <span class="uk-text-muted uk-text-upper uk-text-small">ชื่อผู้ตรวจ : <% Response.Write(HttpContext.Current.Session["USER_NAME"].ToString()); %></span>
+        </div>
+        <!--<div class="uk-width-large-1-2 uk-width-medium-1-2">
+            <div class="uk-input-group">
+                <label>Scan Barcode / Input Paper Code</label>
+                <input type="text" class="md-input" />
+                <span class="uk-input-group-addon">
+                    <a class="md-btn md-btn-primary" href="#">ยืนยัน</a>
+                </span>
+            </div>
+        </div>
+        </div>-->
     </div>
 
     <div id="page_content_inner">
@@ -92,7 +105,8 @@
                 string connStr = ConfigurationManager.ConnectionStrings["SqlConnectionString"].ConnectionString;
                 System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(connStr);
                 Boolean chkNodiff = true;
-                string stdCodeSelect = Request.QueryString["stdcode"].ToString();//"0161100071044";
+                //string stdCodeSelect = Request.QueryString["stdcode"].ToString();//"0161100071044";
+                string stdCodeSelect = "0161100071016";
 
                 try
                 {
@@ -139,9 +153,9 @@
                         //Response.Write(paperURL);
 
                         //paperURL = @"D:\paperimg\" + paperURLFolder + "\\" + paperURLName + ".jpg";
-                        //   Response.Write(totalScoreC1);
-                        //   Response.Write(" ");
-                        //   Response.Write(totalScoreC2);
+                           Response.Write(totalScoreC1);
+                           Response.Write(" ");
+                           Response.Write(totalScoreC2);
 
                     }
 
@@ -170,7 +184,7 @@
                         </h3>
                         <div class="md-card-toolbar">
                             <div class="md-card-toolbar-actions hidden-print" onclick="setTimeout(function () {window.print();}, 300)">
-                                <!--<i class="md-icon material-icons" id="invoice_print">&#xE8ad;</i>-->
+                                <i class="md-icon material-icons" id="invoice_print">&#xE8ad;</i>
                             </div>
                         </div>
                     </div>
@@ -189,8 +203,7 @@
                 <div class="md-card">
                     <!-- Right -->
                     <div class="md-card-toolbar">
-                        <h3 class="md-card-toolbar-heading-text">คะแนน
-                        </h3>
+                        <h3 class="md-card-toolbar-heading-text">คะแนน</h3>
                     </div>
                     <form action="" class="uk-form-stacked" id="score_form">
                         <div class="md-card-content large-padding">
@@ -499,11 +512,22 @@
                 //alert(scoreValue.totalScoreC2);
                 var compare1 = Math.abs(scoreValue.totalScoreC1 - sumScore);
                 var compare2 = Math.abs(scoreValue.totalScoreC2 - sumScore);
+                scoreValue.paperComplete = 1;
+
+                scoreValue.useScoreSum = "";
+                scoreValue.useScore1_1 = "";
+                scoreValue.useScore1_2 = "";
+                scoreValue.useScore1_3 = "";
+                scoreValue.useScore1_4 = "";
+                scoreValue.useScore1_5 = "";
+                scoreValue.useScore1_6 = "";
+                scoreValue.useScore1_7 = "";
+                scoreValue.useScore1_8 = "";
 
                 if (compare1 < compare2) {
                     //alert('is C1  = ' + compare1);
                     if (compare1 <= 1.5) {
-                        //C1+R3 /2
+                        // DO C1+R3 /2 
                         //alert('C1 < 1.5 Do it');
                         //alert('C1= ' + scoreValue.totalScoreC1);
                         //alert('sumScore= ' + sumScore);
@@ -518,10 +542,11 @@
                         scoreValue.useScore1_8 = (Number(scoreValue.score3_4) + Number(scoreValue.totalScoreC1Cri8)) / 2;
 
                         //alert(scoreValue.useScore1_1);
-                    } else {
-                        UIkit.modal.confirm('<p> คะแนนนี้ยังไม่ผ่านเงื่อนไข 15% ระบบจะไม่บันทึกคะแนน<br>กรุณาพิมพ์และให้คะแนนใหม่</p>',
-                                function () { window.location = "papercopy3report.aspx?papercode=" + scoreValue.stdCode + "&qno=1"; }
-                                );
+                    } else { // ไม่ผ่านเงื่อไข 15%
+                        //UIkit.modal.confirm('<p> คะแนนนี้ยังไม่ผ่านเงื่อนไข 15% ระบบจะไม่บันทึกคะแนน<br>กรุณาพิมพ์และให้คะแนนใหม่</p>',
+                        //        function () { window.location = "papercopy3report.aspx?papercode=" + scoreValue.stdCode + "&qno=1"; }
+                        //        );
+                        scoreValue.paperComplete = 0;
                     }
                 } else if (compare2 < compare1) {
                     //alert('is C2  = ' + compare2);
@@ -537,10 +562,11 @@
                         scoreValue.useScore1_6 = (Number(scoreValue.score3_2) + Number(scoreValue.totalScoreC2Cri6)) / 2;
                         scoreValue.useScore1_7 = (Number(scoreValue.score3_3) + Number(scoreValue.totalScoreC2Cri7)) / 2;
                         scoreValue.useScore1_8 = (Number(scoreValue.score3_4) + Number(scoreValue.totalScoreC2Cri8)) / 2;
-                    } else {
-                        UIkit.modal.confirm('<p> คะแนนนี้ยังไม่ผ่านเงื่อนไข 15% ระบบจะไม่บันทึกคะแนน<br>กรุณาพิมพ์และให้คะแนนใหม่</p>',
-                                function () { window.location = "papercopy3report.aspx?papercode=" + scoreValue.stdCode + "&qno=1"; }
-                                );
+                    } else { // ไม่ผ่านเงื่อไข 15%
+                        //UIkit.modal.confirm('<p> คะแนนนี้ยังไม่ผ่านเงื่อนไข 15% ระบบจะไม่บันทึกคะแนน<br>กรุณาพิมพ์และให้คะแนนใหม่</p>',
+                        //        function () { window.location = "papercopy3report.aspx?papercode=" + scoreValue.stdCode + "&qno=1"; }
+                        //        );
+                        scoreValue.paperComplete = 0;
                     }
                 } else if (compare2 == compare1) {
                     //alert('C1 = C2');
@@ -557,10 +583,11 @@
                         scoreValue.useScore1_6 = (Number(scoreValue.score3_2) + Number(scoreValue.totalScoreC1Cri6) + Number(scoreValue.totalScoreC2Cri6)) / 3;
                         scoreValue.useScore1_7 = (Number(scoreValue.score3_3) + Number(scoreValue.totalScoreC1Cri7) + Number(scoreValue.totalScoreC2Cri7)) / 3;
                         scoreValue.useScore1_8 = (Number(scoreValue.score3_4) + Number(scoreValue.totalScoreC1Cri8) + Number(scoreValue.totalScoreC2Cri8)) / 3;
-                    } else {
-                        UIkit.modal.confirm('<p> คะแนนนี้ยังไม่ผ่านเงื่อนไข 15% ระบบจะไม่บันทึกคะแนน<br>กรุณาพิมพ์และให้คะแนนใหม่</p>',
-                                function () { window.location = "papercopy3report.aspx?papercode=" + scoreValue.stdCode + "&qno=1"; }
-                                );
+                    } else { // ไม่ผ่านเงื่อไข 15%
+                        //UIkit.modal.confirm('<p> คะแนนนี้ยังไม่ผ่านเงื่อนไข 15% ระบบจะไม่บันทึกคะแนน<br>กรุณาพิมพ์และให้คะแนนใหม่</p>',
+                        //        function () { window.location = "papercopy3report.aspx?papercode=" + scoreValue.stdCode + "&qno=1"; }
+                        //        );
+                        scoreValue.paperComplete = 0;
                     }
                 }
 
