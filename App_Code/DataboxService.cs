@@ -43,7 +43,7 @@ public class DataboxService : System.Web.Services.WebService
         var boxs = new List<ClassDataBox>();
         using (var con = new SqlConnection(connStr))
         {
-            String query = " SELECT ROW_NUMBER() OVER(ORDER BY bx.BOX_SEQ ASC) AS Row#,bx.*,bxs.BSTATUS_NAME FROM TRN_XM_BOX bx inner join [dbo].[MST_BOX_STATUS] bxs on bx.BOX_STATUS = bxs.BSTATUS_CODE WHERE bx.BOX_STATUS != 'C'";
+            String query = " SELECT ROW_NUMBER() OVER(ORDER BY bx.BOX_SEQ ASC) AS Row#,bx.*,bxs.BSTATUS_NAME,ISNULL((SELECT COUNT(BOX_CODE) FROM [TRN_XM_PACKAGE] WHERE BOX_CODE = bx.BOX_CODE  AND package_status = 'S' GROUP BY BOX_CODE),0) AS NUMS FROM TRN_XM_BOX bx inner join [dbo].[MST_BOX_STATUS] bxs on bx.BOX_STATUS = bxs.BSTATUS_CODE WHERE bx.BOX_STATUS != 'C'";
             var cmd = new SqlCommand(query, con) { CommandType = CommandType.Text };
             con.Open();
             var dr = cmd.ExecuteReader();
@@ -54,7 +54,9 @@ public class DataboxService : System.Web.Services.WebService
                     no = dr["Row#"].ToString(),
                     boxcode = dr["BOX_CODE"].ToString(),
                     packagenum = dr["PACKAGE_NUM"].ToString(),
-                    boxstatus = dr["BSTATUS_NAME"].ToString(),
+                    packagenums = dr["NUMS"].ToString(),
+                    boxstatus = dr["BOX_STATUS"].ToString(),
+                    boxstatusname = dr["BSTATUS_NAME"].ToString(),
                     boxtools = dr["BOX_SEQ"].ToString()
                 };
                 boxs.Add(box);
